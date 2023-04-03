@@ -142,7 +142,7 @@ export default {
                                   localStorage.setItem("user_id",res.data.data.user_id);
                                   localStorage.setItem("role",res.data.data.role);
                                   localStorage.setItem("token",res.data.token);
-                                  this.$router.push('/dashboard');
+                                  this.$router.push('/backAdmin/dashboard');
 
                               }else {
                                   this.$message.error("登录失败");

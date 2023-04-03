@@ -343,8 +343,8 @@ export default {
     created() {
 
         this.getChapterInfoByLessonId();
-        this.uploadAttachmentMp4 = 'http://localhost:8089/back/uploadAttachmentMp4';
-        this.uploadAttachmentPPT = 'http://localhost:8089/back/uploadAttachmentPPT'
+        this.uploadAttachmentMp4 = this.$root.URL+'/back/uploadAttachmentMp4';
+        this.uploadAttachmentPPT = this.$root.URL+'/back/uploadAttachmentPPT'
         console.log("chapter-------------"+this.lesson_id)
     },
     watch: {
@@ -648,36 +648,40 @@ export default {
 
                     let url =   this.$root.URL+"/back/AddChapterInEdit";
                      this.$refs.submit.validate(valid => {
-                         axios.post(url, this.form, {
-                             headers: {
-                                 'Content-Type': 'application/json',
-                                 'token':localStorage.getItem("token"),
-                             }
-                         }).then((res) => {
-                             console.log(JSON.stringify(res))
-                             if(res.data.code === '200'){
-                                 this.$message.success('提交成功');
-                                 this.chapter = res.data.data;
-                                 this.dialog = false;
-                                 this.form = {
-                                     chapter_name: '',
-                                     description: '',
-                                     mp4: '',
-                                     ppt: '',
-                                     lesson_id:'',
-                                     chapter_no:''
+                         if(valid){
+                             axios.post(url, this.form, {
+                                 headers: {
+                                     'Content-Type': 'application/json',
+                                     'token':localStorage.getItem("token"),
                                  }
-                             }else {
-                                 this.$message.error("系统内部错误")
-                             }
-                         }).catch((err) => {
-                             console.log('添加错误')
-                             console.log(err)
-                         })
-                        // 动画关闭需要一定的时间
-                        setTimeout(() => {
-                            this.loading = false;
-                        }, 400);
+                             }).then((res) => {
+                                 console.log(JSON.stringify(res))
+                                 if(res.data.code === '200'){
+                                     this.$message.success('提交成功');
+                                     this.chapter = res.data.data;
+                                     this.dialog = false;
+                                     this.form = {
+                                         chapter_name: '',
+                                         description: '',
+                                         mp4: '',
+                                         ppt: '',
+                                         lesson_id:'',
+                                         chapter_no:''
+                                     }
+                                 }else {
+                                     this.$message.error("系统内部错误")
+                                 }
+                             }).catch((err) => {
+                                 console.log('添加错误')
+                                 console.log(err)
+                             })
+                             // 动画关闭需要一定的时间
+                             setTimeout(() => {
+                                 this.loading = false;
+                             }, 400);
+                         }else {
+                             this.$message.error("输入有误")
+                         }
                     });
 
                     }, 2000)

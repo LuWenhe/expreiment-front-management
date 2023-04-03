@@ -115,140 +115,140 @@
             return {
                 collapse: false,
                 role:'admin',
-                // items_admin: [{
-                //     'icon': 'el-icon-lx-home',
-                //     'index': '/backAdmin/dashboard',
-                //     'title': '系统首页',
-                //  },
-                //  {
-                //     'icon': 'el-icon-reading',
-                //      'index':'/backAdmin/lessonIndex',
-                //     'title': '课程管理',
-                //     'child':[{
-                //         'icon': 'el-icon-s-order',
-                //         'index': '/backAdmin/lessonIndex',
-                //         'title': '课程列表',
-                //         },
-                //         {
-                //             'icon': 'el-icon-s-management',
-                //             'index': '/backAdmin/tagList',
-                //             'title': '标签管理',
-                //         },
-                //         {
-                //             'icon': 'el-icon-s-management',
-                //             'index': '/backAdmin/imageAdmin',
-                //             'title': '镜像管理',
-                //         },
-                //         {
-                //             'icon': 'el-icon-s-management',
-                //             'index': '/backAdmin/classList',
-                //             'title': '班级管理',
-                //         }
-                //     ]
-                // },
-                // {
-                //     'icon': 'el-icon-set-up',
-                //     'index':'/backAdmin/lunboManage',
-                //     'title': '系统管理',
-                //     'child':[{
-                //         'icon': 'el-icon-s-order',
-                //         'index': '/backAdmin/lunboManage',
-                //         'title': '轮播管理',
-                //     }
-                //     ]
-                // },
-                // {
-                //     'icon': 'el-icon-s-custom',
-                //     'index':'/backAdmin/userManage',
-                //     'title': '用户管理',
-                //     'child':[
-                //         {
-                //             'icon': 'el-icon-user',
-                //             'index': '/backAdmin/teacherManage',
-                //             'title': '教师管理',
-                //         },
-                //         {
-                //             'icon': 'el-icon-user',
-                //             'index': '/backAdmin/studentManage',
-                //             'title': '学生管理',
-                //         },
-                //
-                //     ]
-                // }],
                 items_admin: [{
                     'icon': 'el-icon-lx-home',
-                    'index': '/dashboard',
+                    'index': '/backAdmin/dashboard',
                     'title': '系统首页',
-                },
-                    {
-                        'icon': 'el-icon-reading',
-                        'index':'/lessonIndex',
-                        'title': '课程管理',
-                        'child':[{
-                            'icon': 'el-icon-s-order',
-                            'index': '/lessonIndex',
-                            'title': '课程列表',
+                 },
+                 {
+                    'icon': 'el-icon-reading',
+                     'index':'/backAdmin/lessonIndex',
+                    'title': '课程管理',
+                    'child':[{
+                        'icon': 'el-icon-s-order',
+                        'index': '/backAdmin/lessonIndex',
+                        'title': '课程列表',
                         },
-                            {
-                                'icon': 'el-icon-s-management',
-                                'index': '/tagList',
-                                'title': '标签管理',
-                            },
-                            {
-                                'icon': 'el-icon-s-management',
-                                'index': '/imageAdmin',
-                                'title': '工具管理',
-                            }
-                        ]
-                    },
-                    {
-                        'icon': 'el-icon-set-up',
-                        'index':'/lunboManage',
-                        'title': '系统管理',
-                        'child':[{
-                            'icon': 'el-icon-s-order',
-                            'index': '/lunboManage',
-                            'title': '轮播管理',
+                        {
+                            'icon': 'el-icon-s-management',
+                            'index': '/backAdmin/tagList',
+                            'title': '标签管理',
+                        },
+                        {
+                            'icon': 'el-icon-s-management',
+                            'index': '/backAdmin/imageAdmin',
+                            'title': '工具管理',
+                        },
+                        {
+                            'icon': 'el-icon-s-management',
+                            'index': '/backAdmin/classList',
+                            'title': '班级管理',
                         }
-                        ]
-                    },
-                    {
-                        'icon': 'el-icon-s-custom',
-                        'index':'/userManage',
-                        'title': '用户管理',
-                        'child':[
-                            {
-                                'icon': 'el-icon-user',
-                                'index': '/teacherManage',
-                                'title': '教师管理',
-                            },
-                            {
-                                'icon': 'el-icon-user',
-                                'index': '/studentManage',
-                                'title': '学生管理',
-                            },
+                    ]
+                },
+                {
+                    'icon': 'el-icon-set-up',
+                    'index':'/backAdmin/lunboManage',
+                    'title': '系统管理',
+                    'child':[{
+                        'icon': 'el-icon-s-order',
+                        'index': '/backAdmin/lunboManage',
+                        'title': '轮播管理',
+                    }
+                    ]
+                },
+                {
+                    'icon': 'el-icon-s-custom',
+                    'index':'/backAdmin/userManage',
+                    'title': '用户管理',
+                    'child':[
+                        {
+                            'icon': 'el-icon-user',
+                            'index': '/backAdmin/teacherManage',
+                            'title': '教师管理',
+                        },
+                        {
+                            'icon': 'el-icon-user',
+                            'index': '/backAdmin/studentManage',
+                            'title': '学生管理',
+                        },
 
-                        ]
-                    }],
+                    ]
+                }],
+                // items_admin: [{
+                //     'icon': 'el-icon-lx-home',
+                //     'index': '/dashboard',
+                //     'title': '系统首页',
+                // },
+                //     {
+                //         'icon': 'el-icon-reading',
+                //         'index':'/lessonIndex',
+                //         'title': '课程管理',
+                //         'child':[{
+                //             'icon': 'el-icon-s-order',
+                //             'index': '/lessonIndex',
+                //             'title': '课程列表',
+                //         },
+                //             {
+                //                 'icon': 'el-icon-s-management',
+                //                 'index': '/tagList',
+                //                 'title': '标签管理',
+                //             },
+                //             {
+                //                 'icon': 'el-icon-s-management',
+                //                 'index': '/imageAdmin',
+                //                 'title': '工具管理',
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         'icon': 'el-icon-set-up',
+                //         'index':'/lunboManage',
+                //         'title': '系统管理',
+                //         'child':[{
+                //             'icon': 'el-icon-s-order',
+                //             'index': '/lunboManage',
+                //             'title': '轮播管理',
+                //         }
+                //         ]
+                //     },
+                //     {
+                //         'icon': 'el-icon-s-custom',
+                //         'index':'/userManage',
+                //         'title': '用户管理',
+                //         'child':[
+                //             {
+                //                 'icon': 'el-icon-user',
+                //                 'index': '/teacherManage',
+                //                 'title': '教师管理',
+                //             },
+                //             {
+                //                 'icon': 'el-icon-user',
+                //                 'index': '/studentManage',
+                //                 'title': '学生管理',
+                //             },
+                //
+                //         ]
+                //     }],
                 items_teacher:
                     [{
                     'icon': 'el-icon-lx-home',
-                    'index': '/dashboard',
+                    'index': '/backAdmin/dashboard',
                     'title': '系统首页',
                     },
                     {
                         'icon': 'el-icon-reading',
-                        'index':'/lessonIndex',
+                        'index':'/backAdmin/lessonIndex',
                         'title': '课程管理',
                         'child':[{
                             'icon': 'el-icon-s-order',
-                            'index': '/lessonIndex',
+                            'index': '/backAdmin/lessonIndex',
                             'title': '个人课程管理',
                         },
                         {
                             'icon': 'el-icon-s-management',
-                            'index': '/imageAdmin',
-                            'title': '实验软件管理',
+                            'index': '/backAdmin/imageAdmin',
+                            'title': '工具管理',
                         }]
                     }],
                 items_student:

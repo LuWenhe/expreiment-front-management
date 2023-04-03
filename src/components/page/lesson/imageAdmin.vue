@@ -192,6 +192,7 @@ export default {
 
     created() {
         this.getData();
+        this.uploadAttachment = this.$root.URL+"/back/uploadTools"
 
     },
 
@@ -211,7 +212,6 @@ export default {
         addTools(formName){
             this.$refs[formName].validate(valid => {
                 if (valid) {
-
                     let path = this.$root.URL+'/back/addTool';
                     let token = localStorage.getItem('token');
                     axios.post(path, this.addToolForm,
@@ -445,6 +445,10 @@ export default {
                             this.$message({
                                 message:'删除成功'
                             })
+
+                            // this.addToolForm = this.addToolForm.filter(item=>item.id != data.id);
+                            // console.log(this.multipleSelection[0].tool_id);
+
                             this.reload();
                         }else{
                             this.$message({

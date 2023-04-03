@@ -169,7 +169,7 @@ export default {
         addLesson(){
 
             console.log("addLesson")
-            this.$router.push('/addLesson')
+            this.$router.push('/backAdmin/addLesson')
 
         },
         deleteLesson(lesson_id){

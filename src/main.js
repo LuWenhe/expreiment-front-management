@@ -55,10 +55,10 @@ router.beforeEach((to, from, next) =>{
     document.title = `${to.meta.title} | 实训平台管理系统`;
     const token = localStorage.getItem('token');
 
-    if (!token && to.path !== '/login') {
-        next('/login');
-    }else if(token && to.path == '/login'){
-        next('/dashboard')
+    if (!token && to.path !== '/backAdmin/login') {
+        next('/backAdmin/login');
+    }else if(token && to.path == '/backAdmin/login'){
+        next('/backAdmin/dashboard')
 
     }else if (to.meta.permission) {
         console.log(to.path);
@@ -93,7 +93,7 @@ new Vue({
     data: function(){
         return {
            URL: 'http://localhost:8089',
-            //URL: 'http://10.0.7.205:8089',
+           // URL: 'http://10.0.3.67:8089',
 
         }
     },

@@ -223,12 +223,12 @@ const validatorEmail = (rule, value, callback) => {
 };
 const validatorChinese = (rule, value, callback) => {
     if (!value) {
-        return callback(new Error("请输入手机号码"));
+        return callback(new Error("请输入姓名"));
     } else {
         if (ChineseCheck(value)) {
             callback();
         } else {
-            return callback(new Error('请输入正确的手机号码'))
+            return callback(new Error('请输入正确的姓名'))
         }
     }
 };
