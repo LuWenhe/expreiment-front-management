@@ -1,323 +1,313 @@
 <template>
-    <div>
-        <div v-for="(item,index)  in chapterList" :key="index">
-            <div class='secondCard'>
-                <br>
-                <div>
-                    <div style='float: left;margin-left: 20px'><span class='chapter-index'>{{ item.chapter_no }}</span> &nbsp;<span><b>{{item.chapter_name}}</b></span></div>
-                    <div style='float: right;margin-right: 20px'> <el-button @click='delChapter(item.chapter_id)'> <i class='el-icon-delete-solid'></i> </el-button> <el-button @click='editChapter(item.chapter_id)'><i class="el-icon-edit"></i></el-button></div>
-                    <br>
-                </div>
-                <br>
-                <hr>
-                <br>
-                <div style='margin-left: 20px'>
-                    <span>{{item.description}}</span>
-                    <br>
-                    <br>
-                    <div v-for="(item1,index)  in item.sonChapterList" :key="index">
-                        <div style='float: left;'>
-                            <span> {{item1.son_no}} &nbsp;{{item1.son_name}}</span>
-                        </div>
-                        <div style='float: right;margin-right: 20px'>
-                            <el-button><i class="el-icon-edit"></i></el-button>
-                            <el-button  @click="toJupyterPage(item1.exp_url,item1.son_id)"><i class="el-icon-edit">jupyter实验</i></el-button>
-                        </div>
-
-                        <br>
-                        <br>
-                    </div>
-                    <el-button> <i class='el-icon-plus' @click='addSonChapterModal(item.chapter_id)' >添加实验章节</i> </el-button>
-                    <br>
-                    <br>
-                </div>
-
-            </div>
-            <br>
-            <br>
-
-        </div>
-        <el-button type='primary'  @click="dialog = true">添加课程章节</el-button>
+  <div>
+    <div v-for='(item,index)  in chapterList' :key='index'>
+      <div class='secondCard'>
+        <br>
         <div>
-            <el-drawer
-                title="课程章节"
-                :visible.sync="dialog"
-                direction="ltr"
-                custom-class="demo-drawer"
-                ref="drawer"
-            >
-                <div class="demo-drawer__content">
-                    <el-form :model="form" :rules='rules' ref='submit'>
-                        <el-form-item label="章节序号" :label-width="formLabelWidth" prop='chapter_no'>
-                            <el-input v-model="form.chapter_no" style='width: 90%'></el-input>
-                        </el-form-item>
-                        <el-form-item label="章节名称" :label-width="formLabelWidth" prop='chapter_name'>
-                            <el-input v-model="form.chapter_name" style='width: 90%'></el-input>
-                        </el-form-item>
-                        <el-form-item label="简介" :label-width="formLabelWidth" prop='description'>
-                            <el-input
-                                style='width: 90%'
-                                type="textarea"
-                                :rows="3"
-                                placeholder="请输入大纲" v-model='form.description'>
-                            </el-input>
-                        </el-form-item>
-                    </el-form>
-                    <div class="demo-drawer__footer" style='margin-left: 15%'>
-                        <el-button @click="cancelForm">取 消</el-button>
-                        <el-button type="primary" @click="addChapter()">提交</el-button>
-                    </div>
-                </div>
-            </el-drawer>
-
-            <el-dialog
-                title="子章节"
-                :visible.sync="addSonChapterDiag"
-                width="30%"
-               >
-                <el-form :model="lesson_form" :rules='rules' ref='submit_son'>
-                    <el-form-item label="序号" :label-width="formLabelWidth" prop='son_no'>
-                        <el-input v-model="lesson_form.son_no" style='width: 90%'></el-input>
-                    </el-form-item>
-                    <el-form-item label="名称" :label-width="formLabelWidth" prop='son_name'>
-                        <el-input v-model="lesson_form.son_name" style='width: 90%'></el-input>
-                    </el-form-item>
-                    <el-form-item label="简介" :label-width="formLabelWidth" prop='description'>
-                        <el-input
-                            style='width: 90%'
-                            type="textarea"
-                            :rows="3"
-                            placeholder="请输入大纲" v-model='lesson_form.description'>
-                        </el-input>
-                    </el-form-item>
-
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="addSonChapterDiagCancel">取 消</el-button>
-                    <el-button type="primary" @click="addSonChapter">确 定</el-button>
-                </span>
-            </el-dialog>
+          <div style='float: left;margin-left: 20px'><span class='chapter-index'>{{ item.chapter_no }}</span>
+            &nbsp;<span><b>{{ item.chapter_name }}</b></span></div>
+          <div style='float: right;margin-right: 20px'>
+            <el-button @click='delChapter(item.chapter_id)'><i class='el-icon-delete-solid'></i></el-button>
+            <el-button @click='editChapter(item.chapter_id)'><i class='el-icon-edit'></i></el-button>
+          </div>
+          <br>
         </div>
+        <br>
+        <hr>
+        <br>
+        <div style='margin-left: 20px'>
+          <span>{{ item.description }}</span>
+          <br>
+          <br>
+          <div v-for='(item1,index)  in item.sonChapterList' :key='index'>
+            <div style='float: left;'>
+              <span> {{ item1.son_no }} &nbsp;{{ item1.son_name }}</span>
+            </div>
+            <div style='float: right;margin-right: 20px'>
+              <el-button><i class='el-icon-edit'></i></el-button>
+              <el-button @click='toJupyterPage(item1.exp_url,item1.son_id)'><i class='el-icon-edit'>jupyter实验</i>
+              </el-button>
+            </div>
+
+            <br>
+            <br>
+          </div>
+          <el-button><i class='el-icon-plus' @click='addSonChapterModal(item.chapter_id)'>添加实验章节</i></el-button>
+          <br>
+          <br>
+        </div>
+
+      </div>
+      <br>
+      <br>
+
     </div>
+    <el-button type='primary' @click='dialog = true'>添加课程章节</el-button>
+    <div>
+      <el-drawer
+        title='课程章节'
+        :visible.sync='dialog'
+        direction='ltr'
+        custom-class='demo-drawer'
+        ref='drawer'
+      >
+        <div class='demo-drawer__content'>
+          <el-form :model='form' :rules='rules' ref='submit'>
+            <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
+              <el-input v-model='form.chapter_no' style='width: 90%'></el-input>
+            </el-form-item>
+            <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
+              <el-input v-model='form.chapter_name' style='width: 90%'></el-input>
+            </el-form-item>
+            <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
+              <el-input
+                style='width: 90%'
+                type='textarea'
+                :rows='3'
+                placeholder='请输入大纲' v-model='form.description'>
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <div class='demo-drawer__footer' style='margin-left: 15%'>
+            <el-button @click='cancelForm'>取 消</el-button>
+            <el-button type='primary' @click='addChapter()'>提交</el-button>
+          </div>
+        </div>
+      </el-drawer>
+
+      <el-dialog
+        title='子章节'
+        :visible.sync='addSonChapterDiag'
+        width='30%'
+      >
+        <el-form :model='lesson_form' :rules='rules' ref='submit_son'>
+          <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
+            <el-input v-model='lesson_form.son_no' style='width: 90%'></el-input>
+          </el-form-item>
+          <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
+            <el-input v-model='lesson_form.son_name' style='width: 90%'></el-input>
+          </el-form-item>
+          <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
+            <el-input
+              style='width: 90%'
+              type='textarea'
+              :rows='3'
+              placeholder='请输入大纲' v-model='lesson_form.description'>
+            </el-input>
+          </el-form-item>
+
+        </el-form>
+        <span slot='footer' class='dialog-footer'>
+                    <el-button @click='addSonChapterDiagCancel'>取 消</el-button>
+                    <el-button type='primary' @click='addSonChapter'>确 定</el-button>
+                </span>
+      </el-dialog>
+    </div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
-import {get,post} from '../../../api/index'
+import { get, post } from '../../../api/index';
+
 export default {
-    name: 'ChapterAdd',
-    props: ['isAddLesson','lesson_id','tabIndex'],
-    data(){
-        return{
-            lessonId : this.lesson_id,    // 把传过来的值赋值给新的变量
+  name: 'ChapterAdd',
+  props: ['isAddLesson', 'lesson_id', 'tabIndex'],
+  data() {
+    return {
+      lessonId: this.lesson_id,    // 把传过来的值赋值给新的变量
 
-            isAddLesso:this.isAddLesson,
-            tab_index:this.tabIndex,
-            addSonChapterDiag:false,
-            rules: {
+      isAddLesso: this.isAddLesson,
+      tab_index: this.tabIndex,
+      addSonChapterDiag: false,
+      rules: {
 
-                chapter_name: [{ required: true, message: '请输入章节名称', trigger: 'blur' }],
-                description: [{ required: true, message: '请输入章节描述', trigger: 'blur' }],
-                chapter_no: [{ required: true, message: '请输入章节编号', trigger: 'blur' }],
+        chapter_name: [{ required: true, message: '请输入章节名称', trigger: 'blur' }],
+        description: [{ required: true, message: '请输入章节描述', trigger: 'blur' }],
+        chapter_no: [{ required: true, message: '请输入章节编号', trigger: 'blur' }]
 
-            },
-            son_rules: {
+      },
+      son_rules: {
 
-                son_name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-                description: [{ required: true, message: '请输入描述', trigger: 'blur' }],
-                son_no: [{ required: true, message: '请输入编号', trigger: 'blur' }],
+        son_name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        description: [{ required: true, message: '请输入描述', trigger: 'blur' }],
+        son_no: [{ required: true, message: '请输入编号', trigger: 'blur' }]
 
-            },
-            table: false,
+      },
+      table: false,
 
-            loading: false,
-            lesson_id : this.lessonId,    // 把传过来的值赋值给新的变量
-            chapterList:[
+      loading: false,
+      lesson_id: this.lessonId,    // 把传过来的值赋值给新的变量
+      chapterList: [],
+      dialog: false,
+      form: {
+        chapter_name: '',
+        description: '',
+        mp4: '',
+        ppt: '',
+        lesson_id: '',
+        chapter_no: ''
 
-            ],
-            dialog:false,
-            form: {
-                chapter_name: '',
-                description: '',
-                mp4: '',
-                ppt: '',
-                lesson_id:'',
-                chapter_no:''
+      },
+      lesson_form: {
+        son_no: '',
+        son_name: '',
+        description: '',
+        exp_type: '',
+        chapter_id: '',
+        lesson_id: ''
+      },
+      formLabelWidth: '80px',
+      timer: null,
+      chapter_id: ''
 
-            },
-            lesson_form:{
-                son_no:'',
-                son_name:'',
-                description:'',
-                exp_type:'',
-                chapter_id:'',
-                lesson_id:''
-            },
-            formLabelWidth: '80px',
-            timer: null,
-            chapter_id:''
-
-        }
+    };
 
 
+  },
+
+  methods: {
+
+    addSonChapterDiagCancel() {
+
+      this.addSonChapterDiag = false;
+      this.lesson_form = {};
+    },
+    addSonChapterModal(chapter_id) {
+      this.chapter_id = chapter_id;
+      this.addSonChapterDiag = true;
+    },
+    addSonChapter() {
+      this.$confirm('确定要提交表单吗？')
+        .then(_ => {
+          this.timer = setTimeout(() => {
+            this.lesson_form.lesson_id = this.lesson_id;
+            this.lesson_form.chapter_id = this.chapter_id;
+            let url = this.$root.URL + '/back/AddSonChapterInEdit';
+            this.$refs.submit_son.validate(valid => {
+              axios.post(url, this.lesson_form, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'token': localStorage.getItem('token')
+                }
+              }).then((res) => {
+                if (res.data.code === '200') {
+                  this.$message.success('提交成功');
+                  this.chapter = res.data.data;
+                  this.form = '';
+                  this.getChapterInfoByLessonId();
+                } else {
+                  this.$message.error('系统内部错误');
+                }
+              }).catch((err) => {
+                console.log(err);
+              });
+              // 动画关闭需要一定的时间
+              setTimeout(() => {
+                this.loading = false;
+              }, 400);
+            });
+          }, 2000);
+
+        })
+        .catch(_ => {
+        });
+
+
+      this.addSonChapterDiag = false;
 
     },
-
-    methods:{
-
-        addSonChapterDiagCancel(){
-
-            this.addSonChapterDiag = false;
-            this.lesson_form = {};
-        },
-        addSonChapterModal(chapter_id){
-
-            console.log(chapter_id)
-            this.chapter_id = chapter_id;
-            this.addSonChapterDiag = true;
-        },
-        addSonChapter(){
-
-            console.log("chapter_id "+this.chapter_id)
-
-            this.$confirm('确定要提交表单吗？')
-                .then(_ => {
-                    this.timer = setTimeout(() => {
-                        this.lesson_form.lesson_id = this.lesson_id
-                        this.lesson_form.chapter_id = this.chapter_id
-                        let url =   this.$root.URL+"/back/AddSonChapterInEdit";
-                        this.$refs.submit_son.validate(valid => {
-                            axios.post(url, this.lesson_form, {
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'token':localStorage.getItem("token"),
-                                }
-                            }).then((res) => {
-                                console.log(JSON.stringify(res))
-                                if(res.data.code === '200'){
-                                    this.$message.success('提交成功');
-                                    this.chapter = res.data.data;
-                                    this.form = '';
-                                    this.getChapterInfoByLessonId()
-                                }else {
-                                    this.$message.error("系统内部错误")
-                                }
-                            }).catch((err) => {
-                                console.log('添加错误')
-                                console.log(err)
-                            })
-                            // 动画关闭需要一定的时间
-                            setTimeout(() => {
-                                this.loading = false;
-                            }, 400);
-                        });
-                    }, 2000)
-
-                })
-                .catch(_ => {});
-
-
-
-            this.addSonChapterDiag = false;
-
-        },
-        delChapter(chapter_id){
-            this.$confirm('此操作将永久删除该章节, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
-
-                console.log("chapter_id "+chapter_id)
-                let url = this.$root.URL + '/back/delChapterInEdit?chapter_id='+chapter_id
-                await get(url).then(res=>{
-
-                    console.log(JSON.stringify(res))
-                    if(res.data.code === '200'){
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
-                        this.getChapterInfoByLessonId();
-                    }else {
-                        this.$message({
-                            type: 'error',
-                            message: '服务器异常，暂时无法删除!'
-                        });
-
-                    }
-
-                });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
+    delChapter(chapter_id) {
+      this.$confirm('此操作将永久删除该章节, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        let url = this.$root.URL + '/back/delChapterInEdit?chapter_id=' + chapter_id;
+        await get(url).then(res => {
+          if (res.data.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
             });
-        },
-
-
-        addChapter() {
-            this.$refs.submit.validate(valid => {
-                this.form.lesson_id = this.lesson_id
-                this.chapterList.push({ chapter_name:this.form.chapter_name,
-                    chapter_no:this.form.chapter_no,
-                    description:this.form.description,
-                    sonChapterList:[]})
-
-                console.log(JSON.stringify(this.chapterList));
-                this.dialog = false;
-                this.form = {};
-
+            this.getChapterInfoByLessonId();
+          } else {
+            this.$message({
+              type: 'error',
+              message: '服务器异常，暂时无法删除!'
             });
 
-        },
-        cancelForm() {
+          }
 
-            this.dialog = false;
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
 
-            this.form = {};
-        },
-    },
-    created() {
-        //11-22
-        console.log(this.tab_index)
-        console.log('isAddLesson '+this.isAddLesso)
 
-        if(!(this.isAddLesso) && this.tab_index === 1){
-            alert("xxx")
-            this.$message.error("还未添加课程，请添加课程之后再添加对应章节信息")
-        }
+    addChapter() {
+      this.$refs.submit.validate(valid => {
+        this.form.lesson_id = this.lesson_id;
+        this.chapterList.push({
+          chapter_name: this.form.chapter_name,
+          chapter_no: this.form.chapter_no,
+          description: this.form.description,
+          sonChapterList: []
+        });
+        this.dialog = false;
+        this.form = {};
+      });
+
     },
-    watch: {
-        lesson_id(val) {
-            this.lessonId = val //对父组件传过来的值进行监听，如果改变也对子组件内部的值进行改变
-        },
-        isAddLesson(val){
-            this.isAddLesso = val;
-        },
-        tabIndex(val){
-            this.tab_index = val;
-        },
+    cancelForm() {
+
+      this.dialog = false;
+
+      this.form = {};
+    }
+  },
+  created() {
+    //11-22
+    console.log(this.tab_index);
+    if (!(this.isAddLesso) && this.tab_index === 1) {
+      alert('xxx');
+      this.$message.error('还未添加课程，请添加课程之后再添加对应章节信息');
+    }
+  },
+  watch: {
+    lesson_id(val) {
+      this.lessonId = val; //对父组件传过来的值进行监听，如果改变也对子组件内部的值进行改变
     },
+    isAddLesson(val) {
+      this.isAddLesso = val;
+    },
+    tabIndex(val) {
+      this.tab_index = val;
+    }
+  }
 };
 </script>
 
 <style scoped>
-.secondCard{
-    background-color: white;
-    height: auto;
-    width: 60%;
-    margin-left: 20px;
+.secondCard {
+  background-color: white;
+  height: auto;
+  width: 60%;
+  margin-left: 20px;
 }
-.chapter-index{
-    display: inline-block;
-    line-height: 30px;
-    text-align: center;
-    background-color: #fdf5e6;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 12px;
+
+.chapter-index {
+  display: inline-block;
+  line-height: 30px;
+  text-align: center;
+  background-color: #fdf5e6;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 12px;
 }
 </style>
