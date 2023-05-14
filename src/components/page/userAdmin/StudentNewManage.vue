@@ -9,7 +9,7 @@
       </el-col>
       <el-col :span="2">
         <el-upload
-          class=""
+          list-type="text"
           ref="upload"
           :action="uploadUrl"
           :on-change="beforeUpload"
@@ -40,7 +40,7 @@
         header-cell-class-name="table-header"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="user_id" label="序号" width="100px"></el-table-column>
+        <el-table-column type='index' label="序号" width="100px"></el-table-column>
         <el-table-column prop="username" label="用户名" width="150px"></el-table-column>
         <el-table-column prop="name" label="姓名" width="150px"></el-table-column>
         <el-table-column prop="sex" label="性别" with="50px"></el-table-column>
@@ -510,7 +510,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.el-upload--text {
+  width: 80px;
+  height: 33px;
+  border: none;
+}
 .top {
   display: flex;
   justify-content: left;

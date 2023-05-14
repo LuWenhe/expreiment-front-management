@@ -55,7 +55,7 @@ router.beforeEach((to, from, next) => {
 
   if (!token && to.path !== '/login') {
     next('/login');
-  } else if (token && to.path === '/backAdmin/login') {
+  } else if (token && to.path === '/login') {
     next('/dashboard')
   } else if (to.meta.permission) {
   } else {
