@@ -1,4 +1,4 @@
-<template xmlns:v='http://www.w3.org/1999/xhtml'>
+<template>
   <div class='wrapper'>
     <v-head></v-head>
     <vside-bar></vside-bar>
@@ -18,11 +18,10 @@
 </template>
 
 <script>
-import vHead from './Header.vue';
-import vsideBar from './sideBar';
-
-import vTags from './Tags.vue';
-import bus from './bus';
+import vHead from './Header.vue'
+import vsideBar from './sideBar'
+import vTags from './Tags.vue'
+import bus from './bus'
 
 export default {
   data() {

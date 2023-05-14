@@ -168,7 +168,7 @@ export default new Router({
         },
         {
           path: "/studentManage",
-          component: () => import("@/components/page/userAdmin/studentManage"),
+          component: () => import("@/components/page/userAdmin/StudentNewManage.vue"),
           name: "/studentManage",
           meta: {title: "学员管理"}
         },
@@ -179,10 +179,10 @@ export default new Router({
           meta: {title: "教师管理"}
         },
         {
-          path: "/studentNewManage",
-          component: () => import("@/components/page/userAdmin/StudentNewManage.vue"),
-          name: "/studentNewManage",
-          meta: {title: "学员管理2"}
+          path: '/clazzManage',
+          component: () => import('@/components/page/userAdmin/ClazzManage.vue'),
+          name: '/clazzManage',
+          meta: {title: '班级管理'}
         }
       ]
     }

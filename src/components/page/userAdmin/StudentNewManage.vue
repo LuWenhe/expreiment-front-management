@@ -40,9 +40,10 @@
         header-cell-class-name="table-header"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="序号" width="150px"></el-table-column>
+        <el-table-column prop="user_id" label="序号" width="100px"></el-table-column>
+        <el-table-column prop="username" label="用户名" width="150px"></el-table-column>
         <el-table-column prop="name" label="姓名" width="150px"></el-table-column>
-        <el-table-column prop="sex" label="性别" with="150px"></el-table-column>
+        <el-table-column prop="sex" label="性别" with="50px"></el-table-column>
         <el-table-column prop="birthday" label="生日" width="150px"></el-table-column>
         <el-table-column prop="workPlace" label="单位" width="150px"></el-table-column>
         <el-table-column prop="job" label="岗位" width="150px"></el-table-column>
@@ -70,6 +71,9 @@
     <!-- 添加学生 -->
     <el-dialog class="student-dialog" title="添加学生" width="35%" :visible.sync="addDialogFormVisible">
       <el-form :model="studentForm" :rules="studentRules" ref="addRuleForm" label-width="100px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="studentForm.username"></el-input>
+        </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="studentForm.name"></el-input>
         </el-form-item>
@@ -115,6 +119,9 @@
     <!-- 修改学生 -->
     <el-dialog class="student-dialog" title="更新信息" width="35%" :visible.sync="editDialogFormVisible">
       <el-form :model="editStudentForm" :rules="studentRules" ref="editRuleForm" label-width="100px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editStudentForm.username"></el-input>
+        </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="editStudentForm.name"></el-input>
         </el-form-item>
@@ -186,6 +193,7 @@ export default {
       editDialogFormVisible: false,
       studentForm: {
         id: '',
+        username: '',
         name: '',
         sex: '',
         birthday: '',
@@ -200,6 +208,7 @@ export default {
       },
       editStudentForm: {
         id: '',
+        username: '',
         name: '',
         sex: '',
         birthday: '',
@@ -214,6 +223,9 @@ export default {
       provinceList: [],
       formLabelWidth: '100px',
       studentRules: {
+        username: [
+          {required: true, message: '请输入用户名', trigger: 'blur'}
+        ],
         name: [
           {required: true, message: '请输入姓名', trigger: 'blur'}
         ],
@@ -316,7 +328,7 @@ export default {
       })
     },
     getAllStudents() {
-      let path = this.$root.URL + '/userBack/getStudents'
+      let path = this.$root.URL + '/userBack/getAllStudents'
 
       let obj = {
         currentPage: this.pageInfo.pageNum,
@@ -347,7 +359,7 @@ export default {
     submitAddStudent(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let url = this.$root.URL + '/userBack/addOneStudent'
+          let url = this.$root.URL + '/userBack/addStudent'
           let studentForm = this.studentForm
           let workPlace
 
@@ -383,8 +395,10 @@ export default {
       let studentIds = []
 
       studentObjs.forEach(item => {
-        studentIds.push(item.id)
+        studentIds.push(item.user_id)
       })
+
+      console.log(studentIds)
 
       let url = this.$root.URL + '/userBack/deleteStudents'
       let ids = JSON.stringify(studentIds)
@@ -414,7 +428,8 @@ export default {
       this.multipleSelection = val
     },
     editStudent(index, row) {
-      this.editStudentForm.id = row.id
+      this.editStudentForm.id = row.user_id
+      this.editStudentForm.username = row.username
       this.editStudentForm.name = row.name
       this.editStudentForm.sex = row.sex
       this.editStudentForm.birthday = row.birthday
@@ -444,12 +459,12 @@ export default {
       this.editStudentForm.department1 = department1
       this.editStudentForm.department2 = department2
 
-      this.editDialogFormVisible = true;
+      this.editDialogFormVisible = true
     },
     submitEditStudent(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let url = this.$root.URL + '/userBack/editStudentInfo'
+          let url = this.$root.URL + '/userBack/editStudent'
           let editStudentForm = this.editStudentForm
           let workPlace
 

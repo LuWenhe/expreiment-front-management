@@ -10,11 +10,13 @@
       unique-opened
       router
     >
-      <template v-if="this.role=='admin'">
+      <!-- 如果是管理员 -->
+      <template v-if="role === 'admin'">
         <template v-for="item in items_admin">
           <template v-if="item.child">
             <el-submenu :index="item.index">
-              <template slot="title"><i :class="item.icon"></i><span>{{ item.title }}</span>
+              <template slot="title">
+                <i :class="item.icon"></i><span>{{ item.title }}</span>
               </template>
               <template v-for="item1 in item.child ">
                 <el-menu-item
@@ -36,7 +38,8 @@
           </template>
         </template>
       </template>
-      <template v-else-if="this.role=='teacher'">
+      <!-- 如果是教师 -->
+      <template v-else-if="role === 'teacher'">
         <template v-for="item in items_teacher">
           <template v-if="item.child">
             <el-submenu :index="item.index">
@@ -47,7 +50,8 @@
                   :index="item1.index"
                   :key="item1.index"
                 ><i :class="item1.icon"></i>
-                  <span slot="title">{{ item1.title }}</span></el-menu-item>
+                  <span slot="title">{{ item1.title }}</span>
+                </el-menu-item>
               </template>
             </el-submenu>
           </template>
@@ -62,6 +66,7 @@
           </template>
         </template>
       </template>
+      <!-- 如果是学员 -->
       <template v-else>
         <template v-for="item in items_student">
           <template v-if="item.child">
@@ -73,7 +78,8 @@
                   :index="item1.index"
                   :key="item1.index"
                 ><i :class="item1.icon"></i>
-                  <span slot="title">{{ item1.title }}</span></el-menu-item>
+                  <span slot="title">{{ item1.title }}</span>
+                </el-menu-item>
               </template>
             </el-submenu>
           </template>
@@ -93,7 +99,7 @@
 </template>
 
 <script>
-import bus from '../common/bus';
+import bus from '../common/bus'
 
 export default {
   data() {
@@ -164,26 +170,27 @@ export default {
         {
           'icon': 'el-icon-lx-home',
           'index': '/dashboard',
-          'title': '系统首页',
+          'title': '系统首页'
         },
         {
           'icon': 'el-icon-reading',
           'index': '/lessonIndex',
           'title': '课程管理',
-          'child': [{
-            'icon': 'el-icon-s-order',
-            'index': '/lessonIndex',
-            'title': '课程列表',
-          },
+          'child': [
+            {
+              'icon': 'el-icon-s-order',
+              'index': '/lessonIndex',
+              'title': '课程列表'
+            },
             {
               'icon': 'el-icon-s-management',
               'index': '/tagList',
-              'title': '标签管理',
+              'title': '标签管理'
             },
             {
               'icon': 'el-icon-s-management',
               'index': '/imageAdmin',
-              'title': '工具管理',
+              'title': '工具管理'
             }
           ]
         },
@@ -191,11 +198,12 @@ export default {
           'icon': 'el-icon-set-up',
           'index': '/lunboManage',
           'title': '系统管理',
-          'child': [{
-            'icon': 'el-icon-s-order',
-            'index': '/lunboManage',
-            'title': '轮播管理',
-          }
+          'child': [
+            {
+              'icon': 'el-icon-s-order',
+              'index': '/lunboManage',
+              'title': '轮播管理'
+            }
           ]
         },
         {
@@ -206,66 +214,83 @@ export default {
             {
               'icon': 'el-icon-user',
               'index': '/teacherManage',
-              'title': '教师管理',
+              'title': '教师管理'
             },
             {
               'icon': 'el-icon-user',
               'index': '/studentManage',
-              'title': '学生管理',
-            },
-            {
-              'icon': 'el-icon-user',
-              'index': '/studentNewManage',
-              'title': '学员管理',
+              'title': '学生管理'
             }
           ]
-        }],
-      items_teacher:
-        [{
+        }
+      ],
+      items_teacher: [
+        {
           'icon': 'el-icon-lx-home',
           'index': '/dashboard',
           'title': '系统首页',
         },
-          {
-            'icon': 'el-icon-reading',
-            'index': '/lessonIndex',
-            'title': '课程管理',
-            'child': [{
+        {
+          'icon': 'el-icon-reading',
+          'index': '/lessonIndex',
+          'title': '课程管理',
+          'child': [
+            {
               'icon': 'el-icon-s-order',
               'index': '/lessonIndex',
-              'title': '个人课程管理',
+              'title': '个人课程管理'
             },
-              {
-                'icon': 'el-icon-s-management',
-                'index': '/imageAdmin',
-                'title': '实验软件管理',
-              }]
-          }],
-      items_student:
-        [{
+            {
+              'icon': 'el-icon-s-management',
+              'index': '/imageAdmin',
+              'title': '实验软件管理'
+            }
+          ]
+        },
+        {
+          'icon': 'el-icon-s-custom',
+          'index': '/userManage',
+          'title': '用户管理',
+          'child': [
+            {
+              'icon': 'el-icon-user',
+              'index': '/studentManage',
+              'title': '学生管理',
+            }
+          ]
+        },
+        {
+          'icon': 'el-icon-school',
+          'index': '',
+          'title': '班级管理',
+          'child': [
+            {
+              'icon': 'el-icon-s-custom',
+              'index': '/clazzManage',
+              'title': '班级列表',
+            }
+          ]
+        }
+      ],
+      items_student: [
+        {
           'icon': 'el-icon-lx-home',
           'index': '/dashboard',
-          'title': '系统首页',
-        }]
-
-    };
+          'title': '系统首页'
+        }
+      ]
+    }
   },
   methods: {
-
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
-
     UniMainPage() {
       this.$router.push('/union');
     },
-    setSideBar() {
-
-    },
-
     onclick() {
       console.log('被点击');
     }
@@ -287,14 +312,16 @@ export default {
 
   },
   created() {
-    if (localStorage.getItem("role") === '0') {
+    let role = localStorage.getItem("role")
+
+    if (role === '0') {
       this.role = 'admin'
-    } else if (localStorage.getItem("role") === '1') {
-      this.role = 'student'
+    } else if (role === '1') {
+      this.role = 'teacher'
     } else {
       this.role = 'student'
     }
-    this.setSideBar()
+
     bus.$on('collapse', (msg) => {
       this.collapse = msg;
       bus.$emit('collapse-content', msg);
