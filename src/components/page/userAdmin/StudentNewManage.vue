@@ -1,35 +1,47 @@
 <template>
   <el-row class="student-manage-box" justify="start">
+    <!-- 头部 -->
     <el-row class="top">
-      <el-col :span="1">
-        <el-button type="primary" @click="addDialogFormVisible = true">添加</el-button>
-      </el-col>
-      <el-col :span="1">
+      <el-row class='input'>
+        <span>请选择班级：</span>
+        <el-select v-model="defaultVal" placeholder="请选择" @change='changeSelect'>
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-row>
+      <el-row class='button-group'>
         <el-button type="danger" @click="delStudents">删除</el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-upload
-          list-type="text"
-          ref="upload"
-          :action="uploadUrl"
-          :on-change="beforeUpload"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :limit="1"
-          :on-exceed="uploadExceed"
-          :on-success="uploadSuccess"
-          :on-error="uploadError"
-          :headers="uploadHeaders"
-          :file-list="fileList"
-          :auto-upload="false">
-          <el-button type="primary" @click="upload">上传文件</el-button>
-          <div class="el-upload__tip" slot="tip">只能上传xlsx文件，且不超过10M，一次只能上传一个</div>
-        </el-upload>
-      </el-col>
-      <el-col :span="2">
-        <el-button type="success" @click="submitUpload">上传到服务器</el-button>
-      </el-col>
+        <el-button type="primary" @click="addDialogFormVisible = true">添加</el-button>
+        <el-button type="success" @click="addDialogFormVisible = true">上传文件</el-button>
+      </el-row>
+<!--      <el-col :span="2">-->
+<!--        <el-upload-->
+<!--          list-type="text"-->
+<!--          ref="upload"-->
+<!--          :action="uploadUrl"-->
+<!--          :on-change="beforeUpload"-->
+<!--          :on-remove="handleRemove"-->
+<!--          :before-remove="beforeRemove"-->
+<!--          :limit="1"-->
+<!--          :on-exceed="uploadExceed"-->
+<!--          :on-success="uploadSuccess"-->
+<!--          :on-error="uploadError"-->
+<!--          :headers="uploadHeaders"-->
+<!--          :file-list="fileList"-->
+<!--          :auto-upload="false">-->
+<!--          <el-button type="primary" @click="upload">上传文件</el-button>-->
+<!--          <div class="el-upload__tip" slot="tip">只能上传xlsx文件，且不超过10M，一次只能上传一个</div>-->
+<!--        </el-upload>-->
+<!--      </el-col>-->
+<!--      <el-col :span="2">-->
+<!--        <el-button type="success" @click="submitUpload">上传到服务器</el-button>-->
+<!--      </el-col>-->
     </el-row>
+    <!-- 内容部分 -->
     <el-row>
       <el-table
         :data="tableData"
@@ -41,8 +53,8 @@
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type='index' label="序号" width="100px"></el-table-column>
-        <el-table-column prop="username" label="用户名" width="150px"></el-table-column>
-        <el-table-column prop="name" label="姓名" width="150px"></el-table-column>
+        <el-table-column prop="username" label="用户名" width="130px"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="130px"></el-table-column>
         <el-table-column prop="sex" label="性别" with="50px"></el-table-column>
         <el-table-column prop="birthday" label="生日" width="150px"></el-table-column>
         <el-table-column prop="workPlace" label="单位" width="150px"></el-table-column>
@@ -57,6 +69,7 @@
         </el-table-column>
       </el-table>
     </el-row>
+    <!-- 分页 -->
     <el-row>
       <el-pagination
         @size-change="handleSizeChange"
@@ -168,8 +181,8 @@
 </template>
 
 <script>
-import {phoneCheck} from "@/utils/validator"
-import {post, get} from "@/api"
+import { phoneCheck } from '@/utils/validator'
+import { get, post } from '@/api'
 
 const validatorPhoneNum = (rule, value, callback) => {
   if (!value) {
@@ -191,6 +204,8 @@ export default {
       fileList: [],
       addDialogFormVisible: false,
       editDialogFormVisible: false,
+      defaultVal: '',
+      options: [],
       studentForm: {
         id: '',
         username: '',
@@ -264,13 +279,13 @@ export default {
       },
       uploadUrl: this.$root.URL + '/userBack/uploadFromExcel',
       uploadHeaders: {
-        "token": localStorage.getItem('token')
-      }
+        'token': localStorage.getItem('token')
+      },
     }
   },
   created() {
-    this.getAllStudents()
     this.getAllProvinces()
+    this.getClazzList()
   },
   methods: {
     beforeUpload(file, fileList) {
@@ -318,6 +333,35 @@ export default {
         this.$message.error('文件上传失败!');
       }
     },
+    getClazzList() {
+      let url = this.$root.URL + '/clazz/getClazzList'
+
+      let params = {
+        teacherId: localStorage.getItem('user_id')
+      }
+
+      get(url, params).then(res => {
+        if (res.data.code === '200') {
+          let clazzList = res.data.data
+          let clazzSelect = []
+
+          clazzList.forEach(item => {
+            let option = {}
+            // value是id, label是name
+            option.value = item.id
+            option.label = item.name
+            clazzSelect.push(option)
+          })
+
+          // 下拉框的默认选项
+          // this.defaultVal = clazzSelect[0].value
+          this.options = clazzSelect
+        }
+      })
+    },
+    changeSelect(value) {
+      this.getStudentsByClazzId(value)
+    },
     getAllProvinces() {
       let url = this.$root.URL + '/getAllProvinces'
 
@@ -327,15 +371,17 @@ export default {
         }
       })
     },
-    getAllStudents() {
-      let path = this.$root.URL + '/userBack/getAllStudents'
+    // 根据班级id获取该班级下的所有学生
+    getStudentsByClazzId(clazzId) {
+      let path = this.$root.URL + '/clazz/getStudents'
 
-      let obj = {
+      let params = {
+        clazzId: clazzId,
         currentPage: this.pageInfo.pageNum,
         pageSize: this.pageInfo.pageSize
       }
 
-      post(path, obj).then(res => {
+      get(path, params).then(res => {
         if (res.status === 200) {
           let tableData = res.data.list
           let data = res.data
@@ -421,9 +467,6 @@ export default {
         })
       })
     },
-    upload() {
-
-    },
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
@@ -458,7 +501,6 @@ export default {
       this.editStudentForm.province = province
       this.editStudentForm.department1 = department1
       this.editStudentForm.department2 = department2
-
       this.editDialogFormVisible = true
     },
     submitEditStudent(formName) {
@@ -505,7 +547,7 @@ export default {
     },
     submitUpload() {
       this.$refs.upload.submit()
-    },
+    }
   }
 }
 </script>
@@ -516,9 +558,9 @@ export default {
   height: 33px;
   border: none;
 }
+
 .top {
   display: flex;
-  justify-content: left;
   justify-items: center;
 }
 
@@ -528,5 +570,9 @@ export default {
 
 .student-table {
   margin-top: 10px;
+}
+
+.button-group {
+  margin-left: auto;
 }
 </style>
