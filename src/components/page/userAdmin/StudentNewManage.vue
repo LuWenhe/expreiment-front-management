@@ -4,7 +4,7 @@
     <el-row class="top">
       <el-row class='input'>
         <span>请选择班级：</span>
-        <el-select v-model="defaultVal" placeholder="请选择" @change='changeSelect'>
+        <el-select v-model="clazzId" placeholder="请选择" @change='changeSelect'>
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -14,7 +14,7 @@
         </el-select>
       </el-row>
       <el-row class='button-group'>
-        <el-button type="danger" @click="delStudents">删除</el-button>
+        <el-button type="danger" @click="delStudents">删除多个</el-button>
         <el-button type="primary" @click="addDialogFormVisible = true">添加</el-button>
         <el-button type="success" @click="addDialogFormVisible = true">上传文件</el-button>
       </el-row>
@@ -82,7 +82,7 @@
       </el-pagination>
     </el-row>
     <!-- 添加学生 -->
-    <el-dialog class="student-dialog" title="添加学生" width="35%" :visible.sync="addDialogFormVisible">
+    <el-dialog ref='el-form' class="student-dialog" title="添加学生" width="35%" :visible.sync="addDialogFormVisible">
       <el-form :model="studentForm" :rules="studentRules" ref="addRuleForm" label-width="100px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="studentForm.username"></el-input>
@@ -204,7 +204,7 @@ export default {
       fileList: [],
       addDialogFormVisible: false,
       editDialogFormVisible: false,
-      defaultVal: '',
+      clazzId: '',
       options: [],
       studentForm: {
         id: '',
@@ -422,13 +422,25 @@ export default {
           }
 
           this.studentForm.workPlace = workPlace
+          this.studentForm.clazzId = this.clazzId
 
-          post(url, this.studentForm).then(res => {
-            if (res.data.code === '200') {
-              this.$message.success('添加成功!')
-              this.addDialogFormVisible = false
-              this.reload()
-            }
+          this.$confirm('是否为当前班级添加学生?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            post(url, this.studentForm).then(res => {
+              if (res.data.code === '200') {
+                this.$message.success('添加成功!')
+                this.addDialogFormVisible = false
+                this.getStudentsByClazzId(this.clazzId)
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消添加'
+            })
           })
         } else {
           console.log('error submit!!')
@@ -441,23 +453,20 @@ export default {
       let studentIds = []
 
       studentObjs.forEach(item => {
-        studentIds.push(item.user_id)
+        studentIds.push(item.id)
       })
 
-      console.log(studentIds)
-
       let url = this.$root.URL + '/userBack/deleteStudents'
-      let ids = JSON.stringify(studentIds)
 
       this.$confirm('是否删除学生信息?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        post(url, ids).then(res => {
+        post(url, studentIds).then(res => {
           if (res.data.code === '200') {
             this.$message.success('删除成功')
-            this.reload()
+            this.getStudentsByClazzId(this.clazzId)
           }
         })
       }).catch(() => {
@@ -471,7 +480,8 @@ export default {
       this.multipleSelection = val
     },
     editStudent(index, row) {
-      this.editStudentForm.id = row.user_id
+      // 回显
+      this.editStudentForm.id = row.id
       this.editStudentForm.username = row.username
       this.editStudentForm.name = row.name
       this.editStudentForm.sex = row.sex
@@ -523,12 +533,13 @@ export default {
           }
 
           this.editStudentForm.workPlace = workPlace
+          this.editStudentForm.clazzId = this.clazzId
 
           post(url, this.editStudentForm).then(res => {
             if (res.data.code === '200') {
               this.$message.success('更新成功!')
               this.editDialogFormVisible = false
-              this.reload()
+              this.getStudentsByClazzId(this.clazzId)
             }
           })
         } else {
@@ -539,11 +550,11 @@ export default {
     },
     handleSizeChange(pageSize) {
       this.pageInfo.pageSize = pageSize
-      this.getAllStudents()
+      this.getStudentsByClazzId(this.clazzId)
     },
     handleCurrentChange(pageNum) {
       this.pageInfo.pageNum = pageNum
-      this.getAllStudents()
+      this.getStudentsByClazzId(this.clazzId)
     },
     submitUpload() {
       this.$refs.upload.submit()
