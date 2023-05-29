@@ -1,35 +1,25 @@
 <template>
   <el-row class="student-manage-box" justify="start">
+    <!-- 头部 -->
     <el-row class="top">
-      <el-col :span="2">
-        <el-button type="primary" @click="addDialogFormVisible = true">添加</el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-button type="danger" @click="delStudents">删除</el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-upload
-          list-type="text"
-          ref="upload"
-          :action="uploadUrl"
-          :on-change="beforeUpload"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :limit="1"
-          :on-exceed="uploadExceed"
-          :on-success="uploadSuccess"
-          :on-error="uploadError"
-          :headers="uploadHeaders"
-          :file-list="fileList"
-          :auto-upload="false">
-          <el-button type="primary" @click="upload">上传文件</el-button>
-          <div class="el-upload__tip" slot="tip">只能上传xlsx文件，且不超过10M，一次只能上传一个</div>
-        </el-upload>
-      </el-col>
-      <el-col :span="2">
-        <el-button type="success" @click="submitUpload">上传到服务器</el-button>
-      </el-col>
+      <el-row class='input'>
+        <span>请选择班级：</span>
+        <el-select v-model="clazzId" placeholder="请选择" @change='changeSelect'>
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-row>
+      <el-row class='button-group'>
+        <el-button type="danger" @click="delStudents">删除多个</el-button>
+        <el-button type="primary" @click="addStudentBtn">添加学生</el-button>
+        <el-button type="success" @click="uploadBtn">上传文件</el-button>
+      </el-row>
     </el-row>
+    <!-- 内容部分 -->
     <el-row>
       <el-table
         :data="tableData"
@@ -41,8 +31,8 @@
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type='index' label="序号" width="100px"></el-table-column>
-        <el-table-column prop="username" label="用户名" width="150px"></el-table-column>
-        <el-table-column prop="name" label="姓名" width="150px"></el-table-column>
+        <el-table-column prop="username" label="用户名" width="130px"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="130px"></el-table-column>
         <el-table-column prop="sex" label="性别" with="50px"></el-table-column>
         <el-table-column prop="birthday" label="生日" width="150px"></el-table-column>
         <el-table-column prop="workPlace" label="单位" width="150px"></el-table-column>
@@ -57,6 +47,7 @@
         </el-table-column>
       </el-table>
     </el-row>
+    <!-- 分页 -->
     <el-row>
       <el-pagination
         @size-change="handleSizeChange"
@@ -68,8 +59,8 @@
         :total="pageInfo.total">
       </el-pagination>
     </el-row>
-    <!-- 添加学生 -->
-    <el-dialog class="student-dialog" title="添加学生" width="35%" :visible.sync="addDialogFormVisible">
+    <!-- 添加单个学生 -->
+    <el-dialog title="添加学生" width="35%" :visible.sync="addDialogFormVisible">
       <el-form :model="studentForm" :rules="studentRules" ref="addRuleForm" label-width="100px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="studentForm.username"></el-input>
@@ -116,8 +107,28 @@
         <el-button @click="addDialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- 根据文件添加学生 -->
+    <el-dialog title='上传文件' width='35%' :visible.sync='addMultiDialogFormVisible'>
+      <el-upload
+        list-type="text"
+        ref="upload"
+        action=""
+        :on-change="beforeUpload"
+        :on-remove="handleRemove"
+        :before-remove="beforeRemove"
+        :limit="1"
+        :on-exceed="uploadExceed"
+        :headers="uploadHeaders"
+        :file-list="fileList"
+        :auto-upload="false">
+        <el-button type="primary">点击上传</el-button>
+      </el-upload>
+      <div style='margin-top: 10px'>只能上传xlsx文件，且不超过10M，一次只能上传一个</div>
+      <el-button type="success" @click='submitToServer'>上传到服务器</el-button>
+      <el-button @click='btnCancel'>取消</el-button>
+    </el-dialog>
     <!-- 修改学生 -->
-    <el-dialog class="student-dialog" title="更新信息" width="35%" :visible.sync="editDialogFormVisible">
+    <el-dialog title="更新信息" width="35%" :visible.sync="editDialogFormVisible">
       <el-form :model="editStudentForm" :rules="studentRules" ref="editRuleForm" label-width="100px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="editStudentForm.username"></el-input>
@@ -166,9 +177,11 @@
     </el-dialog>
   </el-row>
 </template>
+
 <script>
-import {phoneCheck} from "@/utils/validator"
-import {post, get} from "@/api"
+import { phoneCheck } from '@/utils/validator'
+import { get, post } from '@/api'
+
 const validatorPhoneNum = (rule, value, callback) => {
   if (!value) {
     return callback(new Error("请输入手机号码"));
@@ -180,6 +193,7 @@ const validatorPhoneNum = (rule, value, callback) => {
     }
   }
 }
+
 export default {
   inject: ['reload'],
   name: "StudentNewManage",
@@ -188,6 +202,9 @@ export default {
       fileList: [],
       addDialogFormVisible: false,
       editDialogFormVisible: false,
+      addMultiDialogFormVisible: false,
+      clazzId: '',
+      options: [],
       studentForm: {
         id: '',
         username: '',
@@ -261,74 +278,118 @@ export default {
       },
       uploadUrl: this.$root.URL + '/userBack/uploadFromExcel',
       uploadHeaders: {
-        "token": localStorage.getItem('token')
-      }
+        'token': localStorage.getItem('token')
+      },
     }
   },
   created() {
-    this.getAllStudents()
     this.getAllProvinces()
+    this.getClazzList()
   },
   methods: {
+    addStudentBtn() {
+      // 如果没有选择班级
+      if (typeof this.clazzId !== 'number') {
+        this.$message.warning('请选择班级!')
+      } else {
+        this.addDialogFormVisible = true
+      }
+    },
+    uploadBtn() {
+      // 如果没有选择班级
+      if (typeof this.clazzId !== 'number') {
+        this.$message.warning('请选择班级!')
+      } else {
+        this.addMultiDialogFormVisible = true
+      }
+    },
     beforeUpload(file, fileList) {
       const { name, size } = file
       const index = name.lastIndexOf('.')
-      const fileType = name.substr(index + 1)
+      const fileType = name.substring(index + 1)
       const acceptFileTypes = ['xlsx']
+
       // 判断文件类型
       if(!acceptFileTypes.includes(fileType)) {
         this.$notify.error('文件类型错误，请重新上传!')
         return false
       }
+
       // 判断文件大小
       if(size > 10 * 1024 * 1024) {
         this.$message.error('文件大小超过10M，请重新上传！')
         return false
       }
+
       this.fileList = fileList
       return true
     },
-    handleRemove(file, fileList) {
+    handleRemove(file) {
       this.fileList.pop()
       this.$message.success('文件' + file.name + '移除成功!')
     },
     uploadExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
-    beforeRemove(file, fileList) {
+    beforeRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
-    uploadSuccess(res) {
-      if (res.code === '200') {
-        this.$message.success('文件上传成功!')
-        this.reload()
+    getClazzList() {
+      let url = this.$root.URL + '/clazz/getClazzList'
+
+      let params = {
+        teacherId: localStorage.getItem('user_id')
       }
+
+      get(url, params).then(res => {
+        if (res.data.code === '200') {
+          let clazzList = res.data.data
+          let clazzSelect = []
+
+          clazzList.forEach(item => {
+            let option = {}
+            // value是id, label是name
+            option.value = item.id
+            option.label = item.name
+            clazzSelect.push(option)
+          })
+
+          // 下拉框的默认选项
+          // this.defaultVal = clazzSelect[0].value
+          this.options = clazzSelect
+        }
+      })
     },
-    uploadError(res) {
-      if (res.code !== '200') {
-        this.$message.error('文件上传失败!');
-      }
+    changeSelect(value) {
+      this.getStudentsByClazzId(value)
     },
     getAllProvinces() {
       let url = this.$root.URL + '/getAllProvinces'
+
       get(url).then(res => {
         if (res.data.code === "200") {
           this.provinceList = res.data.data
         }
       })
     },
-    getAllStudents() {
-      let path = this.$root.URL + '/userBack/getAllStudents'
-      let obj = {
+    // 根据班级id获取该班级下的所有学生
+    getStudentsByClazzId(clazzId) {
+      let path = this.$root.URL + '/clazz/getStudents'
+
+      let params = {
+        clazzId: clazzId,
         currentPage: this.pageInfo.pageNum,
         pageSize: this.pageInfo.pageSize
       }
-      post(path, obj).then(res => {
+
+      get(path, params).then(res => {
         if (res.status === 200) {
           let tableData = res.data.list
           let data = res.data
+
           if (tableData != null) {
             this.tableData = tableData
+
             this.pageInfo = {
               pageNum: data.pageNum,
               pageSize: data.pageSize,
@@ -348,23 +409,40 @@ export default {
           let url = this.$root.URL + '/userBack/addStudent'
           let studentForm = this.studentForm
           let workPlace
+
           if (studentForm.department1 === ' ') {
             this.$message.error('请输入单位名称!')
             return false
           }
+
           if (studentForm.department2 === ' ') {
             workPlace = studentForm.province + '/' + studentForm.department1
           } else {
             workPlace = studentForm.province + '/' + studentForm.department1
               + '/' + studentForm.department2
           }
+
           this.studentForm.workPlace = workPlace
-          post(url, this.studentForm).then(res => {
-            if (res.data.code === '200') {
-              this.$message.success('添加成功!')
-              this.addDialogFormVisible = false
-              this.reload()
-            }
+          this.studentForm.clazzId = this.clazzId
+
+          this.$confirm('是否为当前班级添加学生?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            post(url, this.studentForm).then(res => {
+              if (res.data.code === '200') {
+                this.$message.success('添加成功!')
+                // 关闭dialog
+                this.addDialogFormVisible = false
+                this.getStudentsByClazzId(this.clazzId)
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消添加'
+            })
           })
         } else {
           console.log('error submit!!')
@@ -375,21 +453,22 @@ export default {
     delStudents() {
       let studentObjs = this.multipleSelection
       let studentIds = []
+
       studentObjs.forEach(item => {
-        studentIds.push(item.user_id)
+        studentIds.push(item.id)
       })
-      console.log(studentIds)
+
       let url = this.$root.URL + '/userBack/deleteStudents'
-      let ids = JSON.stringify(studentIds)
+
       this.$confirm('是否删除学生信息?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        post(url, ids).then(res => {
+        post(url, studentIds).then(res => {
           if (res.data.code === '200') {
             this.$message.success('删除成功')
-            this.reload()
+            this.getStudentsByClazzId(this.clazzId)
           }
         })
       }).catch(() => {
@@ -399,13 +478,12 @@ export default {
         })
       })
     },
-    upload() {
-    },
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
     editStudent(index, row) {
-      this.editStudentForm.id = row.user_id
+      // 回显
+      this.editStudentForm.id = row.id
       this.editStudentForm.username = row.username
       this.editStudentForm.name = row.name
       this.editStudentForm.sex = row.sex
@@ -414,10 +492,14 @@ export default {
       this.editStudentForm.major = row.major
       this.editStudentForm.qualification = row.qualification
       this.editStudentForm.phone = row.phone
+
       let workPlace = row.workPlace
+
       let province = '', department1 = '', department2 = ''
+
       let firstIndex = workPlace.indexOf('/')
       let lastIndex = workPlace.lastIndexOf('/')
+
       // 如果只有一个/
       if (firstIndex === lastIndex) {
         province = workPlace.substring(0, firstIndex)
@@ -427,6 +509,7 @@ export default {
         department1 = workPlace.substring(firstIndex + 1, lastIndex)
         department2 = workPlace.substring(lastIndex + 1, workPlace.length)
       }
+
       this.editStudentForm.province = province
       this.editStudentForm.department1 = department1
       this.editStudentForm.department2 = department2
@@ -438,22 +521,27 @@ export default {
           let url = this.$root.URL + '/userBack/editStudent'
           let editStudentForm = this.editStudentForm
           let workPlace
+
           if (editStudentForm.department1 === '') {
             this.$message.error('请输入单位名称!')
             return false
           }
+
           if (editStudentForm.department2 === '') {
             workPlace = editStudentForm.province + '/' + editStudentForm.department1
           } else {
             workPlace = editStudentForm.province + '/' + editStudentForm.department1
               + '/' + editStudentForm.department2
           }
+
           this.editStudentForm.workPlace = workPlace
+          this.editStudentForm.clazzId = this.clazzId
+
           post(url, this.editStudentForm).then(res => {
             if (res.data.code === '200') {
               this.$message.success('更新成功!')
               this.editDialogFormVisible = false
-              this.reload()
+              this.getStudentsByClazzId(this.clazzId)
             }
           })
         } else {
@@ -464,33 +552,55 @@ export default {
     },
     handleSizeChange(pageSize) {
       this.pageInfo.pageSize = pageSize
-      this.getAllStudents()
+      this.getStudentsByClazzId(this.clazzId)
     },
     handleCurrentChange(pageNum) {
       this.pageInfo.pageNum = pageNum
-      this.getAllStudents()
+      this.getStudentsByClazzId(this.clazzId)
     },
-    submitUpload() {
-      this.$refs.upload.submit()
+    submitToServer() {
+      let formData = new FormData();
+      formData.append('file', this.fileList[0].raw)
+      formData.append('clazzId', this.clazzId)
+
+      let url = this.$root.URL + '/userBack/uploadFromExcel'
+
+      post(url, formData).then(res => {
+        if (res.status === 200) {
+          this.$message.success(res.data.msg)
+          this.addMultiDialogFormVisible = false
+          this.getStudentsByClazzId(this.clazzId)
+        }
+      })
     },
+    btnCancel() {
+      this.addMultiDialogFormVisible = false
+    }
   }
 }
 </script>
+
 <style>
 .el-upload--text {
   width: 80px;
   height: 33px;
   border: none;
 }
+
 .top {
   display: flex;
-  justify-content: left;
   justify-items: center;
 }
+
 .select {
   width: 30%;
 }
+
 .student-table {
   margin-top: 10px;
+}
+
+.button-group {
+  margin-left: auto;
 }
 </style>
