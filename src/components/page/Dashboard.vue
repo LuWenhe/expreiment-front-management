@@ -2,7 +2,7 @@
   <div>
     <!--    <img src="../../assets/img/12222.png" width=100% height=100% />-->
     <el-row :gutter='20'>
-      <el-col :span='6'>
+      <el-col :span='8'>
         <div class='div_style'>
           <div style='width: 20px'></div>
           <img src='@/assets/icon.png' style='width: 90px;height: 90px;display: inline-block;' />
@@ -15,7 +15,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span='6'>
+      <el-col :span='8'>
         <div class='div_style'>
           <div style='width: 20px'></div>
           <img src='@/assets/icon.png' style='width: 90px;height: 90px;display: inline-block;' />

@@ -693,7 +693,6 @@ export default {
     editSubmitChapter() {
       this.$confirm('确定要提交表单吗？')
         .then(_ => {
-
           let url = this.$root.URL + '/back/editChapterInEdit';
           this.$refs.submit_ediCh.validate(valid => {
             const loading = this.$loading({

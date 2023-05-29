@@ -1,10 +1,10 @@
 <template>
   <el-row class="student-manage-box" justify="start">
     <el-row class="top">
-      <el-col :span="1">
+      <el-col :span="2">
         <el-button type="primary" @click="addDialogFormVisible = true">添加</el-button>
       </el-col>
-      <el-col :span="1">
+      <el-col :span="2">
         <el-button type="danger" @click="delStudents">删除</el-button>
       </el-col>
       <el-col :span="2">
