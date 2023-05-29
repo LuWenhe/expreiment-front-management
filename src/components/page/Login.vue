@@ -122,34 +122,35 @@ export default {
                 background: 'rgba(0, 0, 0, 0.7)'
               });
               setTimeout(() => {
-                const self = this
                 let path = this.$root.URL + '/user/login'
 
                 axios.post(path, this.user).then(res => {
-                  if (res.data.code === '200') {
-                    this.$message.success('登录成功');
-                    localStorage.setItem('name', res.data.data.username);
-                    localStorage.setItem('user_id', res.data.data.user_id);
-                    localStorage.setItem('role', res.data.data.role);
-                    localStorage.setItem('token', res.data.token);
-                    this.$router.push('/dashboard');
+                  let data = res.data
+
+                  if (data.code === '200') {
+                    this.$message.success('登录成功')
+                    localStorage.setItem('name', data.data.username)
+                    localStorage.setItem('user_id', data.data.user_id)
+                    localStorage.setItem('role', data.data.role)
+                    localStorage.setItem('token', data.token)
+                    this.$router.push('/dashboard')
                   } else {
-                    this.$message.error('登录失败');
+                    this.$message.error('登录失败')
                   }
-                });
-                loading.close();
-              }, 2000);
+                })
+                loading.close()
+              }, 2000)
             } else {
-              this.$message.error('请输入账号和密码');
-              console.log('error submit!!');
-              this.refreshCode();
-              return false;
+              this.$message.error('请输入账号和密码')
+              console.log('error submit!!')
+              this.refreshCode()
+              return false
             }
           });
         }
       } else {
 
-        this.$message.error('验证码错误！');
+        this.$message.error('验证码错误！')
       }
     }
 

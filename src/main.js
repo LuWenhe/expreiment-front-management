@@ -30,7 +30,6 @@ Vue.prototype.$http = {
   post
 };
 
-// use
 Vue.use(mavonEditor);
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
@@ -38,10 +37,12 @@ Vue.use(VueI18n);
 Vue.use(ElementUI, {
   size: 'small'
 });
+
 const i18n = new VueI18n({
   locale: 'zh',
   messages
 });
+
 Vue.use(Viewer, {
   defaultOptions: {
     zIndex: 9999

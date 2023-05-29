@@ -3,28 +3,26 @@ import axios from 'axios';
 const $http = axios.create({});
 
 export const get = (url, params) => {
-  params = params || {};
+  let paramsInput = {params: params} || {}
   // eslint-disable-next-line no-unused-vars
   return new Promise((resolve, reject) => {
     // axiso 自带 get 和 post 方法
-    $http.get(url, {
+    $http.get(url, paramsInput, {
       headers: {
         'Content-Type': 'application/json',
         'token': localStorage.getItem('token')
       }
     }).then(res => {
-
       resolve(res);
-
       // eslint-disable-next-line no-unused-vars
     }).catch(error => {
-      alert('网络异常');
-    });
-  });
-};
+      alert('网络异常')
+    })
+  })
+}
 
 export const post = (url, params) => {
-  params = params || {};
+  params = params || {}
   // eslint-disable-next-line no-unused-vars
   return new Promise((resolve, reject) => {
     $http.post(url, params, {
@@ -39,11 +37,10 @@ export const post = (url, params) => {
       // }else{
       //     alert(res.data.msg);
       // }
-      resolve(res);
-
+      resolve(res)
       // eslint-disable-next-line no-unused-vars
     }).catch(error => {
-      alert('网络异常');
-    });
-  });
-};
+      alert('网络异常')
+    })
+  })
+}

@@ -331,13 +331,10 @@ export default {
           total: res.data.total,
           // 总页数
           pages: res.data.pages
-        };
-        this.tableData = res.data.list;
+        }
 
-
-      });
-
-
+        this.tableData = res.data.list
+      })
     },
     getData() {
       let path = this.$root.URL + '/userBack/getAllStudent';
