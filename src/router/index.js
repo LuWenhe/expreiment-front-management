@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import Vue from 'vue'
+import Router from 'vue-router'
 
-Vue.use(Router);
-localStorage.getItem("token");
+Vue.use(Router)
 
 export default new Router({
   // routes: [
@@ -168,7 +167,7 @@ export default new Router({
         },
         {
           path: "/studentManage",
-          component: () => import("@/components/page/userAdmin/StudentNewManage.vue"),
+          component: () => import("@/components/page/userAdmin/StudentManage.vue"),
           name: "/studentManage",
           meta: {title: "学员管理"}
         },
@@ -188,4 +187,4 @@ export default new Router({
     }
   ],
   mode: "history"
-});
+})

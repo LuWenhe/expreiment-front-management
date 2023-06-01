@@ -27,7 +27,6 @@
         class="student-table"
         ref="multipleTable"
         stripe
-        header-cell-class-name="table-header"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type='index' label="序号" width="100px"></el-table-column>
@@ -40,7 +39,7 @@
         <el-table-column prop="major" label="专业" width="150px"></el-table-column>
         <el-table-column prop="qualification" label="学历" width="150px"></el-table-column>
         <el-table-column prop="phone" label="手机" width="150px"></el-table-column>
-        <el-table-column label="操作" width="200px" adlign="center">
+        <el-table-column label="操作" width="200px" align="center">
           <template slot-scope="scope">
             <el-button type="primary" @click="editStudent(scope.$index, scope.row)">编辑</el-button>
           </template>
@@ -60,7 +59,7 @@
       </el-pagination>
     </el-row>
     <!-- 添加单个学生 -->
-    <el-dialog title="添加学生" width="35%" :visible.sync="addDialogFormVisible">
+    <el-dialog title="添加学生" width="30%" :visible.sync="addDialogFormVisible">
       <el-form :model="studentForm" :rules="studentRules" ref="addRuleForm" label-width="100px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="studentForm.username"></el-input>
@@ -83,10 +82,8 @@
         <el-form-item label="单位" prop="province">
           <el-select v-model="studentForm.province" class="select">
             <el-option v-for="item in provinceList" :label="item.name" :value="item.name" :key="item.id"></el-option>
-          </el-select>
-          /
-          <el-input v-model="studentForm.department1" style="width: 30%"></el-input>
-          /
+          </el-select>/
+          <el-input v-model="studentForm.department1" style="width: 30%"></el-input>/
           <el-input v-model="studentForm.department2" placeholder="(可选)" style="width: 30%"></el-input>
         </el-form-item>
         <el-form-item label="岗位" prop="job">
@@ -108,7 +105,7 @@
       </div>
     </el-dialog>
     <!-- 根据文件添加学生 -->
-    <el-dialog title='上传文件' width='35%' :visible.sync='addMultiDialogFormVisible'>
+    <el-dialog title='上传文件' width='30%' :visible.sync='addMultiDialogFormVisible'>
       <el-upload
         list-type="text"
         ref="upload"
@@ -128,7 +125,7 @@
       <el-button @click='btnCancel'>取消</el-button>
     </el-dialog>
     <!-- 修改学生 -->
-    <el-dialog title="更新信息" width="35%" :visible.sync="editDialogFormVisible">
+    <el-dialog title="更新学生信息" width="35%" :visible.sync="editDialogFormVisible">
       <el-form :model="editStudentForm" :rules="studentRules" ref="editRuleForm" label-width="100px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="editStudentForm.username"></el-input>
@@ -196,7 +193,7 @@ const validatorPhoneNum = (rule, value, callback) => {
 
 export default {
   inject: ['reload'],
-  name: "StudentNewManage",
+  name: "StudentManage",
   data() {
     return {
       fileList: [],
@@ -342,8 +339,8 @@ export default {
       }
 
       get(url, params).then(res => {
-        if (res.data.code === '200') {
-          let clazzList = res.data.data
+        if (res.status === 200) {
+          let clazzList = res.data.list
           let clazzSelect = []
 
           clazzList.forEach(item => {
@@ -432,8 +429,7 @@ export default {
           }).then(() => {
             post(url, this.studentForm).then(res => {
               if (res.data.code === '200') {
-                this.$message.success('添加成功!')
-                // 关闭dialog
+                this.$message.success('添加学生成功!')
                 this.addDialogFormVisible = false
                 this.getStudentsByClazzId(this.clazzId)
               }
@@ -458,9 +454,9 @@ export default {
         studentIds.push(item.id)
       })
 
-      let url = this.$root.URL + '/userBack/deleteStudents'
+      let url = this.$root.URL + '/userBack/deleteStudentsByIds'
 
-      this.$confirm('是否删除学生信息?', '提示', {
+      this.$confirm('是否删除学生信息?','提示',{
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -539,7 +535,7 @@ export default {
 
           post(url, this.editStudentForm).then(res => {
             if (res.data.code === '200') {
-              this.$message.success('更新成功!')
+              this.$message.success('更新学生信息成功!')
               this.editDialogFormVisible = false
               this.getStudentsByClazzId(this.clazzId)
             }

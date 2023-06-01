@@ -14,7 +14,6 @@ export const get = (url, params) => {
       }
     }).then(res => {
       resolve(res);
-      // eslint-disable-next-line no-unused-vars
     }).catch(error => {
       alert('网络异常')
     })
@@ -31,14 +30,7 @@ export const post = (url, params) => {
         'token': localStorage.getItem('token')
       }
     }).then(res => {
-      // console.log(JSON.stringify(res))
-      // if(res.data.status===0){
-      //
-      // }else{
-      //     alert(res.data.msg);
-      // }
       resolve(res)
-      // eslint-disable-next-line no-unused-vars
     }).catch(error => {
       alert('网络异常')
     })

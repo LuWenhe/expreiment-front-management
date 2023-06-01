@@ -1,4 +1,4 @@
-root = true
+.editorconfig.editorconfigroot = true
 
 [*]
 charset = utf-8
