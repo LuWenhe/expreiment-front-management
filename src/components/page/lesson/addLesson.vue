@@ -349,7 +349,7 @@ export default {
     },
     async loadAll() {
 
-      let url = this.$root.URL + '/backSysAdmin/loadAllTeachers';
+      let url = this.$root.URL + '/userBack/loadAllTeachers';
       await get(url).then(res => {
         console.log(JSON.stringify(res.data.data));
         if (res.data.code === '200') {

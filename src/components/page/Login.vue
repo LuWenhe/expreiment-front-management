@@ -52,16 +52,16 @@
 </template>
 
 <script>
-import axios from 'axios';
-import SIdentify from '../common/Identify';
-import VabVerify from '../common/vabVerify';
-import bus from '../common/bus';
-import img0 from '../../assets/img.jpg';
-import img1 from '../../assets/img1.jpg';
-import img2 from '../../assets/img2.jpg';
-import img3 from '../../assets/img3.jpg';
-import img4 from '../../assets/img4.jpg';
-import img5 from '../../assets/img5.jpg';
+import axios from 'axios'
+import SIdentify from '../common/Identify'
+import VabVerify from '../common/vabVerify'
+import img0 from '../../assets/img.jpg'
+import img1 from '../../assets/img1.jpg'
+import img2 from '../../assets/img2.jpg'
+import img3 from '../../assets/img3.jpg'
+import img4 from '../../assets/img4.jpg'
+import img5 from '../../assets/img5.jpg'
+import { post } from '@/api'
 
 export default {
   data: function() {
@@ -101,12 +101,11 @@ export default {
   methods: {
     handleSuccess() {
       // this.$baseMessage('校验成功', 'success')
-      this.$message.success('校验成功');
-      this.isRight = 'yes';
+      this.$message.success('校验成功')
+      this.isRight = 'yes'
     },
     handleError() {
-      //this.$baseMessage('校验失败', 'error')
-      this.$message.error('校验失败');
+      this.$message.error('校验失败')
     },
     submitForm() {
       if (this.isRight === 'yes') {
@@ -124,14 +123,15 @@ export default {
               setTimeout(() => {
                 let path = this.$root.URL + '/user/login'
 
-                axios.post(path, this.user).then(res => {
+                post(path, this.user).then(res => {
                   let data = res.data
 
                   if (data.code === '200') {
                     this.$message.success('登录成功')
                     localStorage.setItem('name', data.data.username)
-                    localStorage.setItem('user_id', data.data.user_id)
-                    localStorage.setItem('role', data.data.role)
+                    localStorage.setItem('user_id', data.data.userId)
+                    localStorage.setItem('role_id', data.data.roleId)
+                    localStorage.setItem('role', data.data.roleName)
                     localStorage.setItem('token', data.token)
                     this.$router.push('/dashboard')
                   } else {

@@ -120,9 +120,9 @@ export default {
       }
 
       get(url, params).then(res => {
-        if (res.status === 200) {
-          let tableData = res.data.list
-          let data = res.data
+        if (res.data.code === '200') {
+          let tableData = res.data.data.list
+          let data = res.data.data
 
           if (tableData != null) {
             this.clazzTableData = tableData

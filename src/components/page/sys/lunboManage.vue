@@ -246,7 +246,7 @@ export default {
     },
 
     getData() {
-      let path = this.$root.URL + '/backSysAdmin/getAllBanner';
+      let path = this.$root.URL + '/banner/getAllBanner';
       let token = localStorage.getItem('token');
       axios.post(path, { token: token, currentPage: this.pageInfo.pageNum, pageSize: this.pageInfo.pageSize },
         {
@@ -312,7 +312,7 @@ export default {
     },
     updateBanner() {
       this.dialogVisible = false;
-      let path = this.$root.URL + '/backSysAdmin/updateBanner';
+      let path = this.$root.URL + '/banner/updateBanner';
       let token = localStorage.getItem('token');
       axios.post(
         path, this.dialogdata,

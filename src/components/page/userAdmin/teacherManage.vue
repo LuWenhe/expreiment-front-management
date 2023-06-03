@@ -295,14 +295,10 @@ export default {
 
     };
   },
-
   created() {
     this.getData();
     this.uploadAttachment = this.$root.URL + '/back/uploadExcelImport';
-
-
   },
-
   methods: {
 // 邮箱自动填充后缀名
     querySearchEmail(queryString, callback) {

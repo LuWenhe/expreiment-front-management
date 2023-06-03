@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--    <img src="../../assets/img/12222.png" width=100% height=100% />-->
     <el-row :gutter='20'>
       <el-col :span='8'>
         <div class='div_style'>

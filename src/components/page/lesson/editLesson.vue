@@ -159,7 +159,6 @@
                 :rows='3'
                 placeholder='可以学到的知识' v-model='lesson.canLearn'>
               </el-input>
-
             </el-col>
           </el-row>
           <br>
@@ -184,7 +183,6 @@
                 :rows='3'
                 placeholder='目标' v-model='lesson.goal'>
               </el-input>
-
             </el-col>
           </el-row>
           <br>
@@ -202,11 +200,9 @@
                   @imgDel='handleEditorImgDel'>
                 </mavon-editor>
               </el-form-item>
-
             </el-col>
           </el-row>
           <br>
-
           <el-button type='primary' style='margin-left: 5%' @click='submit'>提交</el-button>
           <br>
           <br>
@@ -223,8 +219,8 @@
 <script>
 import { get, post } from '../../../api/index';
 import ChapterAdmin from './ChapterAdmin';
-import axios from 'axios';
-import { bNumberCheck, ChineseCheck } from '../../../utils/validator';
+import axios from 'axios'
+import { bNumberCheck, ChineseCheck } from '@/utils/validator'
 
 const validatorLearnTime = (rule, value, callback) => {
   if (!value) {
@@ -261,10 +257,8 @@ export default {
         learn_time: [{ validator: validatorLearnTime, required: true, trigger: 'blur' }],
         lesson_name: [{ required: true, message: '请输入课程名', trigger: 'blur' }],
         learn_credit: [{ validator: validatorLearnCredit, required: true, trigger: 'blur' }]
-
       },
       uploadHeaders: { 'token': localStorage.getItem('token') },
-
       activeName: 'first',
       imageUrl: '',
       tempUrl: '',
@@ -290,11 +284,9 @@ export default {
         dagang: '',
         cankao: '',
         goal: ''
-
       },
       teachers: []
-
-    };
+    }
   },
   created() {
 
@@ -330,35 +322,20 @@ export default {
       console.log(ev);
     },
     async loadAll() {
-
-      let url = this.$root.URL + '/backSysAdmin/loadAllTeachers';
+      let url = this.$root.URL + '/userBack/loadAllTeachers';
       await get(url).then(res => {
-        console.log(JSON.stringify(res.data.data));
         if (res.data.code === '200') {
           this.teachers = res.data.data;
-        } else {
-
         }
-
-      });
+      })
     },
-    //------------------------------------加载老师姓名结束-------------------
-
     async getOptionList() {
       let url = this.$root.URL + '/back/getOptionList';
       await get(url).then(res => {
-
-        console.log('--------------------------------------');
-        console.log(JSON.stringify(res.data));
         if (res.data.code === '200') {
           this.options = res.data.data;
-        } else {
-
         }
-
-      });
-
-
+      })
     },
     async getLessonDetail() {
       const url = this.$root.URL + '/back/getLessonDetail';

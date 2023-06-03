@@ -339,8 +339,8 @@ export default {
       }
 
       get(url, params).then(res => {
-        if (res.status === 200) {
-          let clazzList = res.data.list
+        if (res.data.code === '200') {
+          let clazzList = res.data.data.list
           let clazzSelect = []
 
           clazzList.forEach(item => {

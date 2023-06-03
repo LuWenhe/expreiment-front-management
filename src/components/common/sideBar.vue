@@ -104,67 +104,7 @@ export default {
   data() {
     return {
       collapse: false,
-      role: 'admin',
-      // items_admin: [{
-      //     'icon': 'el-icon-lx-home',
-      //     'index': '/backAdmin/dashboard',
-      //     'title': '系统首页',
-      //  },
-      //  {
-      //     'icon': 'el-icon-reading',
-      //      'index':'/backAdmin/lessonIndex',
-      //     'title': '课程管理',
-      //     'child':[{
-      //         'icon': 'el-icon-s-order',
-      //         'index': '/backAdmin/lessonIndex',
-      //         'title': '课程列表',
-      //         },
-      //         {
-      //             'icon': 'el-icon-s-management',
-      //             'index': '/backAdmin/tagList',
-      //             'title': '标签管理',
-      //         },
-      //         {
-      //             'icon': 'el-icon-s-management',
-      //             'index': '/backAdmin/imageAdmin',
-      //             'title': '镜像管理',
-      //         },
-      //         {
-      //             'icon': 'el-icon-s-management',
-      //             'index': '/backAdmin/classList',
-      //             'title': '班级管理',
-      //         }
-      //     ]
-      // },
-      // {
-      //     'icon': 'el-icon-set-up',
-      //     'index':'/backAdmin/lunboManage',
-      //     'title': '系统管理',
-      //     'child':[{
-      //         'icon': 'el-icon-s-order',
-      //         'index': '/backAdmin/lunboManage',
-      //         'title': '轮播管理',
-      //     }
-      //     ]
-      // },
-      // {
-      //     'icon': 'el-icon-s-custom',
-      //     'index':'/backAdmin/userManage',
-      //     'title': '用户管理',
-      //     'child':[
-      //         {
-      //             'icon': 'el-icon-user',
-      //             'index': '/backAdmin/teacherManage',
-      //             'title': '教师管理',
-      //         },
-      //         {
-      //             'icon': 'el-icon-user',
-      //             'index': '/backAdmin/studentManage',
-      //             'title': '学生管理',
-      //         },
-      //
-      //     ]
-      // }],
+      role: '',
       items_admin: [
         {
           'icon': 'el-icon-lx-home',
@@ -313,11 +253,11 @@ export default {
   created() {
     let role = localStorage.getItem("role")
 
-    if (role === '0') {
+    if (role === '管理员') {
       this.role = 'admin'
-    } else if (role === '1') {
+    } else if (role === '老师') {
       this.role = 'teacher'
-    } else {
+    } else if (role === '学生') {
       this.role = 'student'
     }
 
