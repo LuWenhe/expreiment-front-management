@@ -10,22 +10,15 @@
       <el-col :span='4'>
         <el-input
           placeholder='请根据姓名进行检索'
-          v-model='realName'
+          v-model='name'
           maxlength='20'
           show-word-limit
           clearable
         >
         </el-input>
       </el-col>
-      &nbsp; &nbsp;
       <el-col :span='3'>
-        <el-button
-          type='primary'
-          icon='el-icon-search'
-          @click='handleSearch'
-        >搜索
-        </el-button>
-
+        <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
       </el-col>
       <el-col :span='3'>
         <el-upload
@@ -52,66 +45,20 @@
       stripe
       header-cell-class-name='table-header'
       @selection-change='handleSelectionChange'>
-      <el-table-column
-        type='selection'
-        width='55'>
-      </el-table-column>
-      <el-table-column
-        type='index'
-        label='序号'
-        width='150px'>
-      </el-table-column>
-      <el-table-column
-        prop='username'
-        label='用户名'
-        width='150px'
-
-      ></el-table-column>
-      <el-table-column
-        prop='realName'
-        label='真实姓名'
-        width='150px'
-
-      ></el-table-column>
-      <el-table-column
-        prop='phone'
-        label='电话'
-        width='150px'
-
-      ></el-table-column>
-      <el-table-column
-        prop='email'
-        label='邮箱'
-        width='150px'
-
-      ></el-table-column>
-      <el-table-column
-        prop='created_time'
-        label='账号创建时间'
-        width='150px'
-        sortable
-      ></el-table-column>
-      <el-table-column
-        label='操作'
-        width='200px'
-        align='center'
-      >
+      <el-table-column type='selection' width='55'></el-table-column>
+      <el-table-column type='index' label='序号' width='150px'></el-table-column>
+      <el-table-column prop='username' label='用户名' width='150px'></el-table-column>
+      <el-table-column prop='name' label='真实姓名' width='150px'></el-table-column>
+      <el-table-column prop='phone' label='电话' width='150px'></el-table-column>
+      <el-table-column prop='email' label='邮箱' width='150px'></el-table-column>
+      <el-table-column prop='created_time' label='账号创建时间' width='150px' sortable></el-table-column>
+      <el-table-column label='操作' width='200px' align='center'>
         <template slot-scope='scope'>
-
-          <el-button
-            type='primary'
-            @click='handleEdit(scope.$index, scope.row)'
-          >编辑
-          </el-button>
-
+          <el-button type='primary' @click='handleEdit(scope.$index, scope.row)'>编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
-
-    <div
-      class='block'
-      style='margin:5px 0 0 848px'
-    >
+    <div class='block' style='margin:5px 0 0 848px'>
       <el-row>
         <el-col>
           <div class='block'>
@@ -128,17 +75,14 @@
           </div>
         </el-col>
       </el-row>
-
       <!-- 新增教师 -->
       <el-dialog title='新增教师' :visible.sync='addTeacherDiag' width='40%' :before-close='handleClose'>
-
         <el-form label-position='left' label-width='100px' :model='addTeacherInfo' :rules='rules' ref='addTeacherInfo'>
-
           <el-form-item label='用户名' prop='username'>
             <el-input v-model=addTeacherInfo.username></el-input>
           </el-form-item>
-          <el-form-item label='真实姓名' prop='realName'>
-            <el-input v-model=addTeacherInfo.realName></el-input>
+          <el-form-item label='真实姓名' prop='name'>
+            <el-input v-model=addTeacherInfo.name></el-input>
           </el-form-item>
           <el-form-item label='联系方式' prop='phone'>
             <el-input v-model=addTeacherInfo.phone></el-input>
@@ -148,29 +92,24 @@
               v-model='addTeacherInfo.email'
               :fetch-suggestions='querySearchEmail'
               :trigger-on-focus='false'
-              placeholder='输入邮箱'
-            >
+              placeholder='输入邮箱'>
             </el-autocomplete>
           </el-form-item>
         </el-form>
-
         <span slot='footer' class='dialog-footer'>
-                  <el-button @click='cancelAdd()'>取 消</el-button>
-                  <el-button type='primary' @click="addTeacher('addTeacherInfo')">确 定</el-button>
-                 </span>
+          <el-button @click='cancelAdd()'>取 消</el-button>
+          <el-button type='primary' @click="addTeacher('addTeacherInfo')">确 定</el-button>
+        </span>
       </el-dialog>
-
       <!-- 编辑教师信息 -->
       <el-dialog title='修改教师' :visible.sync='editTeacherDiag' width='70%' :before-close='handleClose'>
-
         <el-form label-position='left' label-width='100px' :model='editTeacherInfo' :rules='rules'
                  ref='editTeacherInfo'>
-
           <el-form-item label='用户名' prop='username'>
             <el-input v-model=editTeacherInfo.username></el-input>
           </el-form-item>
-          <el-form-item label='真实姓名' prop='realName'>
-            <el-input v-model=editTeacherInfo.realName></el-input>
+          <el-form-item label='真实姓名' prop='name'>
+            <el-input v-model=editTeacherInfo.name></el-input>
           </el-form-item>
           <el-form-item label='联系方式' prop='phone'>
             <el-input v-model=editTeacherInfo.phone></el-input>
@@ -185,58 +124,52 @@
             </el-autocomplete>
           </el-form-item>
         </el-form>
-
         <span slot='footer' class='dialog-footer'>
-                  <el-button @click='cancelEdit()'>取 消</el-button>
-                  <el-button type='primary' @click="editTeacher('editTeacherInfo')">确 定</el-button>
-                 </span>
+          <el-button @click='cancelEdit()'>取 消</el-button>
+          <el-button type='primary' @click="editTeacher('editTeacherInfo')">确 定</el-button>
+        </span>
       </el-dialog>
-
-
     </div>
-
   </div>
-
 </template>
 
 <script>
-import axios from 'axios';
-import { ChineseCheck, emailCheck, phoneCheck } from '../../../utils/validator';
-import { post } from '@/api';
+import { ChineseCheck, emailCheck, phoneCheck } from '@/utils/validator'
+import { addTeacher, deleteUsers, editTeacher, findTeacherByName, getAllTeachers } from '@/api/user'
 
 const validatorPhoneNum = (rule, value, callback) => {
   if (!value) {
-    return callback(new Error('请输入手机号码'));
+    return callback(new Error('请输入手机号码'))
   } else {
     if (phoneCheck(value)) {
-      callback();
+      callback()
     } else {
-      return callback(new Error('请输入正确的手机号码'));
+      return callback(new Error('请输入正确的手机号码'))
     }
   }
-};
+}
 const validatorEmail = (rule, value, callback) => {
   if (!value) {
-    return callback(new Error('请输入邮箱'));
+    return callback(new Error('请输入邮箱'))
   } else {
     if (emailCheck(value)) {
-      callback();
+      callback()
     } else {
-      return callback(new Error('请输入正确的手机号码'));
+      return callback(new Error('请输入正确的邮箱'))
     }
   }
-};
+}
 const validatorChinese = (rule, value, callback) => {
   if (!value) {
-    return callback(new Error('请输入手机号码'));
+    return callback(new Error('请输入姓名'))
   } else {
     if (ChineseCheck(value)) {
-      callback();
+      callback()
     } else {
-      return callback(new Error('请输入正确的手机号码'));
+      return callback(new Error('请输入正确的姓名'))
     }
   }
-};
+}
 export default {
   inject: ['reload'],
   data() {
@@ -245,7 +178,7 @@ export default {
         phone: [
           { validator: validatorPhoneNum, required: true, trigger: 'blur' }
         ],
-        realName: [
+        name: [
           { validator: validatorChinese, required: true, trigger: 'blur' }
         ],
         username: [{
@@ -271,33 +204,30 @@ export default {
         total: 0,
         pages: 0
       },
-
       addTeacherInfo: {
         username: '',
-        realName: '',
+        name: '',
         phone: '',
         email: ''
       },
       editTeacherInfo: {
         user_id: '',
         username: '',
-        realName: '',
+        name: '',
         phone: '',
         email: '',
         password: '',
         repeatPassword: ''
       },
-      realName: '',
       waitLoading: false,
       uploadAttachment: '',
       uploadHeaders: { 'token': localStorage.getItem('token') },
       fileList: []
-
-    };
+    }
   },
   created() {
-    this.getData();
-    this.uploadAttachment = this.$root.URL + '/back/uploadExcelImport';
+    this.getData()
+    this.uploadAttachment = this.$root.URL + '/back/uploadExcelImport'
   },
   methods: {
 // 邮箱自动填充后缀名
@@ -317,305 +247,212 @@ export default {
         { value: '@x.cn' },
         { value: '@chinaren.comsogou.com' },
         { value: '@citiz.com' }
-      ];
-      let results = [];
-      let queryList = [];
-      emailList.map(item => {
-        queryList.push({ value: queryString.split('@')[0] + item.value });
-      });
-      results = queryString ? queryList.filter(this.createFilter(queryString)) : queryList;
-      callback(results);
-    },
+      ]
 
-// 邮箱填写过滤
+      let results = []
+      let queryList = []
+
+      emailList.map(item => {
+        queryList.push({ value: queryString.split('@')[0] + item.value })
+      })
+
+      results = queryString ? queryList.filter(this.createFilter(queryString)) : queryList
+      callback(results)
+    },
     createFilter(queryString) {
       return (item) => {
-        return (item.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-      };
+        return (item.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
     },
-
-
     handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-          this.addTeacherInfo = {
-            username: '',
-            realName: '',
-            phone: '',
-            email: ''
-          };
-
-
-        })
-        .catch(_ => {
-        });
+      this.$confirm('确认关闭？').then(_ => {
+        done()
+        this.addTeacherInfo = {
+          username: '',
+          name: '',
+          phone: '',
+          email: ''
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val;
+      this.multipleSelection = val
     },
-
-
     //改变每页显示的数据条数
     handleSizeChange(pageSize) {
-      // console.log(`每页 ${val} 条`);
-      this.pageInfo.pageSize = pageSize;
-      this.getData();
+      this.pageInfo.pageSize = pageSize
+      this.getData()
     },
-
-    /**
-     * 第n页
-     * @param pageNum
-     */
     handleCurrentChange(pageNum) {
-      // console.log(`当前页: ${val}`);
-      this.pageInfo.pageNum = pageNum;
-      this.getData();
+      this.pageInfo.pageNum = pageNum
+      this.getData()
     },
-    async handleSearch() {
-      const url = this.$root.URL + '/userBack/findTeacherByName';
-      await post(url, {
-        realName: this.realName,
-        currentPage: this.pageInfo.pageNum,
-        pageSize: this.pageInfo.pageSize
-      }).then(res => {
-        this.pageInfo = {
-          // 当前页数
-          pageNum: res.data.pageNum,
-          // 每页数量
-          pageSize: res.data.pageSize,
-          // 当前页数量
-          size: res.data.size,
-          // 当前页面第一个元素在数据库中的行号
-          startRow: res.data.startRow,
-          // 当前页面最后一个元素在数据库中的行号
-          endRow: res.data.endRow,
-          // 总记录数
-          total: res.data.total,
-          // 总页数
-          pages: res.data.pages
-        };
-        this.tableData = res.data.list;
+    handleSearch() {
+      let name = this.name
+      let currentPage = this.pageInfo.pageNum
+      let pageSize = this.pageInfo.pageSize
 
+      findTeacherByName(name, currentPage, pageSize).then(res => {
+        if (res.data.code === '200') {
+          let tableData = res.data.data.list
+          let data = res.data.data
 
-      });
+          if (tableData != null) {
+            this.tableData = tableData
 
-
+            this.pageInfo = {
+              pageNum: data.pageNum,
+              pageSize: data.pageSize,
+              size: data.size,
+              startRow: data.startRow,
+              endRow: data.endRow,
+              total: data.total,
+              pages: data.pages
+            }
+          }
+        }
+      })
     },
     getData() {
-      let path = this.$root.URL + '/userBack/getAllTeachers';
-      let token = localStorage.getItem('token');
-      axios.post(path, { token: token, currentPage: this.pageInfo.pageNum, pageSize: this.pageInfo.pageSize },
-        {
-          headers: {
-            'content-type': 'application/json',
-            'token': token
-          }
-        }
-      ).then((res) => {
-        if (res && res.data) {
-          if (res.data.list) {
-            this.pageInfo = {
-              // 当前页数
-              pageNum: res.data.pageNum,
-              // 每页数量
-              pageSize: res.data.pageSize,
-              // 当前页数量
-              size: res.data.size,
-              // 当前页面第一个元素在数据库中的行号
-              startRow: res.data.startRow,
-              // 当前页面最后一个元素在数据库中的行号
-              endRow: res.data.endRow,
-              // 总记录数
-              total: res.data.total,
-              // 总页数
-              pages: res.data.pages
-            };
-            this.tableData = res.data.list;
-          }
-        } else {
+      let currentPage = this.pageInfo.pageNum
+      let pageSize = this.pageInfo.pageSize
 
-          this.$message({
-            message: '没有权限'
-          });
+      getAllTeachers(currentPage, pageSize).then(res => {
+        if (res.data.code === '200') {
+          let tableData = res.data.data.list
+          let data = res.data.data
+
+          if (tableData != null) {
+            this.tableData = tableData
+
+            this.pageInfo = {
+              pageNum: data.pageNum,
+              pageSize: data.pageSize,
+              size: data.size,
+              startRow: data.startRow,
+              endRow: data.endRow,
+              total: data.total,
+              pages: data.pages
+            }
+          }
         }
-      });
+      })
     },
     //新增教师
     addTeacher(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-
-          console.log(JSON.stringify(this.addTeacherInfo));
-          let path = this.$root.URL + '/userBack/addTeacher';
-          let token = localStorage.getItem('token');
-
           const loading = this.$loading({
             lock: true,
             text: '正在努力添加',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
-          });
+          })
           setTimeout(() => {
-            axios.post(path, this.addTeacherInfo,
-              {
-                headers: {
-                  'content-type': 'application/json',
-                  'token': token
-                }
-              }
-            ).then((res) => {
-              if (res.data) {
-                if (res.data.code === '200') {
-                  this.$message({
-                    message: '添加教师成功',
-                    type: 'success'
-                  });
-                  this.addTeacherDiag = false;
-                  this.addTeacherInfo = {};
-                  this.reload();
-                }
+            addTeacher(this.addTeacherInfo).then(res => {
+              if (res.data.code === '200') {
+                this.$message('添加教师成功!')
+                this.addTeacherDiag = false
+                this.addTeacherInfo = {}
+                this.reload()
               } else {
-                this.$message({
-                  message: '内部服务器出错',
-                  type: 'error'
-                });
+                this.$message.error('添加教师失败!')
               }
-
-            });
-            loading.close();
-          }, 2000);
-
-
+            })
+            loading.close()
+          }, 2000)
         } else {
-          console.log('error submit!!');
-          this.$message.error('表单填写错误，添加失败');
+          console.log('error submit!!')
+          this.$message.error('表单填写错误，添加失败')
         }
-      });
+      })
     },
     cancelAdd() {
-      this.addTeacherDiag = false;
+      this.addTeacherDiag = false
       this.addTeacherInfo = {
         username: '',
-        realName: '',
+        name: '',
         phone: '',
         email: ''
-      };
-
+      }
     },
-
     handleEdit(index, row) {
-
-      console.log(JSON.stringify(row));
-      this.editTeacherInfo.user_id = row.user_id;
-      this.editTeacherInfo.username = row.username;
-      this.editTeacherInfo.realName = row.realName;
-      this.editTeacherInfo.email = row.email;
-      this.editTeacherInfo.phone = row.phone;
-      this.editTeacherDiag = true;
-
+      this.editTeacherInfo.user_id = row.user_id
+      this.editTeacherInfo.username = row.username
+      this.editTeacherInfo.name = row.name
+      this.editTeacherInfo.email = row.email
+      this.editTeacherInfo.phone = row.phone
+      this.editTeacherDiag = true
     },
     editTeacher(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(JSON.stringify(this.editTeacherInfo));
-          let path = this.$root.URL + '/userBack/editTeacher';
-          let token = localStorage.getItem('token');
-          axios.post(path, this.editTeacherInfo,
-            {
-              headers: {
-                'content-type': 'application/json',
-                'token': token
-              }
-            }
-          ).then((res) => {
-            if (res.data) {
-              if (res.data.code === '200') {
-                this.$message({
-                  message: '编辑教师成功',
-                  type: 'success'
-                });
-                this.editTeacherDiag = false;
-
-                this.reload();
-              }
+          editTeacher(this.editTeacherInfo).then(res => {
+            if (res.data.code === '200') {
+              this.$message.success('更新教师信息成功!')
+              this.editTeacherDiag = false
+              this.reload()
             } else {
-              this.$message({
-                message: '内部服务器出错',
-                type: 'error'
-              });
+              this.$message.error('更新教师信息失败!')
             }
-
-          });
+          })
         } else {
-          console.log('error submit!!');
-          this.$message.error('表单填写错误，添加失败');
+          this.$message.error('表单填写错误，添加失败')
         }
-      });
+      })
     },
     cancelEdit() {
-      this.editTeacherDiag = false;
+      this.editTeacherDiag = false
     },
     deleteTeacher() {
+      let teacherObjs = this.multipleSelection
+      let teachIds = []
 
-      if (this.multipleSelection.length < 1) {
-        this.$message.error('请选择删除的用户!');
+      teacherObjs.forEach(item => {
+        teachIds.push(item.user_id)
+      })
 
-      } else {
-        console.log(JSON.stringify(this.multipleSelection));
-        let token = localStorage.getItem('token');
-        let path = this.$root.URL + '/userBack/deleteUser';
-        axios.post(
-          path,
-          {
-            deleteRow: JSON.stringify(this.multipleSelection)
-          },
-          {
-            headers: {
-              'dataType': 'json',
-              'token': token
-            }
-          }
-        ).then((res) => {
+      this.$confirm('是否删除教师信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteUsers(teachIds).then(res => {
           if (res.data.code === '200') {
-            console.log('成功');
-            this.$message({
-              message: '操作成功'
-            });
-            this.reload();
+            this.$message.success('删除教师成功!')
+            this.reload()
           } else {
-            this.$message({
-              message: '删除失败'
-            });
-
+            this.$message.error('删除教师失败!')
           }
-        });
-      }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
-      this.addToolForm.download_url = '';
+      console.log(file, fileList)
+      this.addToolForm.download_url = ''
     },
     handlePreview(file) {
-      console.log(file);
+      console.log(file)
     },
     handleExceed(files, fileList) {
-      this.$message.warning('只能上传一个文件！');
+      this.$message.warning('只能上传一个文件！')
     },
-
     handleSuccess(res, file) {
-      console.log(file.response);
       if (file.response.code === '200') {
-        this.$message.success('导入用户表格成功');
-        this.reload();
+        this.$message.success('导入用户表格成功')
+        this.reload()
       }
-      // this.addToolForm.download_url = file.response.data;
-
+      // this.addToolForm.download_url = file.response.data
     }
-
-
   }
-};
+}
 </script>
 
 <style>

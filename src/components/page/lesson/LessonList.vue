@@ -1,43 +1,24 @@
 <template>
-
   <div>
     <el-row>
       <el-col :span='3'>
-        <br>
-        <br>
-        <br>
-        <ul v-for='(item,index)  in tagsList' :key='index'>
+        <ul v-for='(item,index) in tagsList' :key='index'>
           <li class='tagLi' @click='getLessonsByTag(item.value)'>
-            <i class='el-icon-price-tag' style='width: 150px;font-size: 20px'><a href='#'
-                                                                                 style='width: 150px;height: 50px;font-size: 20px'>{{ item.value }}</a>
+            <i class='el-icon-price-tag' style='width: 150px;font-size: 20px'>
+              <a href='#' style='width: 150px;height: 50px;font-size: 20px'>{{ item.value }}</a>
             </i>
           </li>
-          <br>
         </ul>
       </el-col>
       <el-col :span='21'>
         <el-row type='flex' class='row-bg' justify='start'>
           <el-col :span='6'>
-            <el-input
-              placeholder='请根据课程名称进行检索'
-              v-model='lesson_name'
-              maxlength='20'
-              show-word-limit
-              clearable
-            >
+            <el-input placeholder='请根据课程名称进行检索' v-model='lesson_name' maxlength='20' show-word-limit clearable>
             </el-input>
           </el-col>
-          &nbsp; &nbsp;
           <el-col :span='4'>
-            <el-button
-              type='primary'
-              icon='el-icon-search'
-              @click='handleSearch'
-            >搜索
-            </el-button>
-            <el-button type='danger' @click='addLesson'>
-              添加课程
-            </el-button>
+            <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
+            <el-button type='danger' @click='addLesson'>添加课程</el-button>
           </el-col>
         </el-row>
         <br>
@@ -46,8 +27,7 @@
                   :key='index'>
             <el-card style='width: 250px;height: 380px;margin-bottom: 25px; ' shadow='hover'>
               <div v-if='item.pic_url != null'>
-                <img :src='item.pic_url' class='image' style='width: 100%;height: 250px'
-                     @click='stepIntoDetail(item.lessonId)'>
+                <img :src='item.pic_url' class='image' style='width: 100%;height: 250px' @click='stepIntoDetail(item.lessonId)'>
               </div>
               <div v-else>
                 <img src='http://10.0.7.205:8081/2c2f312d-9ee4-4306-8c18-960046c32302.png' class='image'
@@ -61,9 +41,7 @@
                   <el-button type='warning' style='float:right;position:relative;margin-right: 6px'
                              @click='deleteLesson(item.lessonId)'><i class='el-icon-delete'></i></el-button>
                 </div>
-
               </div>
-
             </el-card>
           </el-col>
         </el-row>
@@ -85,20 +63,16 @@
         </el-row>
       </el-col>
     </el-row>
-
   </div>
 </template>
 
 <script>
-import { get, post } from '../../../api/index';
+import { deleteLessonById, findLessonsByName, getAllLessons, getOptionList } from '@/api/backLesson'
 
 export default {
   inject: ['reload'],
-
   data() {
     return {
-      //总数据条数
-      //总数据条数
       pageInfo: {
         pageNum: 1,
         pageSize: 10,
@@ -127,50 +101,31 @@ export default {
           'tags': null,
           'teacher_name': 'nxd'
         }
-
       ],
-      tagsList: [
-        {
-          tagName: '全部'
-        },
-        {
-          tagName: 'meteo'
-        },
-        {
-          tagName: 'ai'
-        }
-
-      ],
+      tagsList: [],
       tagActive: '',
       btnShow: false,
       index: '0'
-
-
-    };
+    }
   },
   created() {
-    this.tagActive = '全部';
-    this.getLessonList();
-    this.getOptionList();
+    this.tagActive = '全部'
+    this.getLessonList()
+    this.getOptionList()
   },
   methods: {
-    async getOptionList() {
-      let url = this.$root.URL + '/back/getOptionList';
-      await get(url).then(res => {
+    getOptionList() {
+      getOptionList().then(res => {
         if (res.data.code === '200') {
-          this.tagsList = res.data.data;
-        } else {
+          this.tagsList = res.data.data
         }
-
-      });
-
-
+      })
     },
     stepIntoDetail(lessonId) {
-      this.$router.push({ name: 'editLesson', query: { lessonId: lessonId } });
+      this.$router.push({ name: 'editLesson', query: { lessonId: lessonId } })
     },
     addLesson() {
-      this.$router.push('/backAdmin/addLesson');
+      this.$router.push('/addLesson')
     },
     deleteLesson(lesson_id) {
       this.$confirm('此操作将永久删除该课程, 是否继续?', '警告', {
@@ -178,17 +133,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        await get(this.$root.URL + '/back/deleteLessonById?lesson_id=' + lesson_id).then(res => {
-
+        deleteLessonById(lesson_id).then(res => {
           if (res.data.code === '200') {
             this.$message({
               type: 'success',
-              message: '删除成功'
+              message: '删除课程成功!'
             });
-            this.reload();
+            this.reload()
           }
-
-        });
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -197,49 +150,37 @@ export default {
       });
     },
     async handleSearch() {
-      const url = this.$root.URL + '/back/findLessonsByName';
-      await post(url, {
-        lesson_name: this.lesson_name,
-        currentPage: this.pageInfo.pageNum,
-        pageSize: this.pageInfo.pageSize
-      }).then(res => {
-        this.pageInfo = {
-          // 当前页数
-          pageNum: res.data.pageNum,
-          // 每页数量
-          pageSize: res.data.pageSize,
-          // 当前页数量
-          size: res.data.size,
-          // 当前页面第一个元素在数据库中的行号
-          startRow: res.data.startRow,
-          // 当前页面最后一个元素在数据库中的行号
-          endRow: res.data.endRow,
-          // 总记录数
-          total: res.data.total,
-          // 总页数
-          pages: res.data.pages
-        };
-        this.lesson_list = res.data.list;
+      let lesson_name = this.lesson_name
+      let currentPage = this.pageInfo.pageNum
+      let pageSize = this.pageInfo.pageSize
 
+      findLessonsByName(lesson_name, currentPage, pageSize).then(res => {
+        if (res.data.code === '200') {
+          let tableData = res.data.data.list
+          let data = res.data.data
 
-      });
+          if (tableData != null) {
+            this.lesson_list = tableData
 
-
+            this.pageInfo = {
+              pageNum: data.pageNum,
+              pageSize: data.pageSize,
+              size: data.size,
+              startRow: data.startRow,
+              endRow: data.endRow,
+              total: data.total,
+              pages: data.pages
+            }
+          }
+        }
+      })
     },
-
     //改变每页显示的数据条数
     handleSizeChange(pageSize) {
-      // console.log(`每页 ${val} 条`);
       this.pageInfo.pageSize = pageSize;
       this.getLessonList();
     },
-
-    /**
-     * 第n页
-     * @param pageNum
-     */
     handleCurrentChange(pageNum) {
-      // console.log(`当前页: ${val}`);
       this.pageInfo.pageNum = pageNum;
       this.getLessonList();
     },
@@ -256,53 +197,41 @@ export default {
         pages: 0
       };
       this.getLessonList();
-
     },
 
     async getLessonList() {
-      const url = this.$root.URL + '/back/getAllLessons';
-      /*
-      this是函数产生的, 定义一个函数就会产生作用域和this.
-      你已经知道箭头函数不产生this, 所以你代码里的外面和里面this指向相同.
-      另外, 如果你说有时候this是undefined, 那么仔细检查下代码, 这个情况是不会发生的, 只有出现function foo() {}或者是es6的写法foo () {}才会产生新的this
-       */
-      await post(url, {
+      let pageRequest = {
         currentPage: this.pageInfo.pageNum,
         pageSize: this.pageInfo.pageSize,
         tagActive: this.tagActive
-      }).then(res => {
-        if (res) {
-          this.pageInfo = {
-            // 当前页数
-            pageNum: res.data.pageNum,
-            // 每页数量
-            pageSize: res.data.pageSize,
-            // 当前页数量
-            size: res.data.size,
-            // 当前页面第一个元素在数据库中的行号
-            startRow: res.data.startRow,
-            // 当前页面最后一个元素在数据库中的行号
-            endRow: res.data.endRow,
-            // 总记录数
-            total: res.data.total,
-            // 总页数
-            pages: res.data.pages
-          };
-          this.lesson_list = [];
-          this.lesson_list = res.data.list;
+      }
+
+      getAllLessons(pageRequest).then(res => {
+        if (res.data.code === '200') {
+          let tableData = res.data.data.list
+          let data = res.data.data
+
+          if (tableData != null) {
+            this.lesson_list = tableData
+
+            this.pageInfo = {
+              pageNum: data.pageNum,
+              pageSize: data.pageSize,
+              size: data.size,
+              startRow: data.startRow,
+              endRow: data.endRow,
+              total: data.total,
+              pages: data.pages
+            }
+          }
         }
-      });
-
-
+      })
     }
   }
 };
 </script>
 
-
 <style scoped>
-
-
 .tagLi:active, .tagLi:hover {
   background-color: #fdf5e6;
 }

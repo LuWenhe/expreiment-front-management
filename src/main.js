@@ -8,7 +8,6 @@ import VueAxios from 'vue-axios'
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 import { messages } from './components/common/i18n'
-
 import 'element-ui/lib/theme-chalk/index.css'       // 默认主题
 // import './assets/css/theme-green/index.css'; // 浅绿色主题
 import './assets/css/icon.css';

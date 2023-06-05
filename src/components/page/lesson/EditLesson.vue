@@ -3,7 +3,7 @@
     <el-tab-pane label='基本信息' name='first'>
       <div class='firstCard'>
         <br>
-        <h1>&nbsp;&nbsp;&nbsp;编辑课程</h1>
+        <h1>编辑课程</h1>
         <br>
         <el-form :model='lesson' :rules='rules' ref='submit'>
           <el-row :gutter='20' style='margin-left: 5%'>
@@ -19,13 +19,10 @@
                 :limit='imgLimit'
                 :on-exceed='handleExceed'
                 :file-list='fileListFront'
-                :headers='uploadHeaders'
-
-              >
+                :headers='uploadHeaders'>
                 <i class='el-icon-plus'></i>
               </el-upload>
             </el-col>
-
             <el-col :span='6'>
               <span>难易程度</span>
               <br> <br>
@@ -41,23 +38,15 @@
               <el-row>
                 <el-col>
                   <span>教师</span>
-                  <br>
-                  <br>
                   <el-form-item prop='teacher_name'>
-                    <!--                                <el-input placeholder='请输入老师姓名' v-model='lesson.teacher_name' style='width: 200px'></el-input>-->
                     <el-autocomplete
                       popper-class='my-autocomplete'
                       v-model='lesson.teacher_name'
                       :fetch-suggestions='querySearch'
                       placeholder='请输入老师姓名'
                       @select='handleSelect'
-                      style='width: 200px'
-                    >
-                      <i
-                        class='el-icon-edit el-input__icon'
-                        slot='suffix'
-                        @click='handleIconClick'>
-                      </i>
+                      style='width: 200px'>
+                      <i class='el-icon-edit el-input__icon' slot='suffix' @click='handleIconClick'></i>
                       <template slot-scope='{ item }'>
                         <div class='name'>{{ item.username }}</div>
                       </template>
@@ -69,13 +58,9 @@
               <el-row>
                 <el-col>
                   <span>学时</span>
-                  <br>
-                  <br>
                   <el-form-item prop='learn_time'>
-
                     <el-input placeholder='学时' style='width: 200px' v-model='lesson.learn_time'></el-input>
                   </el-form-item>
-
                 </el-col>
               </el-row>
             </el-col>
@@ -83,36 +68,25 @@
               <el-row>
                 <el-col>
                   <span>课程名称</span>
-                  <br>
-                  <br>
                   <el-form-item prop='lesson_name'>
-
                     <el-input placeholder='课程名称' style='width: 200px' v-model='lesson.lesson_name'></el-input>
                   </el-form-item>
-
                 </el-col>
               </el-row>
               <br>
               <el-row>
                 <el-col>
                   <span>学分</span>
-                  <br>
-                  <br>
                   <el-form-item prop='learn_credit'>
                     <el-input placeholder='学分' style='width: 200px' v-model='lesson.learn_credit'></el-input>
                   </el-form-item>
-
                 </el-col>
               </el-row>
-
             </el-col>
           </el-row>
-          <br>
-          <br>
           <el-row style='margin-left: 5%'>
             <el-col :span='12'>
               <span>tags</span>
-              <br><br>
               <el-select
                 style='width: 90%'
                 v-model='lesson.tags'
@@ -131,10 +105,7 @@
             </el-col>
             <el-col :span='12'>
               <span>适合人群</span>
-              <br>
-              <br>
               <el-input placeholder='适合人群' style='width: 90%' v-model='lesson.suitablePerson'></el-input>
-
             </el-col>
           </el-row>
           <br>
@@ -143,22 +114,12 @@
             <el-col :span='12'>
               <span>大纲</span>
               <br><br>
-              <el-input
-                style='width: 90%'
-                type='textarea'
-                :rows='3'
-                placeholder='请输入大纲' v-model='lesson.dagang'>
-              </el-input>
+              <el-input style='width: 90%' type='textarea' :rows='3' placeholder='请输入大纲' v-model='lesson.dagang'></el-input>
             </el-col>
             <el-col :span='12'>
               <span>可以学到的知识</span>
               <br><br>
-              <el-input
-                style='width:90%'
-                type='textarea'
-                :rows='3'
-                placeholder='可以学到的知识' v-model='lesson.canLearn'>
-              </el-input>
+              <el-input style='width:90%' type='textarea' :rows='3' placeholder='可以学到的知识' v-model='lesson.canLearn'></el-input>
             </el-col>
           </el-row>
           <br>
@@ -177,12 +138,7 @@
             <el-col :span='12'>
               <span>目标</span>
               <br><br>
-              <el-input
-                style='width: 90%'
-                type='textarea'
-                :rows='3'
-                placeholder='目标' v-model='lesson.goal'>
-              </el-input>
+              <el-input style='width: 90%' type='textarea' :rows='3' placeholder='目标' v-model='lesson.goal'></el-input>
             </el-col>
           </el-row>
           <br>
@@ -202,25 +158,20 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <br>
           <el-button type='primary' style='margin-left: 5%' @click='submit'>提交</el-button>
-          <br>
-          <br>
-          <br>
         </el-form>
       </div>
     </el-tab-pane>
     <el-tab-pane label='章节管理' name='second'>
       <chapter-admin :lessonId='this.lessonId'></chapter-admin>
     </el-tab-pane>
-
   </el-tabs>
 </template>
 <script>
-import { get, post } from '../../../api/index';
-import ChapterAdmin from './ChapterAdmin';
-import axios from 'axios'
-import { bNumberCheck, ChineseCheck } from '@/utils/validator'
+import ChapterAdmin from './ChapterAdmin'
+import { bNumberCheck } from '@/utils/validator'
+import { loadAllTeachers } from '@/api/user'
+import { addLessonPic, getLessonDetail, getOptionList, updateLesson } from '@/api/backLesson';
 
 const validatorLearnTime = (rule, value, callback) => {
   if (!value) {
@@ -289,19 +240,15 @@ export default {
     }
   },
   created() {
-
     this.lessonId = this.$route.query.lessonId;
-    this.uploadImgServer = this.$root.URL + '/back/addLessonPic';
-    this.getLessonDetail();
-    this.getOptionList();
-
+    this.uploadImgServer = this.$root.URL + '/lesson/addLessonPic'
+    this.getLessonDetail()
+    this.getOptionList()
   },
   mounted() {
-    this.teachers = this.loadAll();
+    this.teachers = this.loadAll()
   },
   methods: {
-
-    //------------------------------------加载老师姓名开始-------------------
     querySearch(queryString, cb) {
       var teachers = this.teachers;
       var results = queryString ? teachers.filter(this.createFilter(queryString)) : teachers;
@@ -321,65 +268,56 @@ export default {
     handleIconClick(ev) {
       console.log(ev);
     },
-    async loadAll() {
-      let url = this.$root.URL + '/userBack/loadAllTeachers';
-      await get(url).then(res => {
+    loadAll() {
+      loadAllTeachers().then(res => {
         if (res.data.code === '200') {
           this.teachers = res.data.data;
         }
       })
     },
-    async getOptionList() {
-      let url = this.$root.URL + '/back/getOptionList';
-      await get(url).then(res => {
+    getOptionList() {
+      getOptionList().then(res => {
         if (res.data.code === '200') {
-          this.options = res.data.data;
+          this.options = res.data.data
         }
       })
     },
     async getLessonDetail() {
-      const url = this.$root.URL + '/back/getLessonDetail';
-      await post(url, { lessonId: this.lessonId }).then(res => {
-
-        console.log(JSON.stringify(res.data));
-        this.lesson = res.data.data;
-        this.fileListFront.push({ name: 'xxx', url: res.data.data.pic_url.split(',')[0] });   //在el-upload中回显后台返回的地址
-        this.hideUpload = true;
-
-      });
-
+      getLessonDetail(this.lessonId).then(res => {
+        if (res.data.code === '200') {
+          this.lesson = res.data.data;
+          this.fileListFront.push({ name: 'xxx', url: res.data.data.pic_url.split(',')[0] });   //在el-upload中回显后台返回的地址
+          this.hideUpload = true;
+        }
+      })
     },
     submit() {
       this.$refs.submit.validate(valid => {
         if (valid) {
-          console.log(JSON.stringify(this.lesson));
-          const url = this.$root.URL + '/back/updateLessonInfo';
-          post(url, this.lesson).then(res => {
-            console.log(JSON.stringify(res));
-            this.$message.success('提交成功');
-          });
+          updateLesson(this.lesson).then(res => {
+            if (res.data.code === '200') {
+              this.$message.success('更新课程成功!')
+            }
+          })
         } else {
-          this.$message.error('请输入必填项');
-
+          this.$message.error('请输入必填项')
         }
-
-      });
+      })
     },
     handleClick(tab, event) {
-      console.log(tab, event);
+
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
       this.fileListFront.some((item, i) => {
         if (item.name === file.name) {
-          this.fileListFront.splice(i, 1);
-          return true;
+          this.fileListFront.splice(i, 1)
+          return true
         }
-      });
-      this.hideUpload = fileList.length >= this.imgLimit;
-      this.lesson.pic_url = '';
-    },
+      })
 
+      this.hideUpload = fileList.length >= this.imgLimit
+      this.lesson.pic_url = ''
+    },
     /**上传文件之前的钩子函数 */
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
@@ -405,37 +343,25 @@ export default {
     },
     /**文件超出个数限制时的钩子 */
     handleExceed() {
-      this.$message.error(`只能选择${this.imgLimit}个文件`);
+      this.$message.error(`只能选择${this.imgLimit}个文件`)
     },
     handleEditorImgAdd(pos, $file) {
-      // const blob = this.dataURItoBlob($file.miniurl)
-      const formData = new FormData();
-      formData.append('file', $file);
-      axios.post(this.$root.URL + '/back/addLessonPic', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'token': localStorage.getItem('token')
-        }
-      }).then((res) => {
-        console.log(JSON.stringify(res));
+      let formData = new FormData()
+      formData.append('file', $file)
+
+      addLessonPic(formData).then(res => {
         if (res.data.code === '200') {
-          //this.pic_suolue = res.data.data
-          this.$refs.md.$img2Url(pos, res.data.data);
+          this.$refs.md.$img2Url(pos, res.data.data)
         } else {
-          this.$message.error('error');
+          this.$message.error('error')
         }
-      }).catch((err) => {
-        console.log('上传错误');
-        console.log(err);
-      });
+      })
     },
     handleEditorImgDel(pos) {
       delete this.imgFile[pos];
     }
-
-
   }
-};
+}
 </script>
 
 <style>

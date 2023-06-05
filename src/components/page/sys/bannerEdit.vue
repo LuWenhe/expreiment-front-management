@@ -1,11 +1,10 @@
 <template>
-  <div>
+  <el-form>
     <el-form>
       <el-row>
         <el-col :span='8'>
           <el-form-item label='轮播图片'>
             <img :src=data.banner_url alt='' style='height:5rem;width:5rem;'>
-
             <el-upload
               ref='uploadPic'
               :http-request='uploadFile'
@@ -15,7 +14,7 @@
               :auto-upload='false'
               :limit='1'
               accept='image/gif,image/jpeg,image/jpg,image/png,image/svg'
-            >
+              action=''>
               <i class='el-icon-plus'></i>
               <div slot='tip' class='el-upload__tip'>只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
@@ -24,7 +23,7 @@
         </el-col>
       </el-row>
     </el-form>
-  </div>
+  </el-form>
 </template>
 
 <script>
@@ -39,41 +38,31 @@ export default {
   data() {
     return {
       fileList: []
-    };
+    }
   },
   methods: {
-
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      console.log(file, fileList)
     },
     handlePreview(file) {
-      console.log(file);
+      console.log(file)
     },
     uploadFile(file) {
-      console.log(file.file);
-      this.pic_form = new FormData();
-      this.pic_form.append('file', file.file);
+      this.pic_form = new FormData()
+      this.pic_form.append('file', file.file)
     },
     submitUpload() {
-      this.$refs.uploadPic.submit();
-      axios.post(this.$root.URL + '/manage/upload_small_pic', this.pic_form, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'token': localStorage.getItem('token')
-        }
-      }).then((res) => {
+      this.$refs.uploadPic.submit()
+      axios.post(this.$root.URL + '/manage/upload_small_pic', this.pic_form).then((res) => {
         if (res.data.code === '200') {
-          this.data.banner_url = res.data.data;
+          this.data.banner_url = res.data.data
         } else {
-          this.$message.error('error');
+          this.$message.error('error')
         }
       }).catch((err) => {
-        console.log('上传错误');
-        console.log(err);
-      });
-
+        console.log(err)
+      })
     }
-
     // handleEditorImgAdd (pos, $file) {
     //   // const blob = this.dataURItoBlob($file.miniurl)
     //   const formData = new FormData()
@@ -99,8 +88,6 @@ export default {
     //   delete this.imgFile[pos]
     // },
   }
-
-
 };
 </script>
 <style>

@@ -177,14 +177,16 @@
 
 <script>
 import { phoneCheck } from '@/utils/validator'
-import { get, post } from '@/api'
+import { getClazzListByTeacherId, getStudentsByClazzId } from '@/api/clazz'
+import { getProvinces } from '@/api/province'
+import { addStudent, addStudentFromExcel, deleteUsers, editStudent } from '@/api/user'
 
 const validatorPhoneNum = (rule, value, callback) => {
   if (!value) {
-    return callback(new Error("请输入手机号码"));
+    return callback(new Error("请输入手机号码"))
   } else {
     if (phoneCheck(value)) {
-      callback();
+      callback()
     } else {
       return callback(new Error('请输入正确的手机号码'))
     }
@@ -273,7 +275,6 @@ export default {
         total: 0,       // 总记录数
         pages: 0        // 总页数
       },
-      uploadUrl: this.$root.URL + '/userBack/uploadFromExcel',
       uploadHeaders: {
         'token': localStorage.getItem('token')
       },
@@ -332,13 +333,9 @@ export default {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
     getClazzList() {
-      let url = this.$root.URL + '/clazz/getClazzList'
+      let teacherId = localStorage.getItem('user_id')
 
-      let params = {
-        teacherId: localStorage.getItem('user_id')
-      }
-
-      get(url, params).then(res => {
+      getClazzListByTeacherId(teacherId).then(res => {
         if (res.data.code === '200') {
           let clazzList = res.data.data.list
           let clazzSelect = []
@@ -361,9 +358,7 @@ export default {
       this.getStudentsByClazzId(value)
     },
     getAllProvinces() {
-      let url = this.$root.URL + '/getAllProvinces'
-
-      get(url).then(res => {
+      getProvinces().then(res => {
         if (res.data.code === "200") {
           this.provinceList = res.data.data
         }
@@ -371,18 +366,13 @@ export default {
     },
     // 根据班级id获取该班级下的所有学生
     getStudentsByClazzId(clazzId) {
-      let path = this.$root.URL + '/clazz/getStudents'
+      let currentPage = this.pageInfo.pageNum
+      let pageSize = this.pageInfo.pageSize
 
-      let params = {
-        clazzId: clazzId,
-        currentPage: this.pageInfo.pageNum,
-        pageSize: this.pageInfo.pageSize
-      }
-
-      get(path, params).then(res => {
-        if (res.status === 200) {
-          let tableData = res.data.list
-          let data = res.data
+      getStudentsByClazzId(clazzId, currentPage, pageSize).then(res => {
+        if (res.data.code === '200') {
+          let tableData = res.data.data.list
+          let data = res.data.data
 
           if (tableData != null) {
             this.tableData = tableData
@@ -403,7 +393,6 @@ export default {
     submitAddStudent(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let url = this.$root.URL + '/userBack/addStudent'
           let studentForm = this.studentForm
           let workPlace
 
@@ -427,7 +416,7 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            post(url, this.studentForm).then(res => {
+            addStudent(this.studentForm).then(res => {
               if (res.data.code === '200') {
                 this.$message.success('添加学生成功!')
                 this.addDialogFormVisible = false
@@ -454,17 +443,17 @@ export default {
         studentIds.push(item.id)
       })
 
-      let url = this.$root.URL + '/userBack/deleteStudentsByIds'
-
       this.$confirm('是否删除学生信息?','提示',{
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        post(url, studentIds).then(res => {
+        deleteUsers(studentIds).then(res => {
           if (res.data.code === '200') {
-            this.$message.success('删除成功')
+            this.$message.success('删除学生成功!')
             this.getStudentsByClazzId(this.clazzId)
+          } else {
+            this.$message.error("删除学生失败!")
           }
         })
       }).catch(() => {
@@ -514,7 +503,6 @@ export default {
     submitEditStudent(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let url = this.$root.URL + '/userBack/editStudent'
           let editStudentForm = this.editStudentForm
           let workPlace
 
@@ -533,7 +521,7 @@ export default {
           this.editStudentForm.workPlace = workPlace
           this.editStudentForm.clazzId = this.clazzId
 
-          post(url, this.editStudentForm).then(res => {
+          editStudent(this.editStudentForm).then(res => {
             if (res.data.code === '200') {
               this.$message.success('更新学生信息成功!')
               this.editDialogFormVisible = false
@@ -555,13 +543,11 @@ export default {
       this.getStudentsByClazzId(this.clazzId)
     },
     submitToServer() {
-      let formData = new FormData();
+      let formData = new FormData()
       formData.append('file', this.fileList[0].raw)
       formData.append('clazzId', this.clazzId)
 
-      let url = this.$root.URL + '/userBack/uploadFromExcel'
-
-      post(url, formData).then(res => {
+      addStudentFromExcel(formData).then(res => {
         if (res.status === 200) {
           this.$message.success(res.data.msg)
           this.addMultiDialogFormVisible = false

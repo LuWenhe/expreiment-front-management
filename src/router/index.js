@@ -132,12 +132,12 @@ export default new Router({
         },
         {
           path: '/addLesson',
-          component: () => import('@/components/page/lesson/addLesson'),
+          component: () => import('@/components/page/lesson/AddLesson.vue'),
           meta: {title: '添加课程'}
         },
         {
           path: '/editLesson',
-          component: () => import('@/components/page/lesson/editLesson'),
+          component: () => import('@/components/page/lesson/EditLesson.vue'),
           name: 'editLesson',
           meta: {title: '编辑课程'}
         },

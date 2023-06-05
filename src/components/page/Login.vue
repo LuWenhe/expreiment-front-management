@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import SIdentify from '../common/Identify'
 import VabVerify from '../common/vabVerify'
 import img0 from '../../assets/img.jpg'
@@ -61,7 +60,7 @@ import img2 from '../../assets/img2.jpg'
 import img3 from '../../assets/img3.jpg'
 import img4 from '../../assets/img4.jpg'
 import img5 from '../../assets/img5.jpg'
-import { post } from '@/api'
+import { login } from '@/api/user'
 
 export default {
   data: function() {
@@ -75,7 +74,6 @@ export default {
         username: '',
         password: '',
         identity: ''
-
       },
       imgs: [
         img0,
@@ -121,9 +119,7 @@ export default {
                 background: 'rgba(0, 0, 0, 0.7)'
               });
               setTimeout(() => {
-                let path = this.$root.URL + '/user/login'
-
-                post(path, this.user).then(res => {
+                login(this.user).then(res => {
                   let data = res.data
 
                   if (data.code === '200') {
@@ -138,6 +134,7 @@ export default {
                     this.$message.error('登录失败')
                   }
                 })
+
                 loading.close()
               }, 2000)
             } else {
@@ -149,13 +146,11 @@ export default {
           });
         }
       } else {
-
         this.$message.error('验证码错误！')
       }
     }
-
   }
-};
+}
 </script>
 
 <style scoped>

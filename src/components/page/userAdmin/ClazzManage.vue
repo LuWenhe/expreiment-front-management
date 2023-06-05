@@ -70,7 +70,8 @@
 </template>
 
 <script>
-import { get, post } from '@/api'
+import { addClazz, getClazzListByTeacherId, updateClazz } from '@/api/clazz';
+import { deleteStudentsAndClazzByClazzId } from '@/api/user';
 
 export default {
   name: 'ClazzManage',
@@ -111,15 +112,10 @@ export default {
   },
   methods: {
     getClazzListByTeacherId(teacherId) {
-      let url = this.$root.URL + '/clazz/getClazzList'
+      let currentPage = this.pageInfo.pageNum
+      let pageSize = this.pageInfo.pageSize
 
-      let params = {
-        teacherId: teacherId,
-        currentPage: this.pageInfo.pageNum,
-        pageSize: this.pageInfo.pageSize
-      }
-
-      get(url, params).then(res => {
+      getClazzListByTeacherId(teacherId, currentPage, pageSize).then(res => {
         if (res.data.code === '200') {
           let tableData = res.data.data.list
           let data = res.data.data
@@ -147,8 +143,6 @@ export default {
       this.editDialogFormVisible = true
     },
     delClazz(index, row) {
-      let path = this.$root.URL + '/userBack/deleteStudentsAndClazzByClazzId'
-
       this.$confirm('是否删除当前班级以及班级下的所有学生?','提示',{
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -156,10 +150,12 @@ export default {
       }).then(() => {
         let clazzId = row.id
 
-        post(path, clazzId).then(res => {
+        deleteStudentsAndClazzByClazzId(clazzId).then(res => {
           if (res.data.code === '200') {
             this.$message.success('删除班级以及班级下的所有学生成功!')
             this.getClazzListByTeacherId(this.teacherId)
+          } else {
+            this.$message.error('删除失败!')
           }
         })
       })
@@ -174,30 +170,31 @@ export default {
     },
     submitClazz() {
       this.clazzForm.teacherId = this.teacherId
-      let url = this.$root.URL + '/clazz/addClazz'
 
       this.$confirm("是否添加当前班级?", '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        post(url, this.clazzForm).then(res => {
+        addClazz(this.clazzForm).then(res => {
           if (res.data.code === '200') {
             this.$message.success('添加班级成功!')
             this.addDialogFormVisible = false
             this.getClazzListByTeacherId(this.teacherId)
+          } else {
+            this.$message.error('添加班级失败!')
           }
         })
       })
     },
     submitEditClazz() {
-      let url = this.$root.URL + '/clazz/updateClazz'
-
-      post(url, this.editClazzForm).then(res => {
+      updateClazz(this.editClazzForm).then(res => {
         if (res.data.code === '200') {
           this.$message.success('更新班级信息成功!')
           this.editDialogFormVisible = false
           this.getClazzListByTeacherId(this.teacherId)
+        } else {
+          this.$message.error('更新班级信息失败!')
         }
       })
     }

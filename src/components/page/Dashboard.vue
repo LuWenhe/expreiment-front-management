@@ -27,22 +27,17 @@
         </div>
       </el-col>
     </el-row>
-
     <el-divider content-position='left'>课程分类图</el-divider>
-
     <el-row :gutter='20'>
-
       <el-col :span='6'>
         <div id='echarts_id' style='width: 700px;height: 700px'></div>
       </el-col>
     </el-row>
-
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import { get, post } from '../../api/index';
+import { getDashBoardInfo } from '@/api/dashBoard'
 
 export default {
   data: function() {
@@ -53,95 +48,78 @@ export default {
       num2: 0,
       num3: 0,
       num4: 0
-
-    };
+    }
   },
-
   created() {
-
     if (localStorage.getItem('token') == null) {
-      this.$router.push('/backAdmin/login');
-
+      this.$router.push('/backAdmin/login')
     }
 
-    this.getData();
-
+    this.getData()
   },
   mounted() {
-
-    this.drawPic();
-
+    this.drawPic()
   },
   methods: {
+    drawPic() {
+      getDashBoardInfo().then(res => {
+        if (res.data.code === '200') {
+          let eChart = this.$echarts.init(document.getElementById('echarts_id'))
 
-    async drawPic() {
-      let url = this.$root.URL + '/back/getDashBoardInfo';
-      await post(url).then(res => {
-        let echart = this.$echarts.init(document.getElementById('echarts_id'));
-        let option = {
-          title: {
-            text: '实训平台数据图',
-            left: 'center'
-          },
-          tooltip: {
-            trigger: 'item'
-          },
-          legend: {
-            orient: 'vertical',
-            left: 'left'
-          },
-          series: [
-            {
-              name: '访问来源',
-              type: 'pie',
-              radius: '50%',
-              data: [{ value: res.data.data.lessonCount, name: '课程数量' },
-                { value: res.data.data.tagCount, name: '课程标签' }
-
-              ],
-              emphasis: {
-                itemStyle: {
-                  shadowBlur: 10,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+          let option = {
+            title: {
+              text: '实训平台数据图',
+              left: 'center'
+            },
+            tooltip: {
+              trigger: 'item'
+            },
+            legend: {
+              orient: 'vertical',
+              left: 'left'
+            },
+            series: [
+              {
+                name: '访问来源',
+                type: 'pie',
+                radius: '50%',
+                data: [
+                  { value: res.data.data.lessonCount, name: '课程数量' },
+                  { value: res.data.data.tagCount, name: '课程标签' }
+                ],
+                emphasis: {
+                  itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  }
                 }
               }
-            }
-          ]
-        };
+            ]
+          }
 
-        echart.setOption(option);
-
-      });
-
-
+          eChart.setOption(option)
+        }
+      })
     },
-
-    async getData() {
-
-      let url = this.$root.URL + '/back/getDashBoardInfo';
-      let res = await post(url).then(res => {
+    getData() {
+      getDashBoardInfo().then(res => {
         if (res.data.code === '200') {
-          this.lessonNum = res.data.data.lessonCount;
-          this.tagNum = res.data.data.tagCount;
+          this.lessonNum = res.data.data.lessonCount
+          this.tagNum = res.data.data.tagCount
         } else {
           this.$message.error('加载失败');
         }
       })
     }
-
   }
-
-
-};
-
-
+}
 </script>
 
 <style>
 @import '../../assets/css/main.css';
 @import '../../assets/css/color-dark.css'; /*深色主题*/
-/*@import "./assets/css/theme-green/color-green.css";   浅绿色主题*/
+
 .el-table th.gutter {
   display: table-cell !important;
 }
