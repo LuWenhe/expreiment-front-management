@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import { getGuideBook } from '@/api/frontLesson'
-import { addLessonPic, addSonChapterBook } from '@/api/backLesson'
+import { getGuideBook } from '@/network/api/frontLesson'
+import { addLessonPic, addSonChapterBook } from '@/network/api/backLesson'
 
 export default {
   inject: ['reload'],

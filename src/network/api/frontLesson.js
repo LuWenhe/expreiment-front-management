@@ -1,9 +1,9 @@
-import { request } from '@/network/request'
+import { request } from '@/network/request/request'
 
 export const getGuideBook = (sonId) => {
   return request({
     method: 'GET',
-    url: '/front/getGuideBook',
+    url: '/frontLesson/getGuideBook',
     params: {
       sonId: sonId
     }

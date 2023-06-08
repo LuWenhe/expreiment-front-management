@@ -70,8 +70,8 @@
 </template>
 
 <script>
-import { addClazz, getClazzListByTeacherId, updateClazz } from '@/api/clazz';
-import { deleteStudentsAndClazzByClazzId } from '@/api/user';
+import { addClazz, getClazzListByTeacherId, updateClazz } from '@/network/api/clazz'
+import { deleteStudentsAndClazzByClazzId } from '@/network/api/user'
 
 export default {
   name: 'ClazzManage',

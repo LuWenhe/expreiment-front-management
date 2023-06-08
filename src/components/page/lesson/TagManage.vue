@@ -65,10 +65,10 @@
 </template>
 
 <script>
-import { addTag, deleteTag, editTag, loadTagList } from '@/api/backLesson'
+import { addTag, deleteTag, editTag, getTagsByPage } from '@/network/api/tag'
 
 export default {
-  name: 'TagList',
+  name: 'tagManage',
   data() {
     return {
       formLabelWidth: '120px',
@@ -209,11 +209,11 @@ export default {
       this.pageInfo.pageNum = pageNum;
       this.loadTag();
     },
-    async loadTag() {
+    loadTag() {
       let currentPage = this.pageInfo.pageNum
       let pageSize = this.pageInfo.pageSize
 
-      loadTagList(currentPage, pageSize).then(res => {
+      getTagsByPage(currentPage, pageSize).then(res => {
         if (res.data.code === '200') {
           let tableData = res.data.data.list
           let data = res.data.data

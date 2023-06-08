@@ -10,87 +10,44 @@
       unique-opened
       router
     >
-      <!-- 如果是管理员 -->
-      <template v-if="role === 'admin'">
-        <template v-for="item in items_admin">
-          <template v-if="item.child">
-            <el-submenu :index="item.index">
-              <template slot="title">
-                <i :class="item.icon"></i><span>{{ item.title }}</span>
+      <template v-for='menu in menuList'>
+        <!-- 如果当前结点有子结点 -->
+        <template v-if='menu.children'>
+          <el-submenu :index='menu.id.toString()'>
+            <template slot='title'>
+              <i :class='menu.icon'></i>
+              <span>{{menu.name}}</span>
+            </template>
+            <template v-for='menuChild in menu.children'>
+              <!-- 如果孩子结点还有子结点 -->
+              <template v-if='menuChild.children'>
+                <el-submenu :index='menuChild.id.toString()'>
+                  <template slot='title'>
+                    <i :class='menuChild.icon'></i>
+                    <span slot='title'>{{menuChild.name}}</span>
+                  </template>
+                  <template v-for='menuGrandSon in menuChild.children'>
+                    <el-menu-item :index='menuGrandSon.routerUrl'>
+                      <i :class='menuGrandSon.icon'></i>
+                      <span slot='title'>{{menuGrandSon.name}}</span>
+                    </el-menu-item>
+                  </template>
+                </el-submenu>
               </template>
-              <template v-for="item1 in item.child ">
-                <el-menu-item
-                  :index="item1.index"
-                  :key="item1.index"
-                ><i :class="item1.icon"></i>
-                  <span slot="title">{{ item1.title }}</span></el-menu-item>
-              </template>
-            </el-submenu>
-          </template>
-          <template v-else>
-            <el-menu-item
-              :index="item.index"
-              :key="item.index">
-              <i :class="item.icon"></i>
-              <span slot="title">{{ item.title }}</span>
-            </el-menu-item>
-          </template>
-        </template>
-      </template>
-      <!-- 如果是教师 -->
-      <template v-else-if="role === 'teacher'">
-        <template v-for="item in items_teacher">
-          <template v-if="item.child">
-            <el-submenu :index="item.index">
-              <template slot="title"><i :class="item.icon"></i> <span>{{ item.title }}</span>
-              </template>
-              <template v-for="item1 in item.child ">
-                <el-menu-item
-                  :index="item1.index"
-                  :key="item1.index"
-                ><i :class="item1.icon"></i>
-                  <span slot="title">{{ item1.title }}</span>
+              <template v-else>
+                <el-menu-item :index='menuChild.id.toString()'>
+                  {{menuChild.name}}
                 </el-menu-item>
               </template>
-            </el-submenu>
-          </template>
-          <template v-else>
-            <el-menu-item
-              :index="item.index"
-              :key="item.index"
-            >
-              <i :class="item.icon"></i>
-              <span slot="title">{{ item.title }}</span>
-            </el-menu-item>
-          </template>
+            </template>
+          </el-submenu>
         </template>
-      </template>
-      <!-- 如果是学员 -->
-      <template v-else>
-        <template v-for="item in items_student">
-          <template v-if="item.child">
-            <el-submenu :index="item.index">
-              <template slot="title"><i :class="item.icon"></i><span>{{ item.title }}</span>
-              </template>
-              <template v-for="item1 in item.child ">
-                <el-menu-item
-                  :index="item1.index"
-                  :key="item1.index"
-                ><i :class="item1.icon"></i>
-                  <span slot="title">{{ item1.title }}</span>
-                </el-menu-item>
-              </template>
-            </el-submenu>
-          </template>
-          <template v-else>
-            <el-menu-item
-              :index="item.index"
-              :key="item.index"
-            >
-              <i :class="item.icon"></i>
-              <span slot="title">{{ item.title }}</span>
-            </el-menu-item>
-          </template>
+        <!-- 如果当前结点没有子结点 -->
+        <template v-else>
+          <el-menu-item :index='menu.id.toString()'>
+            <i :class='menu.routerUrl'></i>
+            <span slot='title'>{{menu.title}}</span>
+          </el-menu-item>
         </template>
       </template>
     </el-menu>
@@ -99,175 +56,33 @@
 
 <script>
 import bus from '../common/bus'
+import { getMenuTree } from '@/network/api/permission'
 
 export default {
   data() {
     return {
       collapse: false,
       role: '',
-      items_admin: [
-        {
-          'icon': 'el-icon-lx-home',
-          'index': '/dashboard',
-          'title': '系统首页'
-        },
-        {
-          'icon': 'el-icon-reading',
-          'index': '/lessonIndex',
-          'title': '课程管理',
-          'child': [
-            {
-              'icon': 'el-icon-s-order',
-              'index': '/lessonIndex',
-              'title': '课程列表'
-            },
-            {
-              'icon': 'el-icon-s-management',
-              'index': '/tagList',
-              'title': '标签管理'
-            },
-            {
-              'icon': 'el-icon-s-management',
-              'index': '/imageAdmin',
-              'title': '工具管理'
-            }
-          ]
-        },
-        {
-          'icon': 'el-icon-set-up',
-          'index': '/lunboManage',
-          'title': '系统管理',
-          'child': [
-            {
-              'icon': 'el-icon-s-order',
-              'index': '/lunboManage',
-              'title': '轮播管理'
-            }
-          ]
-        },
-        {
-          'icon': 'el-icon-s-custom',
-          'index': '/userManage',
-          'title': '用户管理',
-          'child': [
-            {
-              'icon': 'el-icon-user',
-              'index': '/teacherManage',
-              'title': '教师管理'
-            },
-            {
-              'icon': 'el-icon-user',
-              'index': '/studentManage',
-              'title': '学生管理'
-            }
-          ]
-        }
-      ],
-      items_teacher: [
-        {
-          'icon': 'el-icon-lx-home',
-          'index': '/dashboard',
-          'title': '系统首页',
-        },
-        {
-          'icon': 'el-icon-reading',
-          'index': '/lessonIndex',
-          'title': '课程管理',
-          'child': [
-            {
-              'icon': 'el-icon-s-order',
-              'index': '/lessonIndex',
-              'title': '个人课程管理'
-            },
-            {
-              'icon': 'el-icon-s-management',
-              'index': '/imageAdmin',
-              'title': '实验软件管理'
-            }
-          ]
-        },
-        {
-          'icon': 'el-icon-s-custom',
-          'index': '/userManage',
-          'title': '用户管理',
-          'child': [
-            {
-              'icon': 'el-icon-user',
-              'index': '/studentManage',
-              'title': '学生管理',
-            }
-          ]
-        },
-        {
-          'icon': 'el-icon-school',
-          'index': '',
-          'title': '班级管理',
-          'child': [
-            {
-              'icon': 'el-icon-s-custom',
-              'index': '/clazzManage',
-              'title': '班级列表',
-            }
-          ]
-        }
-      ],
-      items_student: [
-        {
-          'icon': 'el-icon-lx-home',
-          'index': '/dashboard',
-          'title': '系统首页'
-        }
-      ]
+      menuList: []
     }
-  },
-  methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    UniMainPage() {
-      this.$router.push('/union');
-    },
-    onclick() {
-      console.log('被点击');
-    }
-  },
-  computed: {
-    onRoutes() {
-      return this.$route.path.replace('/', '');
-    },
-    noChildren() {
-      return this.asideMenu.filter(item =>
-        !item.children
-      )
-    },
-    hasChildren() {
-      return this.asideMenu.filter(item =>
-        item.children
-      )
-    }
-
   },
   created() {
-    let role = localStorage.getItem("role")
+    let user_id = localStorage.getItem('user_id')
 
-    if (role === '管理员') {
-      this.role = 'admin'
-    } else if (role === '老师') {
-      this.role = 'teacher'
-    } else if (role === '学生') {
-      this.role = 'student'
-    }
+    getMenuTree(user_id).then(res => {
+      if (res.data.status === '200') {
+        this.menuList.push(res.data.data)
+      } else {
+        this.$message.error('导航栏加载失败!')
+      }
+    })
 
     bus.$on('collapse', (msg) => {
-      this.collapse = msg;
-      bus.$emit('collapse-content', msg);
-    });
-
+      this.collapse = msg
+      bus.$emit('collapse-content', msg)
+    })
   }
-};
+}
 </script>
 
 <style scoped>

@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { addSonChapterInEdit, delChapterInEdit } from '@/api/backLesson'
+import { addSonChapterInEdit, delChapterInEdit } from '@/network/api/backLesson'
 
 export default {
   name: 'ChapterAdd',

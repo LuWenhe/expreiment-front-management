@@ -18,7 +18,7 @@ import 'mavon-editor/dist/css/index.css';
 import * as echarts from 'echarts';   //echarts5.0之后引入的方式
 
 Vue.prototype.$echarts = echarts;
-import { get, post } from './api/index';
+import { get, post } from './network/api';
 //导入验证码
 import SlideVerify from 'vue-monoplasty-slide-verify';
 
@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
   if (!token && to.path !== '/login') {
     next('/login');
   } else if (token && to.path === '/login') {
-    next('/dashboard')
+    next()
   } else if (to.meta.permission) {
   } else {
     if (navigator.userAgent.indexOf('MSIE') > -1 && to.path === '/editor') {

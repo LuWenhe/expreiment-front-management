@@ -1,9 +1,9 @@
-import { request } from '@/network/request'
+import { request } from '@/network/request/request'
 
 export const getClazzListByTeacherId = (teacherId, currentPage, pageSize) => {
   return request({
     method: 'GET',
-    url: '/clazz/getClazzList',
+    url: '/backClazz/getClazzList',
     params: {
       teacherId: teacherId,
       currentPage: currentPage,
@@ -15,7 +15,7 @@ export const getClazzListByTeacherId = (teacherId, currentPage, pageSize) => {
 export const addClazz = (clazzObj) => {
   return request({
     method: 'POST',
-    url: '/clazz/addClazz',
+    url: '/backClazz/addClazz',
     data: clazzObj
   })
 }
@@ -23,7 +23,7 @@ export const addClazz = (clazzObj) => {
 export const updateClazz = (clazzObj) => {
   return request({
     method: 'POST',
-    url: '/clazz/updateClazz',
+    url: '/backClazz/updateClazz',
     data: clazzObj
   })
 }
@@ -31,7 +31,7 @@ export const updateClazz = (clazzObj) => {
 export const deleteClazz = (clazzId) => {
   return request({
     method: 'GET',
-    url: '/clazz/deleteClazz',
+    url: '/backClazz/deleteClazz',
     params: {
       clazzId: clazzId
     }
@@ -41,7 +41,7 @@ export const deleteClazz = (clazzId) => {
 export const getStudentsByClazzId = (clazzId, currentPage, pageSize) => {
   return request({
     method: 'GET',
-    url: '/clazz/getStudents',
+    url: '/backClazz/getStudents',
     params: {
       clazzId: clazzId,
       currentPage: currentPage,

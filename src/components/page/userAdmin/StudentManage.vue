@@ -177,9 +177,9 @@
 
 <script>
 import { phoneCheck } from '@/utils/validator'
-import { getClazzListByTeacherId, getStudentsByClazzId } from '@/api/clazz'
-import { getProvinces } from '@/api/province'
-import { addStudent, addStudentFromExcel, deleteUsers, editStudent } from '@/api/user'
+import { getClazzListByTeacherId, getStudentsByClazzId } from '@/network/api/clazz'
+import { getProvinces } from '@/network/api/province'
+import { addStudent, addStudentFromExcel, deleteUsers, editStudent } from '@/network/api/user'
 
 const validatorPhoneNum = (rule, value, callback) => {
   if (!value) {

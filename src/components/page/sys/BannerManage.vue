@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-row>
     <el-table
       :data='tableData'
       border
@@ -66,12 +66,12 @@
         </span>
       </el-dialog>
     </div>
-  </div>
+  </el-row>
 </template>
 
 <script>
 import bannerEdit from '@/components/page/sys/bannerEdit'
-import { getAllBanners, updateBanner } from '@/api/system'
+import { getAllBanners, updateBanner } from '@/network/api/system'
 
 export default {
   inject: ['reload'],
@@ -124,7 +124,7 @@ export default {
   },
   created() {
     this.getData()
-    this.uploadImgServer = this.$root.URL + '/lesson/addLessonPic'
+    this.uploadImgServer = this.$root.URL + '/backLesson/addLessonPic'
   },
   components: {
     bannerEdit

@@ -214,7 +214,7 @@ import {
   editSonChapterInEdit,
   getChapterInfo,
   getEditSonChapterInfo
-} from '@/api/backLesson'
+} from '@/network/api/backLesson'
 
 export default {
   name: 'ChapterAdmin',

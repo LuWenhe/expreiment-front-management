@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-row>
     <el-row type='flex' class='row-bg' justify='start'>
       <el-col :span='2'>
         <el-button @click='addToolsDiag = true' type='primary'>添加</el-button>
@@ -91,11 +91,11 @@
         <el-button type='primary' @click="addTools('addToolForm')">确 定</el-button>
       </span>
     </el-dialog>
-  </div>
+  </el-row>
 </template>
 
 <script>
-import { addTool, deleteTools, findToolByName, getAllTools } from '@/api/backLesson'
+import { addTool, deleteTools, findToolByName, getAllTools } from '@/network/api/tool'
 
 export default {
   inject: ['reload'],

@@ -1,4 +1,4 @@
-import {request} from '@/network/request'
+import {request} from '@/network/request/request'
 
 export const login = (userObj) => {
   return request({
@@ -11,7 +11,7 @@ export const login = (userObj) => {
 export const deleteStudentsAndClazzByClazzId = (clazzId) => {
   return request({
     method: 'GET',
-    url: '/userBack/deleteStudentsAndClazzByClazzId',
+    url: '/backUser/deleteStudentsAndClazzByClazzId',
     params: {
       clazzId: clazzId
     }
@@ -21,7 +21,7 @@ export const deleteStudentsAndClazzByClazzId = (clazzId) => {
 export const addStudent = (studentObj) => {
   return request({
     method: 'POST',
-    url: '/userBack/addStudent',
+    url: '/backUser/addStudent',
     data: studentObj
   })
 }
@@ -29,7 +29,7 @@ export const addStudent = (studentObj) => {
 export const deleteUsers = (userIds) => {
   return request({
     method: 'POST',
-    url: '/userBack/deleteUsersByIds',
+    url: '/backUser/deleteUsersByIds',
     data: userIds
   })
 }
@@ -37,7 +37,7 @@ export const deleteUsers = (userIds) => {
 export const editStudent = (studentObj) => {
   return request({
     method: 'POST',
-    url: '/userBack/editStudent',
+    url: '/backUser/editStudent',
     data: studentObj
   })
 }
@@ -45,7 +45,7 @@ export const editStudent = (studentObj) => {
 export const addStudentFromExcel = (formData) => {
   return request({
     method: 'POST',
-    url: '/userBack/uploadFromExcel',
+    url: '/backUser/uploadFromExcel',
     data: formData
   })
 }
@@ -53,7 +53,7 @@ export const addStudentFromExcel = (formData) => {
 export const getAllTeachers = (currentPage, pageSize) => {
   return request({
     method: 'GET',
-    url: '/userBack/getAllTeachers',
+    url: '/backUser/getAllTeachers',
     params: {
       currentPage: currentPage,
       pageSize: pageSize
@@ -64,14 +64,14 @@ export const getAllTeachers = (currentPage, pageSize) => {
 export const loadAllTeachers = () => {
   return request({
     method: 'GET',
-    url: '/userBack/loadAllTeachers'
+    url: '/backUser/loadAllTeachers'
   })
 }
 
 export const addTeacher = (teacherObj) => {
   return request({
     method: 'POST',
-    url: '/userBack/addTeacher',
+    url: '/backUser/addTeacher',
     data: teacherObj
   })
 }
@@ -79,7 +79,7 @@ export const addTeacher = (teacherObj) => {
 export const findTeacherByName = (realName, currentPage, pageSize) => {
   return request({
     method: 'GET',
-    url: '/userBack/findTeacherByName',
+    url: '/backUser/findTeacherByName',
     params: {
       realName: realName,
       currentPage: currentPage,
@@ -91,7 +91,7 @@ export const findTeacherByName = (realName, currentPage, pageSize) => {
 export const editTeacher = (teacherObj) => {
   return request({
     method: 'POST',
-    url: '/userBack/editTeacher',
+    url: '/backUser/editTeacher',
     data: teacherObj
   })
 }

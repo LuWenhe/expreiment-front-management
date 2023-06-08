@@ -32,8 +32,7 @@
   </div>
 </template>
 <script>
-import bus from '../common/bus';
-import axios from 'axios';
+import bus from '../common/bus'
 
 export default {
   data() {
@@ -91,10 +90,8 @@ export default {
     handleCommand(command) {
       var id = 0;
       if (command == 'loginout') {
-
         localStorage.clear();
-        this.$router.push('/backAdmin/login');
-
+        this.$router.push('/login');
       }
     },
     // 侧边栏折叠

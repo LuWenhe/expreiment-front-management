@@ -1,4 +1,4 @@
-import { request } from '@/network/request'
+import { request } from '@/network/request/request'
 
 export const getDashBoardInfo = () => {
   return request({

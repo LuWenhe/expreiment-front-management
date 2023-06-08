@@ -170,8 +170,9 @@
 <script>
 import ChapterAdmin from './ChapterAdmin'
 import { bNumberCheck } from '@/utils/validator'
-import { loadAllTeachers } from '@/api/user'
-import { addLessonPic, getLessonDetail, getOptionList, updateLesson } from '@/api/backLesson';
+import { loadAllTeachers } from '@/network/api/user'
+import { addLessonPic, getLessonDetail, updateLesson } from '@/network/api/backLesson'
+import { getTags } from '@/network/api/tag';
 
 const validatorLearnTime = (rule, value, callback) => {
   if (!value) {
@@ -241,12 +242,12 @@ export default {
   },
   created() {
     this.lessonId = this.$route.query.lessonId;
-    this.uploadImgServer = this.$root.URL + '/lesson/addLessonPic'
+    this.uploadImgServer = this.$root.URL + '/backLesson/addLessonPic'
     this.getLessonDetail()
     this.getOptionList()
   },
   mounted() {
-    this.teachers = this.loadAll()
+    this.loadAll()
   },
   methods: {
     querySearch(queryString, cb) {
@@ -271,18 +272,28 @@ export default {
     loadAll() {
       loadAllTeachers().then(res => {
         if (res.data.code === '200') {
-          this.teachers = res.data.data;
+          this.teachers = res.data.data
         }
       })
     },
     getOptionList() {
-      getOptionList().then(res => {
+      getTags().then(res => {
         if (res.data.code === '200') {
-          this.options = res.data.data
+          let tagList = res.data.data
+          let tagOption = []
+
+          tagList.forEach(item => {
+            let tagObj = {}
+            tagObj.value = item.tagName
+            tagObj.label = item.tagName
+            tagOption.push(tagObj)
+          })
+
+          this.options = tagOption
         }
       })
     },
-    async getLessonDetail() {
+    getLessonDetail() {
       getLessonDetail(this.lessonId).then(res => {
         if (res.data.code === '200') {
           this.lesson = res.data.data;

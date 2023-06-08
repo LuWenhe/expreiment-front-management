@@ -186,9 +186,10 @@
 </template>
 <script>
 import { bNumberCheck } from '@/utils/validator'
-import ChapterAdd from '@/components/page/lesson/ChapterAdd'
-import { addLesson, addLessonPic, getOptionList } from '@/api/backLesson'
-import { loadAllTeachers } from '@/api/user'
+import ChapterAdd from '@/components/page/lesson/AddChapter.vue'
+import { addLesson, addLessonPic } from '@/network/api/backLesson'
+import { loadAllTeachers } from '@/network/api/user'
+import { getTags } from '@/network/api/tag'
 
 const validatorLearnTime = (rule, value, callback) => {
   if (!value) {
@@ -233,20 +234,7 @@ export default {
       fileListFront: [], // 照片列表
       hideUpload: false,
       radio: 1,
-      options: [
-        {
-          value: 'AI',
-          label: 'AI类课程'
-        }, {
-          value: 'qixiang',
-          label: '气象类课程'
-        }, {
-          value: 'soft',
-          label: '开发类课程'
-        }, {
-          value: 'other',
-          label: '其他类课程'
-        }],
+      options: [],
       value: [],
       lesson: {
         pic_url: '',
@@ -268,13 +256,12 @@ export default {
       isAddLesson: false,
       tabIndex: '',
       teachers: []
-
-    };
+    }
   },
   created() {
     this.isAddLesson = false
-    this.uploadImgServer = this.$root.URL + '/lesson/addLessonPic'
-    this.getOptionList()
+    this.uploadImgServer = this.$root.URL + '/backLesson/addLessonPic'
+    this.getTags()
   },
   mounted() {
     this.teachers = this.loadAll()
@@ -305,10 +292,20 @@ export default {
         }
       })
     },
-    getOptionList() {
-      getOptionList().then(res => {
+    getTags() {
+      getTags().then(res => {
         if (res.data.code === '200') {
-          this.options = res.data.data
+          let tagList = res.data.data
+          let tagOption = []
+
+          tagList.forEach(item => {
+            let tagObj = {}
+            tagObj.value = item.tagName
+            tagObj.label = item.tagName
+            tagOption.push(tagObj)
+          })
+
+          this.options = tagOption
         }
       })
     },

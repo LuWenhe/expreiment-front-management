@@ -2,10 +2,10 @@
   <div>
     <el-row>
       <el-col :span='3'>
-        <ul v-for='(item,index) in tagsList' :key='index'>
-          <li class='tagLi' @click='getLessonsByTag(item.value)'>
+        <ul v-for='(item, index) in tagList' :key='index'>
+          <li class='tagLi' @click='getLessonsByTag(item.tagName)'>
             <i class='el-icon-price-tag' style='width: 150px;font-size: 20px'>
-              <a href='#' style='width: 150px;height: 50px;font-size: 20px'>{{ item.value }}</a>
+              <a href='#' style='width: 150px;height: 50px;font-size: 20px'>{{ item.tagName }}</a>
             </i>
           </li>
         </ul>
@@ -67,7 +67,8 @@
 </template>
 
 <script>
-import { deleteLessonById, findLessonsByName, getAllLessons, getOptionList } from '@/api/backLesson'
+import { deleteLessonById, findLessonsByName, getAllLessons } from '@/network/api/backLesson'
+import { getTags } from '@/network/api/tag'
 
 export default {
   inject: ['reload'],
@@ -102,7 +103,7 @@ export default {
           'teacher_name': 'nxd'
         }
       ],
-      tagsList: [],
+      tagList: [],
       tagActive: '',
       btnShow: false,
       index: '0'
@@ -115,9 +116,16 @@ export default {
   },
   methods: {
     getOptionList() {
-      getOptionList().then(res => {
+      getTags().then(res => {
         if (res.data.code === '200') {
-          this.tagsList = res.data.data
+          let tagList = res.data.data
+          let tagOption = []
+
+          tagList.forEach(tagObj => {
+            tagOption.push(tagObj)
+          })
+
+          this.tagList = tagOption
         }
       })
     },

@@ -135,7 +135,7 @@
 
 <script>
 import { ChineseCheck, emailCheck, phoneCheck } from '@/utils/validator'
-import { addTeacher, deleteUsers, editTeacher, findTeacherByName, getAllTeachers } from '@/api/user'
+import { addTeacher, deleteUsers, editTeacher, findTeacherByName, getAllTeachers } from '@/network/api/user'
 
 const validatorPhoneNum = (rule, value, callback) => {
   if (!value) {
