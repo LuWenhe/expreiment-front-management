@@ -333,7 +333,8 @@ export default {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
     getClazzList() {
-      let teacherId = localStorage.getItem('user_id')
+      let userData = JSON.parse(localStorage.getItem('userData'))
+      let teacherId = userData.userId
 
       getClazzListByTeacherId(teacherId).then(res => {
         if (res.data.code === '200') {

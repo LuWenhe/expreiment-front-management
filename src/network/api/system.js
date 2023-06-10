@@ -3,7 +3,7 @@ import { request } from '@/network/request/request'
 export const getAllBanners = (currentPage, pageSize) => {
   return request({
     method: 'GET',
-    url: '/banner/getAllBanner',
+    url: '/backBanner/getAllBanner',
     params: {
       currentPage: currentPage,
       pageSize: pageSize
@@ -14,7 +14,7 @@ export const getAllBanners = (currentPage, pageSize) => {
 export const updateBanner = (bannerObj) => {
   return request({
     method: 'POST',
-    url: '/banner/updateBanner',
+    url: '/backBanner/updateBanner',
     data: bannerObj
   })
 }

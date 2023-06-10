@@ -1,9 +1,9 @@
 import { request } from '@/network/request/request'
 
-export const getAllLessons = (pageRequest) => {
+export const getLessonsByUserId = (pageRequest) => {
   return request({
     method: 'POST',
-    url: '/backLesson/getAllLessons',
+    url: '/backLesson/getLessonsByUserId',
     data: pageRequest
   })
 }
@@ -60,15 +60,11 @@ export const uploadSingleFile = (formData) => {
   })
 }
 
-export const findLessonsByName = (lessonName, currentPage, pageSize) => {
+export const findLessonsByName = (pageRequest) => {
   return request({
-    method: 'GET',
+    method: 'POST',
     url: '/backLesson/findLessonsByName',
-    params: {
-      lessonName: lessonName,
-      currentPage: currentPage,
-      pageSize: pageSize
-    }
+    data: pageRequest
   })
 }
 

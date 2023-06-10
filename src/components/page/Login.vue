@@ -108,7 +108,8 @@ export default {
     submitForm() {
       if (this.isRight === 'yes') {
         if (localStorage.getItem('token')) {
-          this.$message('本浏览器无法再次登录');
+          this.$message('本浏览器无法再次登录')
+          this.$router.push('/dashboard')
         } else {
           this.$refs.login.validate(valid => {
             if (valid) {
@@ -124,11 +125,10 @@ export default {
 
                   if (data.code === '200') {
                     this.$message.success('登录成功')
-                    localStorage.setItem('name', data.data.username)
-                    localStorage.setItem('user_id', data.data.userId)
-                    localStorage.setItem('role_id', data.data.roleId)
-                    localStorage.setItem('role', data.data.roleName)
                     localStorage.setItem('token', data.token)
+                    localStorage.setItem('userData', JSON.stringify(data.data))
+
+                    this.$store.dispatch('getUserInfo', data.token)
                     this.$router.push('/dashboard')
                   } else {
                     this.$message.error('登录失败')
@@ -139,8 +139,6 @@ export default {
               }, 2000)
             } else {
               this.$message.error('请输入账号和密码')
-              console.log('error submit!!')
-              this.refreshCode()
               return false
             }
           });

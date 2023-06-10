@@ -106,7 +106,9 @@ export default {
     }
   },
   created() {
-    this.teacherId = localStorage.getItem('user_id')
+    let userData = JSON.parse(localStorage.getItem('userData'))
+
+    this.teacherId = userData.userId
     this.getClazzListByTeacherId(this.teacherId)
     this.initClazzSize()
   },

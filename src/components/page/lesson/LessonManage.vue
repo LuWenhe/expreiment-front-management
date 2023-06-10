@@ -18,7 +18,7 @@
           </el-col>
           <el-col :span='4'>
             <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
-            <el-button type='danger' @click='addLesson'>添加课程</el-button>
+            <el-button type='danger' @click='addLesson' v-permission="'lesson:add'">添加课程</el-button>
           </el-col>
         </el-row>
         <br>
@@ -39,7 +39,7 @@
                 <div style='width: 200px;height: 50px'>
                   <span style='font-size: 15px'>授课老师：{{ item.teacher_name }}</span>
                   <el-button type='warning' style='float:right;position:relative;margin-right: 6px'
-                             @click='deleteLesson(item.lessonId)'><i class='el-icon-delete'></i></el-button>
+                             @click='deleteLesson(item.lessonId)' v-permission="'lesson:delete'"><i class='el-icon-delete'></i></el-button>
                 </div>
               </div>
             </el-card>
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { deleteLessonById, findLessonsByName, getAllLessons } from '@/network/api/backLesson'
+import { deleteLessonById, findLessonsByName, getLessonsByUserId } from '@/network/api/backLesson'
 import { getTags } from '@/network/api/tag'
 
 export default {
@@ -104,14 +104,19 @@ export default {
         }
       ],
       tagList: [],
-      tagActive: '',
       btnShow: false,
-      index: '0'
+      index: '0',
+      userId: 0,
+      roleId: 0
     }
   },
   created() {
-    this.tagActive = '全部'
-    this.getLessonList()
+    let userData = JSON.parse(localStorage.getItem('userData'))
+
+    this.userId = userData.userId
+    this.roleId = userData.roleId
+
+    this.getLessons()
     this.getOptionList()
   },
   methods: {
@@ -146,7 +151,8 @@ export default {
             this.$message({
               type: 'success',
               message: '删除课程成功!'
-            });
+            })
+
             this.reload()
           }
         })
@@ -157,13 +163,32 @@ export default {
         });
       });
     },
-    async handleSearch() {
-      let lesson_name = this.lesson_name
-      let currentPage = this.pageInfo.pageNum
-      let pageSize = this.pageInfo.pageSize
+    handleSearch() {
+      this.getLessonsByLessonName()
+    },
+    //改变每页显示的数据条数
+    handleSizeChange(pageSize) {
+      this.pageInfo.pageSize = pageSize;
+      this.getLessons()
+    },
+    handleCurrentChange(pageNum) {
+      this.pageInfo.pageNum = pageNum;
+      this.getLessons()
+    },
+    // Todo
+    getLessonsByTag(tagName) {
+      this.getLessons()
+    },
+    getLessons() {
+      let pageRequest = {
+        userId: this.userId,
+        roleId: this.roleId,
+        currentPage: this.pageInfo.pageNum,
+        pageSize: this.pageInfo.pageSize
+      }
 
-      findLessonsByName(lesson_name, currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
+      getLessonsByUserId(pageRequest).then(res => {
+        if (res.data.status === '200') {
           let tableData = res.data.data.list
           let data = res.data.data
 
@@ -183,38 +208,15 @@ export default {
         }
       })
     },
-    //改变每页显示的数据条数
-    handleSizeChange(pageSize) {
-      this.pageInfo.pageSize = pageSize;
-      this.getLessonList();
-    },
-    handleCurrentChange(pageNum) {
-      this.pageInfo.pageNum = pageNum;
-      this.getLessonList();
-    },
-
-    getLessonsByTag(tagName) {
-      this.tagActive = tagName;
-      this.pageInfo = {
-        pageNum: 1,
-        pageSize: 10,
-        size: 0,
-        startRow: 0,
-        endRow: 0,
-        total: 0,
-        pages: 0
-      };
-      this.getLessonList();
-    },
-
-    async getLessonList() {
+    getLessonsByLessonName() {
       let pageRequest = {
+        userId: this.userId,
+        lessonName: this.lesson_name,
         currentPage: this.pageInfo.pageNum,
-        pageSize: this.pageInfo.pageSize,
-        tagActive: this.tagActive
+        pageSize: this.pageInfo.pageSize
       }
 
-      getAllLessons(pageRequest).then(res => {
+      findLessonsByName(pageRequest).then(res => {
         if (res.data.code === '200') {
           let tableData = res.data.data.list
           let data = res.data.data
@@ -236,7 +238,7 @@ export default {
       })
     }
   }
-};
+}
 </script>
 
 <style scoped>

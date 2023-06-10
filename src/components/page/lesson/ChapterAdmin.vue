@@ -209,7 +209,8 @@
 <script>
 import {
   addChapterInEdit,
-  addSonChapterInEdit, delChapterInEdit,
+  addSonChapterInEdit,
+  delChapterInEdit,
   delSonChapterInEdit,
   editSonChapterInEdit,
   getChapterInfo,

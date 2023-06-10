@@ -67,9 +67,9 @@ export default {
     }
   },
   created() {
-    let user_id = localStorage.getItem('user_id')
+    let userData = JSON.parse(localStorage.getItem('userData'))
 
-    getMenuTree(user_id).then(res => {
+    getMenuTree(userData.userId).then(res => {
       if (res.data.status === '200') {
         this.menuList.push(res.data.data)
       } else {

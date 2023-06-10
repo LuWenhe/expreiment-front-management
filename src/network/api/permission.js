@@ -9,3 +9,13 @@ export const getMenuTree = (userId) => {
     }
   })
 }
+
+export const getUserPermission = (userId) => {
+  return request({
+    method: 'GET',
+    url: '/permission/getUserPermission',
+    params: {
+      userId: userId
+    }
+  })
+}

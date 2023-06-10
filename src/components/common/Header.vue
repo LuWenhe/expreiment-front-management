@@ -78,7 +78,8 @@ export default {
   },
 
   created() {
-    this.name = localStorage.getItem('name');
+    let userData = JSON.parse(localStorage.getItem('userData'))
+    this.name = userData.name
   },
 
   methods: {
