@@ -372,9 +372,9 @@ export default {
 
             this.$refs.submit_son.validate(valid => {
               addSonChapterInEdit(this.lesson_form).then(res => {
-                if (res.data.code === '200') {
+                if (res.status === '200') {
                   this.$message.success('提交成功');
-                  this.chapter = res.data.data;
+                  this.chapter = res.data
                   this.form = '';
                   this.lesson_form = {};
                   this.getChapterInfoByLessonId();
@@ -406,7 +406,7 @@ export default {
         this.timer = setTimeout(() => {
           this.$refs.submit_son.validate(valid => {
             editSonChapterInEdit(this.edit_lesson_form).then(res => {
-              if (res.data.code === '200') {
+              if (res.status === '200') {
                 const loading = this.$loading({
                   lock: true,
                   text: 'Loading',
@@ -418,11 +418,11 @@ export default {
                   loading.close();
                 }, 2000);
 
-                this.editSonChapterDiag = false;
-                this.chapter = res.data.data;
-                this.form = '';
-                this.lesson_form = {};
-                this.getChapterInfoByLessonId();
+                this.editSonChapterDiag = false
+                this.chapter = res.data
+                this.form = ''
+                this.lesson_form = {}
+                this.getChapterInfoByLessonId()
               } else {
                 this.$message.error('系统内部错误');
               }
@@ -439,13 +439,15 @@ export default {
     },
     getEditSonChapterInfo(son_id) {
       getEditSonChapterInfo(son_id).then(res => {
-        if (res.data.code === '200') {
-          this.edit_lesson_form.son_no = res.data.data.son_no;
-          this.edit_lesson_form.son_name = res.data.data.son_name;
-          this.edit_lesson_form.description = res.data.data.description;
-          this.edit_lesson_form.ppt = res.data.data.ppt;
-          this.edit_lesson_form.mp4 = res.data.data.mp4;
-          this.edit_lesson_form.son_id = res.data.data.son_id;
+        if (res.status === '200') {
+          let dataObj = res.data
+
+          this.edit_lesson_form.son_no = dataObj.son_no
+          this.edit_lesson_form.son_name = dataObj.son_name
+          this.edit_lesson_form.description = dataObj.description
+          this.edit_lesson_form.ppt = dataObj.ppt
+          this.edit_lesson_form.mp4 = dataObj.mp4
+          this.edit_lesson_form.son_id = dataObj.son_id
         }
       });
     },
@@ -456,7 +458,7 @@ export default {
         type: 'warning'
       }).then(async () => {
         delSonChapterInEdit(son_id).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message.success('删除子章节成功!');
             this.getChapterInfoByLessonId();
           } else {
@@ -477,7 +479,7 @@ export default {
         type: 'warning'
       }).then(async () => {
         delChapterInEdit(chapter_id).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message.success('删除章节成功!');
             this.getChapterInfoByLessonId();
           } else {
@@ -507,9 +509,9 @@ export default {
           this.$refs.submit.validate(valid => {
             if (valid) {
               addChapterInEdit(this.form).then(res => {
-                if (res.data.code === '200') {
+                if (res.status === '200') {
                   this.$message.success('提交成功');
-                  this.chapter = res.data.data;
+                  this.chapter = res.data;
                   this.dialog = false;
                   this.form = {
                     chapter_name: '',
@@ -550,7 +552,7 @@ export default {
           });
 
           // post(url, this.editCh_form).then((res) => {
-          //   if (res.data.code === '200') {
+          //   if (res.status === '200') {
           //     loading.close();
           //     this.$message.success('提交成功');
           //     this.editChDiag = false;
@@ -600,9 +602,9 @@ export default {
       });
     },
     cancelForm() {
-      this.loading = false;
-      this.dialog = false;
-      clearTimeout(this.timer);
+      this.loading = false
+      this.dialog = false
+      clearTimeout(this.timer)
       this.form = '';
     },
     cancelEditChForm() {
@@ -610,14 +612,14 @@ export default {
       this.editCh_form = {};
     },
     toJupyterPage(son_id) {
-      this.$router.push({ name: 'ToJupyterPage', query: { son_id: son_id } });
+      this.$router.push({ name: 'ToJupyterPage', query: { son_id: son_id } })
     },
     async getChapterInfoByLessonId() {
       getChapterInfo(this.lesson_id).then(res => {
-        if (res.data.code === '200') {
-          this.chapter = res.data.data;
+        if (res.status === '200') {
+          this.chapter = res.data
         } else {
-          this.$message.error('加载失败');
+          this.$message.error('加载失败')
         }
       });
     }

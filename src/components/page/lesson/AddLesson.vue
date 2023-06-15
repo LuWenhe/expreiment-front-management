@@ -9,15 +9,14 @@
           <el-upload
             :class='{hide:hideUpload}'
             list-type='picture-card'
-            :action='uploadImgServer'
-            :on-preview='handlePictureCardPreview'
+            action=''
             :on-remove='handleRemove'
-            :on-success='handleAvatarSuccess'
             :before-upload='beforeAvatarUpload'
             :limit='imgLimit'
             :on-exceed='handleExceed'
             :file-list='fileListFront'
-            :headers='uploadHeaders'>
+            :headers='uploadHeaders'
+            :http-request='uploadFile'>
             <i class='el-icon-plus'></i>
           </el-upload>
         </el-col>
@@ -51,8 +50,6 @@
                     <div class='name'>{{ item.username }}</div>
                   </template>
                 </el-autocomplete>
-
-
               </el-form-item>
             </el-col>
           </el-row>
@@ -77,10 +74,8 @@
               <br>
               <br>
               <el-form-item prop='lesson_name'>
-
                 <el-input placeholder='课程名称' style='width: 200px' v-model='lesson.lesson_name'></el-input>
               </el-form-item>
-
             </el-col>
           </el-row>
           <br>
@@ -92,10 +87,8 @@
               <el-form-item prop='learn_credit'>
                 <el-input placeholder='学分' style='width: 200px' v-model='lesson.learn_credit'></el-input>
               </el-form-item>
-
             </el-col>
           </el-row>
-
         </el-col>
       </el-row>
       <br>
@@ -165,7 +158,8 @@
         <br> <br>
         <el-col :span='24' style='width: 95%'>
           <el-form-item prop='description'>
-            <mavon-editor v-model='lesson.description' ref='md' class='editor' @imgAdd='handleEditorImgAdd'
+            <mavon-editor v-model='lesson.description' ref='md' class='editor'
+                          @imgAdd='handleEditorImgAdd'
                           @imgDel='handleEditorImgDel'>
             </mavon-editor>
           </el-form-item>
@@ -229,7 +223,6 @@ export default {
       activeName: 'first',
       imageUrl: '',
       tempUrl: '',
-      uploadImgServer: '',
       imgLimit: 1, // 上传照片数
       fileListFront: [], // 照片列表
       hideUpload: false,
@@ -249,8 +242,8 @@ export default {
         description: '',
         dagang: '',
         cankao: '',
-        goal: ''
-
+        goal: '',
+        teacherId: ''
       },
       lesson_id: '',
       isAddLesson: false,
@@ -260,19 +253,17 @@ export default {
   },
   created() {
     this.isAddLesson = false
-    this.uploadImgServer = this.$root.URL + '/backLesson/addLessonPic'
     this.getTags()
   },
   mounted() {
     this.teachers = this.loadAll()
   },
   methods: {
-    //------------------------------------加载老师姓名开始-------------------
     querySearch(queryString, cb) {
-      var teachers = this.teachers;
-      var results = queryString ? teachers.filter(this.createFilter(queryString)) : teachers;
+      let teachers = this.teachers;
+      let results = queryString ? teachers.filter(this.createFilter(queryString)) : teachers;
       // 调用 callback 返回建议列表的数据
-      cb(results);
+      cb(results)
     },
     createFilter(queryString) {
       return (teacher) => {
@@ -280,22 +271,24 @@ export default {
       };
     },
     handleSelect(item) {
-      this.lesson.teacher_name = item.username;
+      this.lesson.teacher_name = item.username
+      let userData = JSON.parse(localStorage.getItem('userData'))
+      this.lesson.teacherId = userData.userId
     },
     handleIconClick(ev) {
 
     },
     async loadAll() {
       loadAllTeachers().then(res => {
-        if (res.data.code === '200') {
-          this.teachers = res.data.data
+        if (res.status === '200') {
+          this.teachers = res.data
         }
       })
     },
     getTags() {
       getTags().then(res => {
-        if (res.data.code === '200') {
-          let tagList = res.data.data
+        if (res.status === '200') {
+          let tagList = res.data
           let tagOption = []
 
           tagList.forEach(item => {
@@ -309,6 +302,18 @@ export default {
         }
       })
     },
+    uploadFile(params) {
+      let file = params.file
+      let formData = new FormData()
+      formData.append('file', file)
+
+      addLessonPic(formData).then(res => {
+        if (res.status === '200') {
+          this.$message.success('上传图片成功!')
+          this.lesson.pic_url = res.data
+        }
+      })
+    },
     submit() {
       if (this.isAddLesson) {
         this.$message.error('已经添加了,不要重复点击提交');
@@ -316,10 +321,10 @@ export default {
         this.$refs.submit.validate(valid => {
           if (valid) {
             addLesson(this.lesson).then(res => {
-              if (res.data.code === '200') {
-                this.$message.success('添加课程成功!')
+              if (res.status === '200') {
                 this.isAddLesson = true
-                this.lesson_id = res.data.data
+                this.$message.success('添加课程成功!')
+                this.$router.push('/lessonManage')
               }
             })
           } else {
@@ -332,7 +337,6 @@ export default {
       this.$router.push({ name: 'editLesson', query: { lessonId: this.lesson_id } });
     },
     handleClick(tab, event) {
-      console.log(tab.index)
       this.tabIndex = tab.index
     },
     handleRemove(file, fileList) {
@@ -356,30 +360,25 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    /**上传成功后的钩子函数 */
     handleAvatarSuccess(res, file) {
-      this.lesson.pic_url = file.response.data;
-      this.fileListFront.push(file);
+      console.log('333')
+
+      this.lesson.pic_url = file.response.data
+      this.fileListFront.push(file)
       this.hideUpload = true;
     },
-    /**查看图片 */
-    handlePictureCardPreview(file) {
-
-    },
-    /**文件超出个数限制时的钩子 */
     handleExceed() {
       this.$message.error(`只能选择${this.imgLimit}个文件`);
     },
     handleEditorImgAdd(pos, $file) {
       let formData = new FormData()
       formData.append('file', $file)
-      console.log(formData)
 
       addLessonPic(formData).then(res => {
-        if (res.data.code === '200') {
-          this.$refs.md.$img2Url(pos, res.data.data);
+        if (res.status === '200') {
+          this.$refs.md.$img2Url(pos, res.data)
         } else {
-          this.$message.error('error');
+          this.$message.error('error')
         }
       })
     },

@@ -295,9 +295,9 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       findTeacherByName(name, currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.tableData = tableData
@@ -320,9 +320,9 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       getAllTeachers(currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.tableData = tableData
@@ -352,7 +352,7 @@ export default {
           })
           setTimeout(() => {
             addTeacher(this.addTeacherInfo).then(res => {
-              if (res.data.code === '200') {
+              if (res.status === '200') {
                 this.$message('添加教师成功!')
                 this.addTeacherDiag = false
                 this.addTeacherInfo = {}
@@ -390,7 +390,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           editTeacher(this.editTeacherInfo).then(res => {
-            if (res.data.code === '200') {
+            if (res.status === '200') {
               this.$message.success('更新教师信息成功!')
               this.editTeacherDiag = false
               this.reload()
@@ -420,7 +420,7 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteUsers(teachIds).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message.success('删除教师成功!')
             this.reload()
           } else {

@@ -118,17 +118,14 @@ export default {
                 text: 'Loading',
                 spinner: 'el-icon-loading',
                 background: 'rgba(0, 0, 0, 0.7)'
-              });
+              })
+
               setTimeout(() => {
                 login(this.user).then(res => {
-                  let data = res.data
-
-                  if (data.code === '200') {
+                  if (res.status === '200') {
                     this.$message.success('登录成功')
-                    localStorage.setItem('token', data.token)
-                    localStorage.setItem('userData', JSON.stringify(data.data))
-
-                    this.$store.dispatch('getUserInfo', data.token)
+                    localStorage.setItem('token', res.token)
+                    localStorage.setItem('userData', JSON.stringify(res.data))
                     this.$router.push('/dashboard')
                   } else {
                     this.$message.error('登录失败')

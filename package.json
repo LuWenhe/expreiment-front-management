@@ -1,5 +1,5 @@
 {
-  "name": "vue-manage-system",
+  "name": "axexp-admin",
   "version": "4.2.0",
   "private": true,
   "scripts": {
@@ -8,12 +8,11 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "axios": "0.21.2",
+    "axios": "0.21.4",
     "babel-polyfill": "^6.26.0",
     "echarts": "^5.2.2",
     "element-china-area-data": "^5.0.2",
     "element-ui": "^2.11.0",
-    "jquery": "3.6.2",
     "lodash": "^4.17.21",
     "mavon-editor": "2.9.1",
     "number-precision": "^1.5.0",
@@ -28,7 +27,6 @@
     "vue-router": "^3.0.3",
     "vue-video-player": "^5.0.2",
     "vuedraggable": "^2.17.0",
-    "vuex": "^3.6.2",
     "zx-verify": "0.0.2"
   },
   "devDependencies": {

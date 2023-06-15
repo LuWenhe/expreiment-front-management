@@ -56,14 +56,17 @@ export default {
     handleSuccess(res, file) {
       this.guide_book = file.response.data;
     },
-    /**文件超出个数限制时的钩子 */
     handleExceed() {
       this.$message.error(`只能选择1个文件`);
     },
     getGuideBook() {
       getGuideBook(this.son_id).then(res => {
-        if (res.data.code === '200') {
-          this.guide_book = res.data.data.guide_book
+        if (res.status === '200') {
+          if (res.data.guide_book === null) {
+            res.data.guide_book = ''
+          }
+
+          this.guide_book = res.data.guide_book
         }
       })
     },
@@ -74,7 +77,7 @@ export default {
       }
 
       addSonChapterBook(sonChapterObj).then(res => {
-        if (res.data.code === '200') {
+        if (res.status === '200') {
           this.$message.success('提交成功')
           this.reload()
         }
@@ -85,8 +88,8 @@ export default {
       formData.append('file', $file)
 
       addLessonPic(formData).then(res => {
-        if (res.data.code === '200') {
-          this.$refs.md.$img2Url(pos, res.data.data)
+        if (res.status === '200') {
+          this.$refs.md.$img2Url(pos, res.data)
         } else {
           this.$message.error('error')
         }
@@ -114,7 +117,7 @@ export default {
     //       'token': localStorage.getItem('token')
     //     }
     //   }).then((res) => {
-    //     if (res.data.code === '200') {
+    //     if (res.status === '200') {
     //       this.$message.success('上传成功')
     //       this.$router.push({ name: 'lessonIndex' })
     //     } else {

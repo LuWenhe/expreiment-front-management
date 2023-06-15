@@ -63,7 +63,7 @@ export default {
   methods: {
     drawPic() {
       getDashBoardInfo().then(res => {
-        if (res.data.code === '200') {
+        if (res.status === '200') {
           let eChart = this.$echarts.init(document.getElementById('echarts_id'))
 
           let option = {
@@ -84,8 +84,8 @@ export default {
                 type: 'pie',
                 radius: '50%',
                 data: [
-                  { value: res.data.data.lessonCount, name: '课程数量' },
-                  { value: res.data.data.tagCount, name: '课程标签' }
+                  { value: res.data.lessonCount, name: '课程数量' },
+                  { value: res.data.tagCount, name: '课程标签' }
                 ],
                 emphasis: {
                   itemStyle: {
@@ -104,9 +104,9 @@ export default {
     },
     getData() {
       getDashBoardInfo().then(res => {
-        if (res.data.code === '200') {
-          this.lessonNum = res.data.data.lessonCount
-          this.tagNum = res.data.data.tagCount
+        if (res.status === '200') {
+          this.lessonNum = res.data.lessonCount
+          this.tagNum = res.data.tagCount
         } else {
           this.$message.error('加载失败');
         }

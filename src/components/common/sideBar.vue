@@ -70,8 +70,8 @@ export default {
     let userData = JSON.parse(localStorage.getItem('userData'))
 
     getMenuTree(userData.userId).then(res => {
-      if (res.data.status === '200') {
-        this.menuList.push(res.data.data)
+      if (res.status === '200') {
+        this.menuList.push(res.data)
       } else {
         this.$message.error('导航栏加载失败!')
       }

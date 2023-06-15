@@ -54,8 +54,8 @@ export default {
     submitUpload() {
       this.$refs.uploadPic.submit()
       axios.post(this.$root.URL + '/manage/upload_small_pic', this.pic_form).then((res) => {
-        if (res.data.code === '200') {
-          this.data.banner_url = res.data.data
+        if (res.status === '200') {
+          this.data.banner_url = res.data
         } else {
           this.$message.error('error')
         }
@@ -73,9 +73,9 @@ export default {
     //       'token':localStorage.getItem("token"),
     //     }
     //   }).then((res) => {
-    //     if(res.data.code === '200'){
-    //       //this.pic_suolue = res.data.data
-    //       this.$refs.md.$img2Url(pos, res.data.data)
+    //     if(res.status === '200'){
+    //       //this.pic_suolue = res.data
+    //       this.$refs.md.$img2Url(pos, res.data)
     //     }else {
     //       this.$message.error("error")
     //     }

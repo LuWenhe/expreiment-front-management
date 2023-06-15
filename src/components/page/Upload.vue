@@ -84,7 +84,7 @@ export default {
       this.cropImg = this.defaultSrc;
     },
     imageuploaded(res) {
-      console.log(res);
+
     },
     handleError() {
       this.$notify.error({

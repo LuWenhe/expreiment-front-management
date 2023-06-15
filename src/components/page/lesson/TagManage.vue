@@ -126,14 +126,14 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteTag(row.tag_id).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message({
               message: '删除标签成功!',
               type: 'success'
             })
 
             this.loadTag()
-          } else if (res.data.code === '502') {
+          } else if (res.status === '502') {
             this.$message({
               message: '已有课程使用该标签，不能删除'
             })
@@ -157,7 +157,7 @@ export default {
         this.$message.error('请输入编辑的内容')
       } else {
         editTag(this.editForm).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message.success('编辑标签成功!')
             this.editTagDiag = false
             this.loadTag()
@@ -188,7 +188,7 @@ export default {
           this.form.tagName = ''
         } else {
           addTag(this.form).then(res => {
-            if (res.data.code === '200') {
+            if (res.status === '200') {
               this.$message.success('添加成功！')
               this.addTagDiag = false
               this.loadTag()
@@ -214,9 +214,9 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       getTagsByPage(currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.tableData = tableData

@@ -178,7 +178,7 @@ export default {
         this.fileListFront = [];
         done()
       }).catch(res => {
-        console.log(res)
+
       })
     },
     handleSelectionChange(val) {
@@ -198,9 +198,9 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       getAllBanners(currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.tableData = tableData
@@ -236,7 +236,7 @@ export default {
     },
     updateBanner() {
       updateBanner(this.dialogdata).then(res => {
-        if (res.data.code === '200') {
+        if (res.status === '200') {
           this.$message.success('更新轮播图成功!')
           this.dialogVisible = false
           this.getData()

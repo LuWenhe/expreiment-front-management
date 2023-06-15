@@ -118,9 +118,9 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       getClazzListByTeacherId(teacherId, currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.clazzTableData = tableData
@@ -153,7 +153,7 @@ export default {
         let clazzId = row.id
 
         deleteStudentsAndClazzByClazzId(clazzId).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message.success('删除班级以及班级下的所有学生成功!')
             this.getClazzListByTeacherId(this.teacherId)
           } else {
@@ -179,7 +179,7 @@ export default {
         type: 'warning'
       }).then(() => {
         addClazz(this.clazzForm).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message.success('添加班级成功!')
             this.addDialogFormVisible = false
             this.getClazzListByTeacherId(this.teacherId)
@@ -191,7 +191,7 @@ export default {
     },
     submitEditClazz() {
       updateClazz(this.editClazzForm).then(res => {
-        if (res.data.code === '200') {
+        if (res.status === '200') {
           this.$message.success('更新班级信息成功!')
           this.editDialogFormVisible = false
           this.getClazzListByTeacherId(this.teacherId)

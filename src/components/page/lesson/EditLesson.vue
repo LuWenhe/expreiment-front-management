@@ -251,10 +251,10 @@ export default {
   },
   methods: {
     querySearch(queryString, cb) {
-      var teachers = this.teachers;
-      var results = queryString ? teachers.filter(this.createFilter(queryString)) : teachers;
+      let teachers = this.teachers
+      let results = queryString ? teachers.filter(this.createFilter(queryString)) : teachers
       // 调用 callback 返回建议列表的数据
-      cb(results);
+      cb(results)
     },
     createFilter(queryString) {
       return (teacher) => {
@@ -262,24 +262,22 @@ export default {
       };
     },
     handleSelect(item) {
-      console.log(JSON.stringify(item));
-      this.lesson.teacher_name = item.username;
-
+      this.lesson.teacher_name = item.username
     },
     handleIconClick(ev) {
-      console.log(ev);
+
     },
     loadAll() {
       loadAllTeachers().then(res => {
-        if (res.data.code === '200') {
-          this.teachers = res.data.data
+        if (res.status === '200') {
+          this.teachers = res.data
         }
       })
     },
     getOptionList() {
       getTags().then(res => {
-        if (res.data.code === '200') {
-          let tagList = res.data.data
+        if (res.status === '200') {
+          let tagList = res.data
           let tagOption = []
 
           tagList.forEach(item => {
@@ -295,10 +293,10 @@ export default {
     },
     getLessonDetail() {
       getLessonDetail(this.lessonId).then(res => {
-        if (res.data.code === '200') {
-          this.lesson = res.data.data;
-          this.fileListFront.push({ name: 'xxx', url: res.data.data.pic_url.split(',')[0] });   //在el-upload中回显后台返回的地址
-          this.hideUpload = true;
+        if (res.status === '200') {
+          this.lesson = res.data
+          this.fileListFront.push({ name: 'xxx', url: res.data.pic_url.split(',')[0] })   //在el-upload中回显后台返回的地址
+          this.hideUpload = true
         }
       })
     },
@@ -306,7 +304,7 @@ export default {
       this.$refs.submit.validate(valid => {
         if (valid) {
           updateLesson(this.lesson).then(res => {
-            if (res.data.code === '200') {
+            if (res.status === '200') {
               this.$message.success('更新课程成功!')
             }
           })
@@ -361,8 +359,8 @@ export default {
       formData.append('file', $file)
 
       addLessonPic(formData).then(res => {
-        if (res.data.code === '200') {
-          this.$refs.md.$img2Url(pos, res.data.data)
+        if (res.status === '200') {
+          this.$refs.md.$img2Url(pos, res.data)
         } else {
           this.$message.error('error')
         }

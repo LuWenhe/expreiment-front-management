@@ -5,12 +5,10 @@ import ElementUI from 'element-ui'
 import VueI18n from 'vue-i18n'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import store from './store'
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 import { messages } from './components/common/i18n'
 import 'element-ui/lib/theme-chalk/index.css'       // 默认主题
-// import './assets/css/theme-green/index.css'; // 浅绿色主题
 import './assets/css/icon.css'
 import './components/common/directives'
 import 'babel-polyfill'
@@ -54,8 +52,6 @@ router.beforeEach((to, from, next) => {
   if (token) {
     next()
   } else {
-    store.commit('resetUserInfo')
-
     // 如果是登录页面,就停留登录页,不在重复跳转
     if (to.path === '/login') {
       next()
@@ -79,7 +75,6 @@ router.onError((error) => {
 
 new Vue({
   router,
-  store,
   i18n,
   render: h => h(App)
 }).$mount('#app');

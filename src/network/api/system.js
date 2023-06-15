@@ -1,4 +1,4 @@
-import { request } from '@/network/request/request'
+import { request } from '@/network/request'
 
 export const getAllBanners = (currentPage, pageSize) => {
   return request({

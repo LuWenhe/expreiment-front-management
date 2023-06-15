@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-button type='primary' @click='dialog = true'>添加课程章节</el-button>
     <div v-for='(item,index)  in chapterList' :key='index'>
       <div class='secondCard'>
         <br>
@@ -39,7 +40,6 @@
       <br>
       <br>
     </div>
-    <el-button type='primary' @click='dialog = true'>添加课程章节</el-button>
     <div>
       <el-drawer
         title='课程章节'
@@ -67,7 +67,7 @@
           </el-form>
           <div class='demo-drawer__footer' style='margin-left: 15%'>
             <el-button @click='cancelForm'>取 消</el-button>
-            <el-button type='primary' @click='addChapter()'>提交</el-button>
+            <el-button type='primary' @click='addChapter'>提交</el-button>
           </div>
         </div>
       </el-drawer>
@@ -166,9 +166,9 @@ export default {
 
           this.$refs.submit_son.validate(valid => {
             addSonChapterInEdit(this.lesson_form).then(res => {
-              if (res.data.code === '200') {
+              if (res.status === '200') {
                 this.$message.success('提交子章节成功')
-                this.chapter = res.data.data
+                this.chapter = res.data
                 this.form = ''
                 this.getChapterInfoByLessonId()
               } else {
@@ -194,12 +194,9 @@ export default {
         type: 'warning'
       }).then(async () => {
         delChapterInEdit(chapter_id).then(res => {
-          if (res.data.code === '200') {
-            this.$message({
-              type: 'success',
-              message: '删除章节成功!'
-            });
-            this.getChapterInfoByLessonId();
+          if (res.status === '200') {
+            this.$message.success('删除章节成功!')
+            this.getChapterInfoByLessonId()
           } else {
             this.$message({
               type: 'error',

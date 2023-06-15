@@ -337,8 +337,8 @@ export default {
       let teacherId = userData.userId
 
       getClazzListByTeacherId(teacherId).then(res => {
-        if (res.data.code === '200') {
-          let clazzList = res.data.data.list
+        if (res.status === '200') {
+          let clazzList = res.data.list
           let clazzSelect = []
 
           clazzList.forEach(item => {
@@ -360,8 +360,8 @@ export default {
     },
     getAllProvinces() {
       getProvinces().then(res => {
-        if (res.data.code === "200") {
-          this.provinceList = res.data.data
+        if (res.status === "200") {
+          this.provinceList = res.data
         }
       })
     },
@@ -371,9 +371,9 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       getStudentsByClazzId(clazzId, currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.tableData = tableData
@@ -418,7 +418,7 @@ export default {
             type: 'warning'
           }).then(() => {
             addStudent(this.studentForm).then(res => {
-              if (res.data.code === '200') {
+              if (res.status === '200') {
                 this.$message.success('添加学生成功!')
                 this.addDialogFormVisible = false
                 this.getStudentsByClazzId(this.clazzId)
@@ -450,7 +450,7 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteUsers(studentIds).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message.success('删除学生成功!')
             this.getStudentsByClazzId(this.clazzId)
           } else {
@@ -523,7 +523,7 @@ export default {
           this.editStudentForm.clazzId = this.clazzId
 
           editStudent(this.editStudentForm).then(res => {
-            if (res.data.code === '200') {
+            if (res.status === '200') {
               this.$message.success('更新学生信息成功!')
               this.editDialogFormVisible = false
               this.getStudentsByClazzId(this.clazzId)

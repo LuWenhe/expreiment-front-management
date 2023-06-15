@@ -151,7 +151,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           addTool(this.addToolForm).then(res => {
-            if (res.data.code === '200') {
+            if (res.status === '200') {
               this.$message.success('上传成功!')
               this.addToolsDiag = false
               this.addToolForm = {}
@@ -234,9 +234,9 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       findToolByName(toolName, currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.tableData = tableData
@@ -259,9 +259,9 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       getAllTools(currentPage, pageSize).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.tableData = tableData
@@ -309,7 +309,7 @@ export default {
           })
 
           deleteTools(toolIds).then(res => {
-            if (res.data.code === '200') {
+            if (res.status === '200') {
               this.$message.success('删除工具成功!')
               this.reload()
             } else {

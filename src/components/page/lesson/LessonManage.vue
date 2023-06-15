@@ -30,8 +30,7 @@
                 <img :src='item.pic_url' class='image' style='width: 100%;height: 250px' @click='stepIntoDetail(item.lessonId)'>
               </div>
               <div v-else>
-                <img src='http://10.0.7.205:8081/2c2f312d-9ee4-4306-8c18-960046c32302.png' class='image'
-                     style='width: 100%;height: 250px' @click='stepIntoDetail(item.lessonId)'>
+                <img src='' class='image' style='width: 100%;height: 250px' @click='stepIntoDetail(item.lessonId)'>
               </div>
               <div style='padding: 14px;'>
                 <span>{{ item.lesson_name }}</span>
@@ -39,7 +38,9 @@
                 <div style='width: 200px;height: 50px'>
                   <span style='font-size: 15px'>授课老师：{{ item.teacher_name }}</span>
                   <el-button type='warning' style='float:right;position:relative;margin-right: 6px'
-                             @click='deleteLesson(item.lessonId)' v-permission="'lesson:delete'"><i class='el-icon-delete'></i></el-button>
+                             @click='deleteLesson(item.lessonId)' v-permission="'lesson:delete'">
+                    <i class='el-icon-delete'></i>
+                  </el-button>
                 </div>
               </div>
             </el-card>
@@ -85,24 +86,7 @@ export default {
       },
       lesson_name: '',
       currentDate: new Date(),
-      lesson_list: [
-        {
-          'lessonId': '',
-          'lesson_name': '',
-          'pic_url': 'http://10.0.7.205:8081/2c2f312d-9ee4-4306-8c18-960046c32302.png',
-          'difficulty': 2,
-          'lesson_time': 0,
-          'learn_credit': 2,
-          'suitablePerson': '研究生',
-          'canLearn': '',
-          'description': '深度学习框架',
-          'teacher_id': null,
-          'user': null,
-          'chapters': null,
-          'tags': null,
-          'teacher_name': 'nxd'
-        }
-      ],
+      lesson_list: [],
       tagList: [],
       btnShow: false,
       index: '0',
@@ -122,8 +106,8 @@ export default {
   methods: {
     getOptionList() {
       getTags().then(res => {
-        if (res.data.code === '200') {
-          let tagList = res.data.data
+        if (res.status === '200') {
+          let tagList = res.data
           let tagOption = []
 
           tagList.forEach(tagObj => {
@@ -147,7 +131,7 @@ export default {
         type: 'warning'
       }).then(async () => {
         deleteLessonById(lesson_id).then(res => {
-          if (res.data.code === '200') {
+          if (res.status === '200') {
             this.$message({
               type: 'success',
               message: '删除课程成功!'
@@ -188,9 +172,9 @@ export default {
       }
 
       getLessonsByUserId(pageRequest).then(res => {
-        if (res.data.status === '200') {
-          let tableData = res.data.data.list
-          let data = res.data.data
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
 
           if (tableData != null) {
             this.lesson_list = tableData
@@ -217,8 +201,8 @@ export default {
       }
 
       findLessonsByName(pageRequest).then(res => {
-        if (res.data.code === '200') {
-          let tableData = res.data.data.list
+        if (res.status === '200') {
+          let tableData = res.data.list
           let data = res.data.data
 
           if (tableData != null) {
