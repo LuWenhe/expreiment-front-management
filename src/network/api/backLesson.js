@@ -1,5 +1,11 @@
 import { request } from '@/network/request'
 
+export const getAllLessons = () => {
+  return request({
+    method: 'GET',
+    url: '/backLesson/getAllLessons'
+  })
+}
 export const getLessonsByUserId = (pageRequest) => {
   return request({
     method: 'POST',
@@ -8,10 +14,10 @@ export const getLessonsByUserId = (pageRequest) => {
   })
 }
 
-export const addLessonPic = (formData) => {
+export const uploadFile = (formData) => {
   return request({
     method: 'POST',
-    url: '/backLesson/addLessonPic',
+    url: '/backLesson/uploadFile',
     data: formData
   })
 }

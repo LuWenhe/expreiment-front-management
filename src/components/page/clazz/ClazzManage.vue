@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { addClazz, getClazzListByTeacherId, updateClazz } from '@/network/api/clazz'
+import { addClazz, getClazzList, updateClazz } from '@/network/api/clazz'
 import { deleteStudentsAndClazzByClazzId } from '@/network/api/user'
 
 export default {
@@ -79,6 +79,7 @@ export default {
     return {
       clazzTableData: [],
       teacherId: '',
+      roleId: '',
       pageInfo: {
         pageNum: 1,     // 当前页码
         pageSize: 10,   // 每页显示的条数
@@ -109,15 +110,21 @@ export default {
     let userData = JSON.parse(localStorage.getItem('userData'))
 
     this.teacherId = userData.userId
-    this.getClazzListByTeacherId(this.teacherId)
+    this.roleId = userData.roleId
+
+    this.getClazzList()
     this.initClazzSize()
   },
   methods: {
-    getClazzListByTeacherId(teacherId) {
-      let currentPage = this.pageInfo.pageNum
-      let pageSize = this.pageInfo.pageSize
+    getClazzList() {
+      let pageRequest = {
+        userId: this.teacherId,
+        roleId: this.roleId,
+        currentPage: this.pageInfo.pageNum,
+        pageSize: this.pageInfo.pageSize
+      }
 
-      getClazzListByTeacherId(teacherId, currentPage, pageSize).then(res => {
+      getClazzList(pageRequest).then(res => {
         if (res.status === '200') {
           let tableData = res.data.list
           let data = res.data
@@ -155,7 +162,7 @@ export default {
         deleteStudentsAndClazzByClazzId(clazzId).then(res => {
           if (res.status === '200') {
             this.$message.success('删除班级以及班级下的所有学生成功!')
-            this.getClazzListByTeacherId(this.teacherId)
+            this.getClazzList()
           } else {
             this.$message.error('删除失败!')
           }
@@ -182,7 +189,7 @@ export default {
           if (res.status === '200') {
             this.$message.success('添加班级成功!')
             this.addDialogFormVisible = false
-            this.getClazzListByTeacherId(this.teacherId)
+            this.getClazzList()
           } else {
             this.$message.error('添加班级失败!')
           }
@@ -194,7 +201,7 @@ export default {
         if (res.status === '200') {
           this.$message.success('更新班级信息成功!')
           this.editDialogFormVisible = false
-          this.getClazzListByTeacherId(this.teacherId)
+          this.getClazzList()
         } else {
           this.$message.error('更新班级信息失败!')
         }

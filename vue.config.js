@@ -4,7 +4,7 @@ function resolve (dir) {
   return path.join(__dirname, dir)
 }
 module.exports = {
-  publicPath: './',
+  publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
   chainWebpack: config => {
@@ -17,6 +17,6 @@ module.exports = {
   // webpack-dev-server 相关配置
   devServer: {
     // 调试端口
-    port: 8083
+    port: 8051
   }
 }

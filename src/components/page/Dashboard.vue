@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <el-row>
     <el-row :gutter='20'>
       <el-col :span='8'>
         <div class='div_style'>
           <div style='width: 20px'></div>
           <img src='@/assets/icon.png' style='width: 90px;height: 90px;display: inline-block;' />
           <div style='position: absolute;line-height: 100px;height: 100px;right: 40px;top: 0;'>
-            <router-link :to="{path: '/backAdmin/lessonManage'}"
+            <router-link :to="{path: '/lessonManage'}"
                          style='font-size: 20px;color: #000000;text-decoration: none'>
               课程数量
             </router-link>
@@ -19,7 +19,7 @@
           <div style='width: 20px'></div>
           <img src='@/assets/icon.png' style='width: 90px;height: 90px;display: inline-block;' />
           <div style='position: absolute;line-height: 100px;height: 100px;right: 40px;top: 0;'>
-            <router-link :to="{path: '/backAdmin/tagManage'}" style='font-size: 20px;color: #000;text-decoration: none'>
+            <router-link :to="{path: '/tagManage'}" style='font-size: 20px;color: #000;text-decoration: none'>
               课程标签
             </router-link>
             <span class='count_style'>{{ tagNum }}</span>
@@ -33,7 +33,7 @@
         <div id='echarts_id' style='width: 700px;height: 700px'></div>
       </el-col>
     </el-row>
-  </div>
+  </el-row>
 </template>
 
 <script>

@@ -1,14 +1,10 @@
 import { request } from '@/network/request'
 
-export const getClazzListByTeacherId = (teacherId, currentPage, pageSize) => {
+export const getClazzList = (pageRequest) => {
   return request({
-    method: 'GET',
+    method: 'POST',
     url: '/backClazz/getClazzList',
-    params: {
-      teacherId: teacherId,
-      currentPage: currentPage,
-      pageSize: pageSize
-    }
+    data: pageRequest
   })
 }
 

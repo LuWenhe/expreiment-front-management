@@ -70,17 +70,15 @@
           <el-input v-model='addToolForm.tool_env' style='width: 90%'></el-input>
         </el-form-item>
         <el-form-item label='上传工具'>
-          <!-- Todo 上传文件Bug -->
           <el-upload
             list-type='text'
-            :action='uploadAttachment'
-            :on-preview='handlePreview'
+            action=''
             :on-remove='handleRemove'
-            :on-success='handleSuccess'
             :limit='1'
             :on-exceed='handleExceed'
             :file-list='fileList'
             :headers='uploadHeaders'
+            :http-request='uploadTool'
           >
             <el-button slot='trigger' size='small' type='primary'>选取文件</el-button>
           </el-upload>
@@ -96,6 +94,7 @@
 
 <script>
 import { addTool, deleteTools, findToolByName, getAllTools } from '@/network/api/tool'
+import { uploadFile } from '@/network/api/backLesson'
 
 export default {
   inject: ['reload'],
@@ -115,8 +114,6 @@ export default {
       name: '',
       multipleSelection: [],
       tableData: [],
-      //总数据条数
-      //总数据条数
       pageInfo: {
         pageNum: 1,
         pageSize: 10,
@@ -133,16 +130,25 @@ export default {
       },
       username: '',
       tool_name: '',
-      formLabelWidth: '80px',
-      uploadAttachment: 'http://10.0.7.205:8089/back/uploadAttachmentPPT'
+      formLabelWidth: '80px'
     };
   },
   created() {
-    this.getData();
-    this.uploadAttachment = this.$root.URL + '/back/uploadTools'
+    this.getData()
   },
-
   methods: {
+    uploadTool(params) {
+      let file = params.file
+      let formData = new FormData()
+      formData.append('file', file)
+
+      uploadFile(formData).then(res => {
+        if (res.status === '200') {
+          this.$message.success('上传文件成功!')
+          this.addToolForm.download_url = res.data
+        }
+      })
+    },
     addCancel() {
       this.addToolsDiag = false
       this.addToolForm = {}
@@ -161,7 +167,6 @@ export default {
             }
           })
         } else {
-          console.log('error submit!!')
           this.$message.error('上传失败')
         }
       })
@@ -186,7 +191,6 @@ export default {
         { value: '@chinaren.comsogou.com' },
         { value: '@citiz.com' }
       ]
-
       let results = []
       let queryList = []
 
@@ -228,7 +232,7 @@ export default {
       this.pageInfo.pageNum = pageNum
       this.getData()
     },
-    async handleSearch() {
+    handleSearch() {
       let toolName = this.tool_name
       let currentPage = this.pageInfo.pageNum
       let pageSize = this.pageInfo.pageSize
@@ -282,14 +286,8 @@ export default {
     handleRemove(file, fileList) {
       this.addToolForm.download_url = '';
     },
-    handlePreview(file) {
-      console.log(file);
-    },
     handleExceed(files, fileList) {
       this.$message.warning('只能上传一个文件！');
-    },
-    handleSuccess(res, file) {
-      this.addToolForm.download_url = file.response.data;
     },
     deleteTools() {
       if (this.multipleSelection.length < 1) {

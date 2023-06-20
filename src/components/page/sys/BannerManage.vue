@@ -124,7 +124,7 @@ export default {
   },
   created() {
     this.getData()
-    this.uploadImgServer = this.$root.URL + '/backLesson/addLessonPic'
+    this.uploadImgServer = this.$root.URL + '/backLesson/uploadFile'
   },
   components: {
     bannerEdit

@@ -30,7 +30,7 @@
 
 <script>
 import { getGuideBook } from '@/network/api/frontLesson'
-import { addLessonPic, addSonChapterBook } from '@/network/api/backLesson'
+import { uploadFile, addSonChapterBook } from '@/network/api/backLesson'
 
 export default {
   inject: ['reload'],
@@ -87,7 +87,7 @@ export default {
       let formData = new FormData()
       formData.append('file', $file)
 
-      addLessonPic(formData).then(res => {
+      uploadFile(formData).then(res => {
         if (res.status === '200') {
           this.$refs.md.$img2Url(pos, res.data)
         } else {

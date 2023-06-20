@@ -19,12 +19,12 @@
         </div>
         <!-- 用户名下拉菜单 -->
         <el-dropdown class='user-name' trigger='click' @command='handleCommand'>
-                    <span class='el-dropdown-link'>
-                        {{ this.name }}
-                        <i class='el-icon-caret-bottom'></i>
-                    </span>
+          <span class='el-dropdown-link'>
+              {{ this.name }}
+              <i class='el-icon-caret-bottom'></i>
+          </span>
           <el-dropdown-menu slot='dropdown'>
-            <el-dropdown-item divided command='loginout'>退出登录</el-dropdown-item>
+            <el-dropdown-item divided command='logout'>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -58,7 +58,6 @@ export default {
       tag: 'section',
       // noresize 是否刷新滚动条大小
       noresize: true,
-
       collapse: false,
       fullscreen: false,
       name: 'linxin',
@@ -79,7 +78,7 @@ export default {
 
   created() {
     let userData = JSON.parse(localStorage.getItem('userData'))
-    this.name = userData.name
+    this.name = userData.username
   },
 
   methods: {
@@ -89,18 +88,16 @@ export default {
     },
     // 用户名下拉菜单选择事件
     handleCommand(command) {
-      var id = 0;
-      if (command == 'loginout') {
-        localStorage.clear();
-        this.$router.push('/login');
+      if (command === 'logout') {
+        localStorage.clear()
+        this.$router.push('/login')
       }
     },
     // 侧边栏折叠
     collapseChage() {
-      this.collapse = !this.collapse;
-      bus.$emit('collapse', this.collapse);
+      this.collapse = !this.collapse
+      bus.$emit('collapse', this.collapse)
     },
-    // 全屏事件
     handleFullScreen() {
       let element = document.documentElement;
       if (this.fullscreen) {
@@ -125,13 +122,11 @@ export default {
           element.msRequestFullscreen();
         }
       }
-      this.fullscreen = !this.fullscreen;
+
+      this.fullscreen = !this.fullscreen
     }
-
   }
-
-
-};
+}
 </script>
 <style scoped>
 .header {

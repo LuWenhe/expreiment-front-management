@@ -16,7 +16,8 @@
             :on-exceed='handleExceed'
             :file-list='fileListFront'
             :headers='uploadHeaders'
-            :http-request='uploadFile'>
+            :http-request='uploadFile'
+          >
             <i class='el-icon-plus'></i>
           </el-upload>
         </el-col>
@@ -181,7 +182,7 @@
 <script>
 import { bNumberCheck } from '@/utils/validator'
 import ChapterAdd from '@/components/page/lesson/AddChapter.vue'
-import { addLesson, addLessonPic } from '@/network/api/backLesson'
+import { addLesson, uploadFile } from '@/network/api/backLesson'
 import { loadAllTeachers } from '@/network/api/user'
 import { getTags } from '@/network/api/tag'
 
@@ -262,7 +263,6 @@ export default {
     querySearch(queryString, cb) {
       let teachers = this.teachers;
       let results = queryString ? teachers.filter(this.createFilter(queryString)) : teachers;
-      // 调用 callback 返回建议列表的数据
       cb(results)
     },
     createFilter(queryString) {
@@ -307,7 +307,7 @@ export default {
       let formData = new FormData()
       formData.append('file', file)
 
-      addLessonPic(formData).then(res => {
+      uploadFile(formData).then(res => {
         if (res.status === '200') {
           this.$message.success('上传图片成功!')
           this.lesson.pic_url = res.data
@@ -350,31 +350,32 @@ export default {
       this.lesson.pic_url = ''
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
       if (!isJPG) {
-        this.$message.error('仅支持jpg，png格式的图片！');
+        this.$message.error('仅支持jpg，png格式的图片！')
       }
+
       if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!');
+        this.$message.error('上传图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M;
+
+      return isJPG && isLt2M
     },
     handleAvatarSuccess(res, file) {
-      console.log('333')
-
       this.lesson.pic_url = file.response.data
       this.fileListFront.push(file)
-      this.hideUpload = true;
+      this.hideUpload = true
     },
     handleExceed() {
-      this.$message.error(`只能选择${this.imgLimit}个文件`);
+      this.$message.error(`只能选择${this.imgLimit}个文件`)
     },
     handleEditorImgAdd(pos, $file) {
       let formData = new FormData()
       formData.append('file', $file)
 
-      addLessonPic(formData).then(res => {
+      uploadFile(formData).then(res => {
         if (res.status === '200') {
           this.$refs.md.$img2Url(pos, res.data)
         } else {

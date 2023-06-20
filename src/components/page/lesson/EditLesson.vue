@@ -171,7 +171,7 @@
 import ChapterAdmin from './ChapterAdmin'
 import { bNumberCheck } from '@/utils/validator'
 import { loadAllTeachers } from '@/network/api/user'
-import { addLessonPic, getLessonDetail, updateLesson } from '@/network/api/backLesson'
+import { uploadFile, getLessonDetail, updateLesson } from '@/network/api/backLesson'
 import { getTags } from '@/network/api/tag';
 
 const validatorLearnTime = (rule, value, callback) => {
@@ -242,7 +242,7 @@ export default {
   },
   created() {
     this.lessonId = this.$route.query.lessonId;
-    this.uploadImgServer = this.$root.URL + '/backLesson/addLessonPic'
+    this.uploadImgServer = this.$root.URL + '/backLesson/uploadFile'
     this.getLessonDetail()
     this.getOptionList()
   },
@@ -358,7 +358,7 @@ export default {
       let formData = new FormData()
       formData.append('file', $file)
 
-      addLessonPic(formData).then(res => {
+      uploadFile(formData).then(res => {
         if (res.status === '200') {
           this.$refs.md.$img2Url(pos, res.data)
         } else {

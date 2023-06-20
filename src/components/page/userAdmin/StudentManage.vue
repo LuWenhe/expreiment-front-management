@@ -177,7 +177,7 @@
 
 <script>
 import { phoneCheck } from '@/utils/validator'
-import { getClazzListByTeacherId, getStudentsByClazzId } from '@/network/api/clazz'
+import { getClazzList, getStudentsByClazzId } from '@/network/api/clazz'
 import { getProvinces } from '@/network/api/province'
 import { addStudent, addStudentFromExcel, deleteUsers, editStudent } from '@/network/api/user'
 
@@ -283,6 +283,8 @@ export default {
   created() {
     this.getAllProvinces()
     this.getClazzList()
+
+    setTimeout(function(){},2000)
   },
   methods: {
     addStudentBtn() {
@@ -334,9 +336,15 @@ export default {
     },
     getClazzList() {
       let userData = JSON.parse(localStorage.getItem('userData'))
-      let teacherId = userData.userId
 
-      getClazzListByTeacherId(teacherId).then(res => {
+      let pageRequest = {
+        userId: userData.userId,
+        roleId: userData.roleId,
+        currentPage: this.pageInfo.pageNum,
+        pageSize: this.pageInfo.pageSize
+      }
+
+      getClazzList(pageRequest).then(res => {
         if (res.status === '200') {
           let clazzList = res.data.list
           let clazzSelect = []
@@ -350,7 +358,6 @@ export default {
           })
 
           // 下拉框的默认选项
-          // this.defaultVal = clazzSelect[0].value
           this.options = clazzSelect
         }
       })
@@ -371,6 +378,7 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       getStudentsByClazzId(clazzId, currentPage, pageSize).then(res => {
+        console.log(res)
         if (res.status === '200') {
           let tableData = res.data.list
           let data = res.data
@@ -549,8 +557,8 @@ export default {
       formData.append('clazzId', this.clazzId)
 
       addStudentFromExcel(formData).then(res => {
-        if (res.status === 200) {
-          this.$message.success(res.data.msg)
+        if (res.status === '200') {
+          this.$message.success('学生数据导入成功!')
           this.addMultiDialogFormVisible = false
           this.getStudentsByClazzId(this.clazzId)
         }

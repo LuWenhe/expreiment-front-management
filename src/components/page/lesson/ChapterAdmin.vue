@@ -42,7 +42,7 @@
     </div>
     <el-button type='primary' @click='dialog = true'>添加课程章节</el-button>
     <!-- 添加章节信息 -->
-    <div>
+    <el-row>
       <el-drawer
         title='课程章节'
         :before-close='handleClose'
@@ -74,6 +74,7 @@
           </div>
         </div>
       </el-drawer>
+      <!-- 编辑课程章节 -->
       <el-drawer
         title='编辑课程章节'
         :before-close='handleClose'
@@ -105,6 +106,7 @@
           </div>
         </div>
       </el-drawer>
+      <!-- 添加课程章节 -->
       <el-dialog title='子章节' :visible.sync='addSonChapterDiag' width='30%' :before-close='handleClose'>
         <el-form :model='lesson_form' :rules='son_rules' ref='submit_son'>
           <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
@@ -123,27 +125,29 @@
           </el-form-item>
           <el-form-item label='PPT' :label-width='formLabelWidth'>
             <el-upload
-              :action='uploadAttachmentPPT'
-              :on-preview='handlePreviewPPT'
+              action=''
+              :before-upload='beforePPTUpload'
               :on-remove='handleRemovePPT'
-              :on-success='handleSuccessPPT'
               :limit='1'
               :on-exceed='handleExceedPPT'
               :file-list='fileList'
-              :headers='uploadHeaders'>
+              :headers='uploadHeaders'
+              :http-request='uploadPPT'
+            >
               <el-button size='small' type='primary'>点击上传</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label='MP4' :label-width='formLabelWidth'>
             <el-upload
-              :action='uploadAttachmentMp4'
+              action=''
+              :before-upload='beforeMP4Upload'
               :on-preview='handlePreviewMp4'
               :on-remove='handleRemoveMp4'
-              :on-success='handleSuccessMp4'
               :limit='1'
               :on-exceed='handleExceedMp4'
               :file-list='fileList'
-              :headers='uploadHeaders'>
+              :headers='uploadHeaders'
+              :http-request='uploadMP4'>
               <el-button size='small' type='primary'>点击上传</el-button>
             </el-upload>
           </el-form-item>
@@ -153,6 +157,7 @@
           <el-button type='primary' @click='addSonChapter'>确 定</el-button>
         </span>
       </el-dialog>
+      <!-- 编辑课程章节 -->
       <el-dialog
         title='编辑子章节'
         :visible.sync='editSonChapterDiag'
@@ -172,27 +177,28 @@
           <el-form-item label='PPT' :label-width='formLabelWidth'>
             <el-upload
               list-type='text'
-              :action='uploadAttachmentPPT'
-              :on-preview='handleEditPreviewPPT'
-              :on-remove='handleEditRemovePPT'
-              :on-success='handleEditSuccessPPT'
+              action=''
+              :before-upload='beforePPTUpload'
               :limit='1'
               :on-exceed='handleEditExceedPPT'
               :file-list='fileList'
-              :headers='uploadHeaders'>
+              :headers='uploadHeaders'
+              :http-request='editUploadPPT'
+            >
               <el-button size='small' type='primary'>点击上传</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label='MP4' :label-width='formLabelWidth'>
             <el-upload
-              :action='uploadAttachmentMp4'
+              action=''
+              :before-upload='beforeMP4Upload'
               :on-preview='handleEditPreviewMp4'
-              :on-remove='handleEditRemoveMp4'
-              :on-success='handleEditSuccessMp4'
               :limit='1'
               :on-exceed='handleEditExceedMp4'
               :file-list='fileList'
-              :headers='uploadHeaders'>
+              :headers='uploadHeaders'
+              :http-request='editUploadMP4'
+            >
               <el-button size='small' type='primary'>点击上传</el-button>
             </el-upload>
           </el-form-item>
@@ -202,20 +208,18 @@
           <el-button type='primary' @click='addEditSonChapter'>确 定</el-button>
         </span>
       </el-dialog>
-    </div>
+    </el-row>
   </div>
 </template>
 
 <script>
 import {
-  addChapterInEdit,
-  addSonChapterInEdit,
+  addChapterInEdit, addSonChapterInEdit,
   delChapterInEdit,
-  delSonChapterInEdit,
-  editSonChapterInEdit,
+  delSonChapterInEdit, editSonChapterInEdit,
   getChapterInfo,
-  getEditSonChapterInfo
-} from '@/network/api/backLesson'
+  getEditSonChapterInfo, uploadFile
+} from '@/network/api/backLesson';
 
 export default {
   name: 'ChapterAdmin',
@@ -289,15 +293,11 @@ export default {
       },
       formLabelWidth: '80px',
       timer: null,
-      chapter_id: '',
-      uploadAttachmentMp4: '',
-      uploadAttachmentPPT: ''
+      chapter_id: ''
     };
   },
   created() {
     this.getChapterInfoByLessonId()
-    this.uploadAttachmentMp4 = this.$root.URL + '/back/uploadAttachmentMp4'
-    this.uploadAttachmentPPT = this.$root.URL + '/back/uploadAttachmentPPT'
   },
   watch: {
     lessonId(val) {
@@ -305,31 +305,92 @@ export default {
     }
   },
   methods: {
+    uploadPPT(params) {
+      let formData = this.getFormData(params)
+      this.uploadFileByType('PPT', 'add', formData)
+    },
+    uploadMP4(params) {
+      let formData = this.getFormData(params)
+      this.uploadFileByType('MP4', 'add', formData)
+    },
+    editUploadPPT(params) {
+      let formData = this.getFormData(params)
+      this.uploadFileByType('PPT', 'update', formData)
+    },
+    editUploadMP4(params) {
+      let formData = this.getFormData(params)
+      this.uploadFileByType('MP4', 'update', formData)
+    },
+    getFormData(params) {
+      let formData = new FormData()
+      formData.append('file', params.file)
+      return formData
+    },
+    uploadFileByType(fileType, operatorType, formData) {
+      uploadFile(formData).then(res => {
+        if (res.status === '200') {
+          this.$message.success('文件上传成功!')
+
+          let fileUrl = res.data
+
+          if (fileType === 'PPT') {
+            if (operatorType === 'add') {
+              this.lesson_form.ppt = fileUrl
+            } else {
+              this.edit_lesson_form.ppt = fileUrl
+            }
+          } else {
+            if (operatorType === 'add') {
+              this.lesson_form.mp4 = fileUrl
+            } else {
+              this.edit_lesson_form.mp4 = fileUrl
+            }
+          }
+        }
+      })
+    },
+    beforePPTUpload(file) {
+      let fileName = file.name
+      let isPPT = fileName.indexOf('.ppt') > 0 || fileName.indexOf('.pptx') > 0
+      let isLt20 = file.size / 1024 / 1024 < 20
+
+      if (!isPPT) {
+        this.$message.error('仅支持上传PPT！')
+        return false
+      }
+
+      if (!isLt20) {
+        this.$message.error('上传图片大小不能超过20MB!')
+        return false
+      }
+
+      return isPPT && isLt20
+    },
+    beforeMP4Upload(file) {
+      let fileName = file.name
+      let isMP4 = fileName.indexOf('.mp4') > 0
+      let isLt50 = file.size / 1024 / 1024 < 50
+
+      if (!isMP4) {
+        this.$message.error('仅支持上传MP4格式的视频!')
+        return false
+      }
+
+      if (!isLt50) {
+        this.$message.error('上传视频大小不能超过50MB!')
+        return false
+      }
+
+      return isMP4 && isLt50
+    },
     handleRemovePPT(file, fileList) {
       console.log(file, fileList);
-    },
-    handlePreviewPPT(file) {
-      console.log(file);
     },
     handleExceedPPT(files, fileList) {
       this.$message.warning('只能上传一个文件！')
     },
-    handleSuccessPPT(res, file) {
-      console.log(file.response.data);
-      this.lesson_form.ppt = file.response.data
-    },
-    handleEditRemovePPT(file, fileList) {
-      console.log(file, fileList);
-    },
-    handleEditPreviewPPT(file) {
-      console.log(file);
-    },
     handleEditExceedPPT(files, fileList) {
       this.$message.warning('只能上传一个文件！');
-    },
-    handleEditSuccessPPT(res, file) {
-      console.log(file.response.data);
-      this.edit_lesson_form.ppt = file.response.data;
     },
     handleRemoveMp4(file, fileList) {
       console.log(file, fileList);
@@ -340,20 +401,11 @@ export default {
     handleExceedMp4(files, fileList) {
       this.$message.warning('只能上传一个文件！');
     },
-    handleSuccessMp4(res, file) {
-      this.lesson_form.mp4 = file.response.data;
-    },
-    handleEditRemoveMp4(file, fileList) {
-      console.log(file, fileList);
-    },
     handleEditPreviewMp4(file) {
       console.log(file);
     },
     handleEditExceedMp4(files, fileList) {
       this.$message.warning('只能上传一个文件！');
-    },
-    handleEditSuccessMp4(res, file) {
-      this.edit_lesson_form.mp4 = file.response.data;
     },
     addSonChapterDiagCancel() {
       this.addSonChapterDiag = false;
@@ -371,13 +423,15 @@ export default {
             this.lesson_form.chapter_id = this.chapter_id;
 
             this.$refs.submit_son.validate(valid => {
+              console.log(this.lesson_form)
+
               addSonChapterInEdit(this.lesson_form).then(res => {
                 if (res.status === '200') {
                   this.$message.success('提交成功');
                   this.chapter = res.data
                   this.form = '';
                   this.lesson_form = {};
-                  this.getChapterInfoByLessonId();
+                  this.getChapterInfoByLessonId()
                 } else {
                   this.$message.error('系统内部错误');
                 }
@@ -405,6 +459,8 @@ export default {
       this.$confirm('确定要提交表单吗？').then(_ => {
         this.timer = setTimeout(() => {
           this.$refs.submit_son.validate(valid => {
+            console.log(this.edit_lesson_form)
+
             editSonChapterInEdit(this.edit_lesson_form).then(res => {
               if (res.status === '200') {
                 const loading = this.$loading({
@@ -485,13 +541,13 @@ export default {
           } else {
             this.$message.error('删除章节失败!');
           }
-        });
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
-        });
-      });
+        })
+      })
     },
     //编辑章节信息
     editChapter(chapter_id, chapter_no, chapter_name, description) {
@@ -614,7 +670,7 @@ export default {
     toJupyterPage(son_id) {
       this.$router.push({ name: 'ToJupyterPage', query: { son_id: son_id } })
     },
-    async getChapterInfoByLessonId() {
+    getChapterInfoByLessonId() {
       getChapterInfo(this.lesson_id).then(res => {
         if (res.status === '200') {
           this.chapter = res.data
