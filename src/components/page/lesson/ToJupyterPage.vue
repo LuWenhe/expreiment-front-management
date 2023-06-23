@@ -2,6 +2,7 @@
   <div id='allLesson'>
     <el-row>
       <h3>实验指导书</h3>
+      <!-- Todo -->
       <el-upload
         list-type='text'
         :action='uploadAttachment'
@@ -54,7 +55,7 @@ export default {
   },
   methods: {
     handleSuccess(res, file) {
-      this.guide_book = file.response.data;
+      this.guide_book = file.response.data
     },
     handleExceed() {
       this.$message.error(`只能选择1个文件`);
@@ -109,31 +110,13 @@ export default {
       this.file_form.append('file', file.file)
       this.file_form.append('son_id', this.son_id)
     }
-    // submitUpload() {
-    //   this.$refs.uploadJupyterFile.submit()
-    //   post(this.uploadServer, this.file_form, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //       'token': localStorage.getItem('token')
-    //     }
-    //   }).then((res) => {
-    //     if (res.status === '200') {
-    //       this.$message.success('上传成功')
-    //       this.$router.push({ name: 'lessonIndex' })
-    //     } else {
-    //       this.$message.error('上传失败')
-    //     }
-    //   }).catch((err) => {
-    //     console.log(err)
-    //   })
-    // }
   },
   watch: {
     '$route.query.son_id': {
       handler(newVal, oldVal) {
         //判断newVal有没有值监听路由变化
-        this.son_id = newVal;
-        this.getGuideBook();
+        this.son_id = newVal
+        this.getGuideBook()
       },
       deep: true
     }

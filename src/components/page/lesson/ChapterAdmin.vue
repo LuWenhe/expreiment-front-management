@@ -1,46 +1,45 @@
 <template>
-  <div>
-    <div v-for='(item,index)  in chapter' :key='index'>
-      <div class='secondCard'>
-        <br>
-        <div>
-          <div style='float: left;margin-left: 20px'><span class='chapter-index'>{{ item.chapter_no }}</span>
-            &nbsp;<span><b>{{ item.chapter_name }}</b></span></div>
-          <div style='float: right;margin-right: 20px'>
-            <el-button @click='delChapter(item.chapter_id)'><i class='el-icon-delete-solid'></i></el-button>
-            <el-button @click='editChapter(item.chapter_id,item.chapter_no,item.chapter_name,item.description)'><i
-              class='el-icon-edit'></i></el-button>
-          </div>
-          <br>
-        </div>
-        <br>
-        <hr>
-        <br>
-        <div style='margin-left: 20px'>
-          <span>{{ item.description }}</span>
-          <br>
-          <br>
-          <div v-for='(item1,index)  in item.sonChapterList' :key='index'>
-            <div style='float: left;'>
-              <span> {{ item1.son_no }} &nbsp;{{ item1.son_name }}</span>
-            </div>
-            <div style='float: right;width: 300px'>
-              <div style='float: left;'>
-                <el-button style='width: 50px' @click='editSonChapter(item1.son_id)'><i class='el-icon-edit'></i>
-                </el-button>
-                <el-button @click='delSonChapter(item1.son_id)'><i class='el-icon-delete-solid'></i></el-button>
-              </div>
-              &nbsp;&nbsp;
-              <div style='width: 100px; float: right;margin-right: 50px'>
-                <el-button @click='toJupyterPage(item1.son_id)'><i class='el-icon-edit'>实验指导书</i></el-button>
-              </div>
-            </div>
-          </div>
-          <el-button><i class='el-icon-plus' @click='addSonChapterModal(item.chapter_id)'>添加实验章节</i></el-button>
-        </div>
-      </div>
-    </div>
-    <el-button type='primary' @click='dialog = true'>添加课程章节</el-button>
+  <el-row class='chapter-container'>
+    <el-row class='chapter-add-btn'>
+      <el-button type='primary' @click='dialog = true'>添加课程章节</el-button>
+    </el-row>
+    <!-- 每个章节 -->
+    <el-row class='son-chapter-box' v-for='(item, index) in chapter' :key='index'>
+      <!-- 章节标题 -->
+      <el-row class='chapter-title'>
+        <el-row class='left'>
+          <span class='chapter-index'>{{ item.chapter_no }}</span>
+          <span><b>{{ item.chapter_name }}</b></span>
+        </el-row>
+        <el-row class='right'>
+          <el-button @click='delChapter(item.chapter_id)'><i class='el-icon-delete-solid'></i></el-button>
+          <el-button @click='editChapter(item.chapter_id,item.chapter_no,item.chapter_name,item.description)'>
+            <i class='el-icon-edit'></i>
+          </el-button>
+          <el-button @click='addSonChapterModal(item.chapter_id)'>
+            <i class='el-icon-plus'>添加实验章节</i>
+          </el-button>
+        </el-row>
+      </el-row>
+      <!-- 子章节 -->
+      <el-row v-if='item.sonChapterList.length > 0' class='son-chapter'>
+        <el-row class='son-chapter-item' v-for='(item, index) in item.sonChapterList' :key='index'>
+          <el-row class='left'>
+            <span>{{ item.son_no }} {{ item.son_name }}</span>
+          </el-row>
+          <el-row class='right'>
+            <el-row>
+              <el-button @click='delSonChapter(item.son_id)'><i class='el-icon-delete-solid'></i></el-button>
+              <el-button @click='editSonChapter(item.son_id)'><i class='el-icon-edit'></i></el-button>
+              <el-button @click='toJupyterPage(item.son_id)'><i class='el-icon-edit'>实验指导书</i></el-button>
+            </el-row>
+          </el-row>
+        </el-row>
+      </el-row>
+      <el-row v-else class='son-chapter'>
+        <span>无数据</span>
+      </el-row>
+    </el-row>
     <!-- 添加章节信息 -->
     <el-row>
       <el-drawer
@@ -209,7 +208,7 @@
         </span>
       </el-dialog>
     </el-row>
-  </div>
+  </el-row>
 </template>
 
 <script>
@@ -219,7 +218,7 @@ import {
   delSonChapterInEdit, editSonChapterInEdit,
   getChapterInfo,
   getEditSonChapterInfo, uploadFile
-} from '@/network/api/backLesson';
+} from '@/network/api/backLesson'
 
 export default {
   name: 'ChapterAdmin',
@@ -684,11 +683,14 @@ export default {
 </script>
 
 <style>
-.secondCard {
+.chapter-container {
+  display: flex;
+  flex-direction: column;
   background-color: white;
-  height: auto;
-  width: 60%;
-  margin-left: 20px;
+}
+
+.chapter-add-btn {
+
 }
 
 .chapter-index {
@@ -700,6 +702,46 @@ export default {
   height: 30px;
   border-radius: 50%;
   margin-right: 12px;
+}
+
+.chapter-title {
+  display: flex;
+  height: 50px;
+  align-items: center;
+}
+
+.chapter-title .left {
+  flex: 0.8;
+  justify-content: flex-start;
+}
+
+.chapter-title .right {
+  flex: 0.2;
+  justify-content: flex-end;
+}
+
+.son-chapter {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.son-chapter-item {
+  display: flex;
+  height: 35px;
+  align-items: center;
+}
+
+.son-chapter-item .left {
+  flex: 0.8;
+}
+
+.son-chapter-item .right {
+  flex: 0.2;
+}
+
+.son-chapter .chapter-btn {
+  width: 120px;
 }
 
 .el-upload--text {

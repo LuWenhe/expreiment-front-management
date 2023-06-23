@@ -147,13 +147,14 @@
             <span>简介</span>
             <br> <br>
             <el-col :span='24' style='width: 95%'>
-              <el-form-item prop='description'>
+              <el-form-item>
                 <mavon-editor
-                  v-model='lesson.description'
+                  v-model='lesson.mdDescription'
                   ref='md'
                   class='editor'
                   @imgAdd='handleEditorImgAdd'
-                  @imgDel='handleEditorImgDel'>
+                  @imgDel='handleEditorImgDel'
+                  @change='changeData'>
                 </mavon-editor>
               </el-form-item>
             </el-col>
@@ -167,6 +168,7 @@
     </el-tab-pane>
   </el-tabs>
 </template>
+
 <script>
 import ChapterAdmin from './ChapterAdmin'
 import { bNumberCheck } from '@/utils/validator'
@@ -233,6 +235,8 @@ export default {
         suitablePerson: '',
         canLearn: '',
         description: '',
+        mdDescription: '',
+        htmlDescription: '',
         dagang: '',
         cankao: '',
         goal: ''
@@ -327,7 +331,6 @@ export default {
       this.hideUpload = fileList.length >= this.imgLimit
       this.lesson.pic_url = ''
     },
-    /**上传文件之前的钩子函数 */
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -339,18 +342,14 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    /**上传成功后的钩子函数 */
     handleAvatarSuccess(res, file) {
       this.lesson.pic_url = file.response.data;
       this.fileListFront.push(file);
       this.hideUpload = true;
     },
-    /**查看图片 */
     handlePictureCardPreview(file) {
       console.log(file);
-
     },
-    /**文件超出个数限制时的钩子 */
     handleExceed() {
       this.$message.error(`只能选择${this.imgLimit}个文件`)
     },
@@ -368,6 +367,9 @@ export default {
     },
     handleEditorImgDel(pos) {
       delete this.imgFile[pos];
+    },
+    changeData(value, render) {
+      this.lesson.htmlDescription = render
     }
   }
 }
