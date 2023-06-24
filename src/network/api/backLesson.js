@@ -13,7 +13,13 @@ export const getLessonsByUserId = (pageRequest) => {
     data: pageRequest
   })
 }
-
+export const getLessonsByTagName = (pageRequest) => {
+  return request({
+    method: 'POST',
+    url: '/backLesson/getLessonsByTagName',
+    data: pageRequest
+  })
+}
 export const uploadFile = (formData) => {
   return request({
     method: 'POST',
@@ -21,7 +27,6 @@ export const uploadFile = (formData) => {
     data: formData
   })
 }
-
 export const addLesson = (lessonObj) => {
   return request({
     method: 'POST',
@@ -29,7 +34,6 @@ export const addLesson = (lessonObj) => {
     data: lessonObj
   })
 }
-
 export const updateLesson = (lessonObj) => {
   return request({
     method: 'POST',
@@ -37,7 +41,6 @@ export const updateLesson = (lessonObj) => {
     data: lessonObj
   })
 }
-
 export const getLessonDetail = (lessonId) => {
   return request({
     method: 'GET',
@@ -47,7 +50,6 @@ export const getLessonDetail = (lessonId) => {
     }
   })
 }
-
 export const getChapterInfo = (lessonId) => {
   return request({
     method: 'GET',
@@ -57,7 +59,6 @@ export const getChapterInfo = (lessonId) => {
     }
   })
 }
-
 export const uploadSingleFile = (formData) => {
   return request({
     method: 'POST',
@@ -65,7 +66,6 @@ export const uploadSingleFile = (formData) => {
     data: formData
   })
 }
-
 export const findLessonsByName = (pageRequest) => {
   return request({
     method: 'POST',
@@ -73,7 +73,6 @@ export const findLessonsByName = (pageRequest) => {
     data: pageRequest
   })
 }
-
 export const addChapterInEdit = (chapterObj) => {
   return request({
     method: 'POST',
@@ -81,7 +80,13 @@ export const addChapterInEdit = (chapterObj) => {
     data: chapterObj
   })
 }
-
+export const updateChapter = (chapterObj) => {
+  return request({
+    method: 'POST',
+    url: '/backLesson/updateChapter',
+    data: chapterObj
+  })
+}
 export const delChapterInEdit = (chapterId) => {
   return request({
     method: 'GET',
@@ -91,7 +96,6 @@ export const delChapterInEdit = (chapterId) => {
     }
   })
 }
-
 export const delSonChapterInEdit = (sonId) => {
   return request({
     method: 'GET',
@@ -101,7 +105,6 @@ export const delSonChapterInEdit = (sonId) => {
     }
   })
 }
-
 export const addSonChapterInEdit = (chapterObj) => {
   return request({
     method: 'POST',
@@ -109,7 +112,6 @@ export const addSonChapterInEdit = (chapterObj) => {
     data: chapterObj
   })
 }
-
 export const editSonChapterInEdit = (chapterObj) => {
   return request({
     method: 'POST',
@@ -117,7 +119,6 @@ export const editSonChapterInEdit = (chapterObj) => {
     data: chapterObj
   })
 }
-
 export const uploadAttachmentMp4 = (formData) => {
   return request({
     method: 'POST',
@@ -125,7 +126,6 @@ export const uploadAttachmentMp4 = (formData) => {
     data: formData
   })
 }
-
 export const uploadAttachmentPPT = (formData) => {
   return request({
     method: 'POST',
@@ -133,7 +133,6 @@ export const uploadAttachmentPPT = (formData) => {
     data: formData
   })
 }
-
 export const uploadExcelImport = (formData) => {
   return request({
     method: 'POST',
@@ -141,7 +140,6 @@ export const uploadExcelImport = (formData) => {
     data: formData
   })
 }
-
 export const uploadExcelImportStu = (formData) => {
   return request({
     method: 'POST',
@@ -149,7 +147,6 @@ export const uploadExcelImportStu = (formData) => {
     data: formData
   })
 }
-
 export const addSonChapterBook = (sonChapterObj) => {
   return request({
     method: 'POST',
@@ -157,7 +154,6 @@ export const addSonChapterBook = (sonChapterObj) => {
     data: sonChapterObj
   })
 }
-
 export const deleteLessonById = (lessonId) => {
   return request({
     method: 'GET',
@@ -167,7 +163,6 @@ export const deleteLessonById = (lessonId) => {
     }
   })
 }
-
 export const getEditSonChapterInfo = (sonId) => {
   return request({
     method: 'GET',

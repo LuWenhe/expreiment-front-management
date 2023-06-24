@@ -41,173 +41,172 @@
       </el-row>
     </el-row>
     <!-- 添加章节信息 -->
-    <el-row>
-      <el-drawer
-        title='课程章节'
-        :before-close='handleClose'
-        :visible.sync='dialog'
-        direction='ltr'
-        custom-class='demo-drawer'
-        ref='drawer'
-      >
-        <div class='demo-drawer__content'>
-          <el-form :model='form' :rules='rules' ref='submit'>
-            <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
-              <el-input v-model='form.chapter_no' style='width: 90%'></el-input>
-            </el-form-item>
-            <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
-              <el-input v-model='form.chapter_name' style='width: 90%'></el-input>
-            </el-form-item>
-            <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
-              <el-input
-                style='width: 90%'
-                type='textarea'
-                :rows='3'
-                placeholder='请输入大纲' v-model='form.description'>
-              </el-input>
-            </el-form-item>
-          </el-form>
-          <div class='demo-drawer__footer' style='margin-left: 15%'>
-            <el-button @click='cancelForm'>取 消</el-button>
-            <el-button type='primary' @click='addChapter'>添加章节</el-button>
-          </div>
-        </div>
-      </el-drawer>
-      <!-- 编辑课程章节 -->
-      <el-drawer
-        title='编辑课程章节'
-        :before-close='handleClose'
-        :visible.sync='editChDiag'
-        direction='rtl'
-        custom-class='demo-drawer'
-        ref='drawer'
-      >
-        <div class='demo-drawer__content'>
-          <el-form :model='editCh_form' :rules='rules' ref='submit_ediCh'>
-            <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
-              <el-input v-model='editCh_form.chapter_no' style='width: 90%'></el-input>
-            </el-form-item>
-            <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
-              <el-input v-model='editCh_form.chapter_name' style='width: 90%'></el-input>
-            </el-form-item>
-            <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
-              <el-input
-                style='width: 90%'
-                type='textarea'
-                :rows='3'
-                placeholder='请输入大纲' v-model='editCh_form.description'>
-              </el-input>
-            </el-form-item>
-          </el-form>
-          <div class='demo-drawer__footer' style='margin-left: 15%'>
-            <el-button @click='cancelEditChForm'>取 消</el-button>
-            <el-button type='primary' @click='editSubmitChapter'>修改</el-button>
-          </div>
-        </div>
-      </el-drawer>
-      <!-- 添加课程章节 -->
-      <el-dialog title='子章节' :visible.sync='addSonChapterDiag' width='30%' :before-close='handleClose'>
-        <el-form :model='lesson_form' :rules='son_rules' ref='submit_son'>
-          <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
-            <el-input v-model='lesson_form.son_no' style='width: 90%'></el-input>
+    <el-drawer
+      title='课程章节'
+      :before-close='handleClose'
+      :visible.sync='dialog'
+      direction='ltr'
+      custom-class='demo-drawer'
+      ref='drawer'
+    >
+      <div class='demo-drawer__content'>
+        <el-form :model='form' :rules='rules' ref='submit'>
+          <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
+            <el-input v-model='form.chapter_no' style='width: 90%'></el-input>
           </el-form-item>
-          <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
-            <el-input v-model='lesson_form.son_name' style='width: 90%'></el-input>
+          <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
+            <el-input v-model='form.chapter_name' style='width: 90%'></el-input>
           </el-form-item>
           <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
             <el-input
               style='width: 90%'
               type='textarea'
               :rows='3'
-              placeholder='请输入大纲' v-model='lesson_form.description'>
+              placeholder='请输入大纲' v-model='form.description'>
             </el-input>
           </el-form-item>
-          <el-form-item label='PPT' :label-width='formLabelWidth'>
-            <el-upload
-              action=''
-              :before-upload='beforePPTUpload'
-              :on-remove='handleRemovePPT'
-              :limit='1'
-              :on-exceed='handleExceedPPT'
-              :file-list='fileList'
-              :headers='uploadHeaders'
-              :http-request='uploadPPT'
-            >
-              <el-button size='small' type='primary'>点击上传</el-button>
-            </el-upload>
+        </el-form>
+        <div class='demo-drawer__footer' style='margin-left: 15%'>
+          <el-button @click='cancelForm'>取 消</el-button>
+          <el-button type='primary' @click='addChapter'>添加章节</el-button>
+        </div>
+      </div>
+    </el-drawer>
+    <!-- 编辑课程章节 -->
+    <el-drawer
+      title='编辑课程章节'
+      :before-close='handleClose'
+      :visible.sync='editChDiag'
+      direction='rtl'
+      custom-class='demo-drawer'
+      ref='drawer'
+    >
+      <el-row class='demo-drawer__content'>
+        <el-form :model='editCh_form' :rules='rules' ref='submit_ediCh'>
+          <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
+            <el-input v-model='editCh_form.chapter_no' style='width: 90%' @input='changeValue'></el-input>
           </el-form-item>
-          <el-form-item label='MP4' :label-width='formLabelWidth'>
-            <el-upload
-              action=''
-              :before-upload='beforeMP4Upload'
-              :on-preview='handlePreviewMp4'
-              :on-remove='handleRemoveMp4'
-              :limit='1'
-              :on-exceed='handleExceedMp4'
-              :file-list='fileList'
-              :headers='uploadHeaders'
-              :http-request='uploadMP4'>
-              <el-button size='small' type='primary'>点击上传</el-button>
-            </el-upload>
+          <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
+            <el-input v-model='editCh_form.chapter_name' style='width: 90%' @input='changeValue'></el-input>
+          </el-form-item>
+          <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
+            <el-input
+              style='width: 90%'
+              type='textarea'
+              :rows='3'
+              @input='changeValue'
+              placeholder='请输入大纲' v-model='editCh_form.description'>
+            </el-input>
           </el-form-item>
         </el-form>
-        <span slot='footer' class='dialog-footer'>
+        <div class='demo-drawer__footer' style='margin-left: 15%'>
+          <el-button @click='cancelEditChForm'>取 消</el-button>
+          <el-button type='primary' @click='editSubmitChapter'>修改</el-button>
+        </div>
+      </el-row>
+    </el-drawer>
+    <!-- 添加课程章节 -->
+    <el-dialog title='子章节' :visible.sync='addSonChapterDiag' width='30%' :before-close='handleClose'>
+      <el-form :model='lesson_form' :rules='son_rules' ref='submit_son'>
+        <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
+          <el-input v-model='lesson_form.son_no' style='width: 90%'></el-input>
+        </el-form-item>
+        <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
+          <el-input v-model='lesson_form.son_name' style='width: 90%'></el-input>
+        </el-form-item>
+        <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
+          <el-input
+            style='width: 90%'
+            type='textarea'
+            :rows='3'
+            placeholder='请输入大纲' v-model='lesson_form.description'>
+          </el-input>
+        </el-form-item>
+        <el-form-item label='PPT' :label-width='formLabelWidth'>
+          <el-upload
+            action=''
+            :before-upload='beforePPTUpload'
+            :on-remove='handleRemovePPT'
+            :limit='1'
+            :on-exceed='handleExceedPPT'
+            :file-list='fileList'
+            :headers='uploadHeaders'
+            :http-request='uploadPPT'
+          >
+            <el-button size='small' type='primary'>点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label='MP4' :label-width='formLabelWidth'>
+          <el-upload
+            action=''
+            :before-upload='beforeMP4Upload'
+            :on-preview='handlePreviewMp4'
+            :on-remove='handleRemoveMp4'
+            :limit='1'
+            :on-exceed='handleExceedMp4'
+            :file-list='fileList'
+            :headers='uploadHeaders'
+            :http-request='uploadMP4'>
+            <el-button size='small' type='primary'>点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <span slot='footer' class='dialog-footer'>
           <el-button @click='addSonChapterDiagCancel'>取 消</el-button>
           <el-button type='primary' @click='addSonChapter'>确 定</el-button>
         </span>
-      </el-dialog>
-      <!-- 编辑课程章节 -->
-      <el-dialog
-        title='编辑子章节'
-        :visible.sync='editSonChapterDiag'
-        width='30%'
-        :before-close='handleClose'>
-        <el-form :model='edit_lesson_form' :rules='son_rules' ref='submit_son'>
-          <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
-            <el-input v-model='edit_lesson_form.son_no' style='width: 90%'></el-input>
-          </el-form-item>
-          <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
-            <el-input v-model='edit_lesson_form.son_name' style='width: 90%'></el-input>
-          </el-form-item>
-          <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
-            <el-input style='width: 90%' type='textarea' :rows='3' placeholder='请输入大纲'
-                      v-model='edit_lesson_form.description'></el-input>
-          </el-form-item>
-          <el-form-item label='PPT' :label-width='formLabelWidth'>
-            <el-upload
-              list-type='text'
-              action=''
-              :before-upload='beforePPTUpload'
-              :limit='1'
-              :on-exceed='handleEditExceedPPT'
-              :file-list='fileList'
-              :headers='uploadHeaders'
-              :http-request='editUploadPPT'
-            >
-              <el-button size='small' type='primary'>点击上传</el-button>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label='MP4' :label-width='formLabelWidth'>
-            <el-upload
-              action=''
-              :before-upload='beforeMP4Upload'
-              :on-preview='handleEditPreviewMp4'
-              :limit='1'
-              :on-exceed='handleEditExceedMp4'
-              :file-list='fileList'
-              :headers='uploadHeaders'
-              :http-request='editUploadMP4'
-            >
-              <el-button size='small' type='primary'>点击上传</el-button>
-            </el-upload>
-          </el-form-item>
-        </el-form>
-        <span slot='footer' class='dialog-footer'>
+    </el-dialog>
+    <!-- 编辑子章节 -->
+    <el-dialog
+      title='编辑子章节'
+      :visible.sync='editSonChapterDiag'
+      width='30%'
+      :before-close='handleClose'>
+      <el-form :model='edit_lesson_form' :rules='son_rules' ref='submit_son'>
+        <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
+          <el-input v-model='edit_lesson_form.son_no' style='width: 90%'></el-input>
+        </el-form-item>
+        <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
+          <el-input v-model='edit_lesson_form.son_name' style='width: 90%'></el-input>
+        </el-form-item>
+        <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
+          <el-input style='width: 90%' type='textarea' :rows='3' placeholder='请输入大纲'
+                    v-model='edit_lesson_form.description'></el-input>
+        </el-form-item>
+        <el-form-item label='PPT' :label-width='formLabelWidth'>
+          <el-upload
+            list-type='text'
+            action=''
+            :before-upload='beforePPTUpload'
+            :limit='1'
+            :on-exceed='handleEditExceedPPT'
+            :file-list='fileList'
+            :headers='uploadHeaders'
+            :http-request='editUploadPPT'
+          >
+            <el-button size='small' type='primary'>点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label='MP4' :label-width='formLabelWidth'>
+          <el-upload
+            action=''
+            :before-upload='beforeMP4Upload'
+            :on-preview='handleEditPreviewMp4'
+            :limit='1'
+            :on-exceed='handleEditExceedMp4'
+            :file-list='fileList'
+            :headers='uploadHeaders'
+            :http-request='editUploadMP4'
+          >
+            <el-button size='small' type='primary'>点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <span slot='footer' class='dialog-footer'>
           <el-button @click='addEditSonChapterDiagCancel'>取 消</el-button>
           <el-button type='primary' @click='addEditSonChapter'>确 定</el-button>
         </span>
-      </el-dialog>
-    </el-row>
+    </el-dialog>
   </el-row>
 </template>
 
@@ -217,8 +216,8 @@ import {
   delChapterInEdit,
   delSonChapterInEdit, editSonChapterInEdit,
   getChapterInfo,
-  getEditSonChapterInfo, uploadFile
-} from '@/network/api/backLesson'
+  getEditSonChapterInfo, updateChapter, uploadFile
+} from '@/network/api/backLesson';
 
 export default {
   name: 'ChapterAdmin',
@@ -256,10 +255,10 @@ export default {
       dialog: false,
       editChDiag: false,
       editCh_form: {
-        chapter_id: null,
-        chapter_no: null,
-        chapter_name: null,
-        description: null
+        chapter_id: '',
+        chapter_no: '',
+        chapter_name: '',
+        description: ''
       },
       form: {
         chapter_name: '',
@@ -304,6 +303,9 @@ export default {
     }
   },
   methods: {
+    changeValue(e) {
+      this.$forceUpdate()
+    },
     uploadPPT(params) {
       let formData = this.getFormData(params)
       this.uploadFileByType('PPT', 'add', formData)
@@ -595,32 +597,26 @@ export default {
     },
     editSubmitChapter() {
       this.$confirm('确定要提交表单吗？').then(_ => {
-        // Todo 章节修改
-        // let url = this.$root.URL + '/back/editChapterInEdit'
-
         this.$refs.submit_ediCh.validate(valid => {
           const loading = this.$loading({
             lock: true,
             text: 'Loading',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
-          });
+          })
 
-          // post(url, this.editCh_form).then((res) => {
-          //   if (res.status === '200') {
-          //     loading.close();
-          //     this.$message.success('提交成功');
-          //     this.editChDiag = false;
-          //     this.editCh_form = {};
-          //     this.getChapterInfoByLessonId();
-          //   } else {
-          //     this.$message.error('系统内部错误');
-          //   }
-          // }).catch((err) => {
-          //   console.log(err)
-          // })
+          updateChapter(this.editCh_form).then(res => {
+            if (res.status === '200') {
+              this.$message.success('修改章节信息成功!')
+              this.editChDiag = false
+              // this.editCh_form = {}
+              this.getChapterInfoByLessonId()
+              loading.close()
+            } else {
+              this.$message.error('服务器发生错误')
+            }
+          })
 
-          // 动画关闭需要一定的时间
           setTimeout(() => {
             this.loading = false
           }, 400)
@@ -651,10 +647,10 @@ export default {
           lesson_id: '',
           ppt: '',
           mp4: ''
-        };
+        }
       }).catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
     },
     cancelForm() {
       this.loading = false

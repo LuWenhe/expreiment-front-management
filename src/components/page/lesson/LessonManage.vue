@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { deleteLessonById, findLessonsByName, getLessonsByUserId } from '@/network/api/backLesson'
+import { deleteLessonById, findLessonsByName, getLessonsByTagName, getLessonsByUserId } from '@/network/api/backLesson';
 import { getTags } from '@/network/api/tag'
 
 export default {
@@ -159,9 +159,36 @@ export default {
       this.pageInfo.pageNum = pageNum;
       this.getLessons()
     },
-    // Todo
     getLessonsByTag(tagName) {
-      this.getLessons()
+      let pageRequest = {
+        tagName: tagName,
+        currentPage: this.pageInfo.pageNum,
+        pageSize: this.pageInfo.pageSize
+      }
+
+      getLessonsByTagName(pageRequest).then(res => {
+        if (res.status === '200') {
+          let tableData = res.data.list
+          let data = res.data
+
+          if (tableData != null && tableData.length > 0) {
+            this.lesson_list = tableData
+
+            this.pageInfo = {
+              pageNum: data.pageNum,
+              pageSize: data.pageSize,
+              size: data.size,
+              startRow: data.startRow,
+              endRow: data.endRow,
+              total: data.total,
+              pages: data.pages
+            }
+          } else {
+            this.lesson_list = []
+            this.$message.error('当前标签没有对应课程!')
+          }
+        }
+      })
     },
     getLessons() {
       let pageRequest = {
@@ -203,7 +230,7 @@ export default {
       findLessonsByName(pageRequest).then(res => {
         if (res.status === '200') {
           let tableData = res.data.list
-          let data = res.data.data
+          let data = res.data
 
           if (tableData != null) {
             this.lesson_list = tableData

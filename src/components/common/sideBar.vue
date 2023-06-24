@@ -2,7 +2,6 @@
   <div class="sidebar">
     <el-menu
       class="sidebar-el-menu"
-      :default-openeds="['1','2','3','4','5']"
       :default-active="$route.path"
       :collapse="collapse"
       background-color="#324157"
