@@ -378,7 +378,6 @@ export default {
       let pageSize = this.pageInfo.pageSize
 
       getStudentsByClazzId(clazzId, currentPage, pageSize).then(res => {
-        console.log(res)
         if (res.status === '200') {
           let tableData = res.data.list
           let data = res.data

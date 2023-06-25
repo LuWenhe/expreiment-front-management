@@ -33,6 +33,7 @@
 </template>
 <script>
 import bus from '../common/bus'
+import { logout } from '@/network/api/user';
 
 export default {
   data() {
@@ -72,23 +73,29 @@ export default {
       timeout: 20 * 1000, //20秒一次心跳
       timeoutObj: null, //心跳心跳倒计时
       serverTimeoutObj: null, //心跳倒计时
-      timeoutnum: null //断开 重连倒计时
+      timeoutnum: null, //断开 重连倒计时
+      userId: ''
     };
   },
 
   created() {
     let userData = JSON.parse(localStorage.getItem('userData'))
     this.name = userData.username
+    this.userId = userData.userId
   },
-
   methods: {
-
     load() {
       this.count = this.infoSize;
     },
     // 用户名下拉菜单选择事件
     handleCommand(command) {
       if (command === 'logout') {
+        logout(this.userId).then(res => {
+          if (res.status === '200') {
+            this.$message.success('退出登录成功!')
+          }
+        })
+
         localStorage.clear()
         this.$router.push('/login')
       }
