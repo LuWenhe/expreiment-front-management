@@ -12,7 +12,8 @@
     <el-table
       :data='tableData'
       stripe
-      style='width: 100%'>
+      style='width: 100%'
+    >
       <el-table-column prop='tag_id' label='序号' width='180'></el-table-column>
       <el-table-column prop='tagName' label='标签名'></el-table-column>
       <el-table-column label='操作' width='200px' align='center'>

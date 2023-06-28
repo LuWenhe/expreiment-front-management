@@ -11,15 +11,16 @@
               <el-upload
                 :class='{hide:hideUpload}'
                 list-type='picture-card'
-                :action='uploadImgServer'
+                action=''
                 :on-preview='handlePictureCardPreview'
                 :on-remove='handleRemove'
-                :on-success='handleAvatarSuccess'
                 :before-upload='beforeAvatarUpload'
                 :limit='imgLimit'
                 :on-exceed='handleExceed'
                 :file-list='fileListFront'
-                :headers='uploadHeaders'>
+                :headers='uploadHeaders'
+                :http-request='uploadPic'
+              >
                 <i class='el-icon-plus'></i>
               </el-upload>
             </el-col>
@@ -174,7 +175,7 @@ import ChapterAdmin from './ChapterAdmin'
 import { bNumberCheck } from '@/utils/validator'
 import { loadAllTeachers } from '@/network/api/user'
 import { uploadFile, getLessonDetail, updateLesson } from '@/network/api/backLesson'
-import { getTags } from '@/network/api/tag';
+import { getTags } from '@/network/api/tag'
 
 const validatorLearnTime = (rule, value, callback) => {
   if (!value) {
@@ -216,7 +217,6 @@ export default {
       activeName: 'first',
       imageUrl: '',
       tempUrl: '',
-      uploadImgServer: '',
       imgLimit: 1, // 上传照片数
       fileListFront: [], // 照片列表
       hideUpload: false,
@@ -239,14 +239,14 @@ export default {
         htmlDescription: '',
         dagang: '',
         cankao: '',
-        goal: ''
+        goal: '',
+        teacherId: ''
       },
       teachers: []
     }
   },
   created() {
-    this.lessonId = this.$route.query.lessonId;
-    this.uploadImgServer = this.$root.URL + '/backLesson/uploadFile'
+    this.lessonId = this.$route.query.lessonId
     this.getLessonDetail()
     this.getOptionList()
   },
@@ -254,6 +254,22 @@ export default {
     this.loadAll()
   },
   methods: {
+    uploadPic(params) {
+      let formData = new FormData()
+      formData.append('file', params.file)
+
+      uploadFile(formData).then(res => {
+        if (res.status === '200') {
+          this.$message.success('图片上传成功!')
+
+          this.lesson.pic_url = res.data
+          this.fileListFront.push(res.data);
+          this.hideUpload = true
+        } else {
+          this.$message.error('图片上传失败!')
+        }
+      })
+    },
     querySearch(queryString, cb) {
       let teachers = this.teachers
       let results = queryString ? teachers.filter(this.createFilter(queryString)) : teachers
@@ -298,7 +314,13 @@ export default {
     getLessonDetail() {
       getLessonDetail(this.lessonId).then(res => {
         if (res.status === '200') {
-          this.lesson = res.data
+          let lessonData = res.data
+
+          if (lessonData.mdDescription === null) {
+            lessonData.mdDescription = ''
+          }
+
+          this.lesson = lessonData
           this.fileListFront.push({ name: 'xxx', url: res.data.pic_url.split(',')[0] })   //在el-upload中回显后台返回的地址
           this.hideUpload = true
         }
@@ -310,6 +332,9 @@ export default {
           updateLesson(this.lesson).then(res => {
             if (res.status === '200') {
               this.$message.success('更新课程成功!')
+              this.$router.back()
+            } else {
+              this.$message.error('更新课程失败')
             }
           })
         } else {
@@ -342,13 +367,8 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    handleAvatarSuccess(res, file) {
-      this.lesson.pic_url = file.response.data;
-      this.fileListFront.push(file);
-      this.hideUpload = true;
-    },
     handlePictureCardPreview(file) {
-      console.log(file);
+
     },
     handleExceed() {
       this.$message.error(`只能选择${this.imgLimit}个文件`)

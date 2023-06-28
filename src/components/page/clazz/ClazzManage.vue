@@ -9,11 +9,12 @@
       <el-table
         class='clazz-table'
         :data='clazzTableData'
-        border>
-        <el-table-column type='selection' width='55'></el-table-column>
+        border
+      >
+        <el-table-column type='selection' width='55px'></el-table-column>
         <el-table-column type='index' label='序号' width='100px'></el-table-column>
-        <el-table-column prop='name' label='班级名' width='100px'></el-table-column>
-        <el-table-column prop='size' label='最大人数' width='100px'></el-table-column>
+        <el-table-column prop='name' label='班级名' width='150px'></el-table-column>
+        <el-table-column prop='size' label='最大人数' width='150px'></el-table-column>
         <el-table-column label='操作' width='200px' align='center'>
           <template slot-scope='scope'>
             <el-button type='primary' @click='editClazz(scope.$index, scope.row)'>编辑</el-button>

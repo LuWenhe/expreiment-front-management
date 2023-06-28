@@ -12,7 +12,8 @@
         :limit='1'
         :on-exceed='handleExceed'
         :file-list='fileList'
-        :headers='uploadHeaders'>
+        :headers='uploadHeaders'
+      >
         <el-button slot='trigger' type='primary'>上传实验指导书</el-button>
       </el-upload>
       <el-col :span='24' style='width: 100%'>
@@ -80,7 +81,7 @@ export default {
       addSonChapterBook(sonChapterObj).then(res => {
         if (res.status === '200') {
           this.$message.success('提交成功')
-          this.reload()
+          this.$router.back()
         }
       })
     },

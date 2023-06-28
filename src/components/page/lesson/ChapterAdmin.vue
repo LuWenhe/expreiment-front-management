@@ -1,7 +1,7 @@
 <template>
   <el-row class='chapter-container'>
     <el-row class='chapter-add-btn'>
-      <el-button type='primary' @click='dialog = true'>添加课程章节</el-button>
+      <el-button type='primary' @click='addChapterBtn'>添加课程章节</el-button>
     </el-row>
     <!-- 每个章节 -->
     <el-row class='son-chapter-box' v-for='(item, index) in chapter' :key='index'>
@@ -16,7 +16,7 @@
           <el-button @click='editChapter(item.chapter_id,item.chapter_no,item.chapter_name,item.description)'>
             <i class='el-icon-edit'></i>
           </el-button>
-          <el-button @click='addSonChapterModal(item.chapter_id)'>
+          <el-button type='success' @click='addSonChapterModal(item.chapter_id)'>
             <i class='el-icon-plus'>添加实验章节</i>
           </el-button>
         </el-row>
@@ -28,11 +28,9 @@
             <span>{{ item.son_no }} {{ item.son_name }}</span>
           </el-row>
           <el-row class='right'>
-            <el-row>
-              <el-button @click='delSonChapter(item.son_id)'><i class='el-icon-delete-solid'></i></el-button>
-              <el-button @click='editSonChapter(item.son_id)'><i class='el-icon-edit'></i></el-button>
-              <el-button @click='toJupyterPage(item.son_id)'><i class='el-icon-edit'>实验指导书</i></el-button>
-            </el-row>
+            <el-button @click='delSonChapter(item.son_id)'><i class='el-icon-delete-solid'></i></el-button>
+            <el-button @click='editSonChapter(item.son_id)'><i class='el-icon-edit'></i></el-button>
+            <el-button @click='toJupyterPage(item.son_id)'><i class='el-icon-edit'>实验指导书</i></el-button>
           </el-row>
         </el-row>
       </el-row>
@@ -42,8 +40,7 @@
     </el-row>
     <!-- 添加章节信息 -->
     <el-drawer
-      title='课程章节'
-      :before-close='handleClose'
+      title='添加章节信息'
       :visible.sync='dialog'
       direction='ltr'
       custom-class='demo-drawer'
@@ -52,7 +49,7 @@
       <div class='demo-drawer__content'>
         <el-form :model='form' :rules='rules' ref='submit'>
           <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
-            <el-input v-model='form.chapter_no' style='width: 90%'></el-input>
+            <el-input v-model.number='form.chapter_no' style='width: 90%'></el-input>
           </el-form-item>
           <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
             <el-input v-model='form.chapter_name' style='width: 90%'></el-input>
@@ -75,7 +72,6 @@
     <!-- 编辑课程章节 -->
     <el-drawer
       title='编辑课程章节'
-      :before-close='handleClose'
       :visible.sync='editChDiag'
       direction='rtl'
       custom-class='demo-drawer'
@@ -106,7 +102,7 @@
       </el-row>
     </el-drawer>
     <!-- 添加课程章节 -->
-    <el-dialog title='子章节' :visible.sync='addSonChapterDiag' width='30%' :before-close='handleClose'>
+    <el-dialog title='子章节' :visible.sync='addSonChapterDiag' width='30%'>
       <el-form :model='lesson_form' :rules='son_rules' ref='submit_son'>
         <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
           <el-input v-model='lesson_form.son_no' style='width: 90%'></el-input>
@@ -161,13 +157,13 @@
       title='编辑子章节'
       :visible.sync='editSonChapterDiag'
       width='30%'
-      :before-close='handleClose'>
+    >
       <el-form :model='edit_lesson_form' :rules='son_rules' ref='submit_son'>
         <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
-          <el-input v-model='edit_lesson_form.son_no' style='width: 90%'></el-input>
+          <el-input v-model='edit_lesson_form.son_no' @input='changeValue' style='width: 90%'></el-input>
         </el-form-item>
         <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
-          <el-input v-model='edit_lesson_form.son_name' style='width: 90%'></el-input>
+          <el-input v-model='edit_lesson_form.son_name' @input='changeValue' style='width: 90%'></el-input>
         </el-form-item>
         <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
           <el-input style='width: 90%' type='textarea' :rows='3' placeholder='请输入大纲'
@@ -241,12 +237,17 @@ export default {
       rules: {
         chapter_name: [{ required: true, message: '请输入章节名称', trigger: 'blur' }],
         description: [{ required: true, message: '请输入章节描述', trigger: 'blur' }],
-        chapter_no: [{ required: true, message: '请输入章节编号', trigger: 'blur' }]
+        chapter_no: [
+          { required: true, message: '请输入章节编号', trigger: 'blur' },
+          { type: 'number', message: '编号必须为数字值' }
+        ]
       },
       son_rules: {
         son_name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
         description: [{ required: true, message: '请输入描述', trigger: 'blur' }],
-        son_no: [{ required: true, message: '请输入编号', trigger: 'blur' }]
+        son_no: [
+          { required: true, message: '请输入编号', trigger: 'blur' }
+        ]
       },
       table: false,
       loading: false,
@@ -291,7 +292,8 @@ export default {
       },
       formLabelWidth: '80px',
       timer: null,
-      chapter_id: ''
+      chapter_id: '',
+      isShow: false
     };
   },
   created() {
@@ -303,6 +305,11 @@ export default {
     }
   },
   methods: {
+    addChapterBtn() {
+      this.form = {}
+      this.lesson_form = {}
+      this.dialog = true
+    },
     changeValue(e) {
       this.$forceUpdate()
     },
@@ -347,6 +354,8 @@ export default {
               this.edit_lesson_form.mp4 = fileUrl
             }
           }
+        } else {
+          this.$message.error('文件上传失败!')
         }
       })
     },
@@ -387,10 +396,10 @@ export default {
     handleRemovePPT(file, fileList) {
       console.log(file, fileList);
     },
-    handleExceedPPT(files, fileList) {
+    handleExceedPPT() {
       this.$message.warning('只能上传一个文件！')
     },
-    handleEditExceedPPT(files, fileList) {
+    handleEditExceedPPT() {
       this.$message.warning('只能上传一个文件！');
     },
     handleRemoveMp4(file, fileList) {
@@ -399,102 +408,50 @@ export default {
     handlePreviewMp4(file) {
       console.log(file);
     },
-    handleExceedMp4(files, fileList) {
+    handleExceedMp4() {
       this.$message.warning('只能上传一个文件！');
     },
     handleEditPreviewMp4(file) {
       console.log(file);
     },
-    handleEditExceedMp4(files, fileList) {
+    handleEditExceedMp4() {
       this.$message.warning('只能上传一个文件！');
     },
     addSonChapterDiagCancel() {
-      this.addSonChapterDiag = false;
-      this.lesson_form = {};
+      this.addSonChapterDiag = false
     },
     addSonChapterModal(chapter_id) {
-      this.chapter_id = chapter_id;
-      this.addSonChapterDiag = true;
+      this.addSonChapterDiag = true
+      this.chapter_id = chapter_id
     },
     addSonChapter() {
-      this.$confirm('确定要提交表单吗？')
-        .then(_ => {
-          this.timer = setTimeout(() => {
-            this.lesson_form.lessonId = this.lesson_id;
-            this.lesson_form.chapter_id = this.chapter_id;
-
-            this.$refs.submit_son.validate(valid => {
-              console.log(this.lesson_form)
-
-              addSonChapterInEdit(this.lesson_form).then(res => {
-                if (res.status === '200') {
-                  this.$message.success('提交成功');
-                  this.chapter = res.data
-                  this.form = '';
-                  this.lesson_form = {};
-                  this.getChapterInfoByLessonId()
-                } else {
-                  this.$message.error('系统内部错误');
-                }
-              });
-
-              setTimeout(() => {
-                this.loading = false;
-              }, 400);
-            });
-          }, 2000);
-        }).catch(err => {
-        console.log(err);
-      });
-      this.addSonChapterDiag = false;
-    },
-    editSonChapter(son_id) {
-      this.editSonChapterDiag = true;
-      this.getEditSonChapterInfo(son_id);
-    },
-    addEditSonChapterDiagCancel() {
-      this.editSonChapterDiag = false;
-      this.edit_lesson_form = {};
-    },
-    addEditSonChapter() {
       this.$confirm('确定要提交表单吗？').then(_ => {
         this.timer = setTimeout(() => {
+          this.lesson_form.lessonId = this.lesson_id
+          this.lesson_form.chapter_id = this.chapter_id
+
           this.$refs.submit_son.validate(valid => {
-            console.log(this.edit_lesson_form)
-
-            editSonChapterInEdit(this.edit_lesson_form).then(res => {
+            addSonChapterInEdit(this.lesson_form).then(res => {
               if (res.status === '200') {
-                const loading = this.$loading({
-                  lock: true,
-                  text: 'Loading',
-                  spinner: 'el-icon-loading',
-                  background: 'rgba(0, 0, 0, 0.7)'
-                });
-
-                setTimeout(() => {
-                  loading.close();
-                }, 2000);
-
-                this.editSonChapterDiag = false
+                this.$message.success('提交成功');
                 this.chapter = res.data
-                this.form = ''
+                this.form = '';
                 this.lesson_form = {}
                 this.getChapterInfoByLessonId()
+                this.loading = false
               } else {
-                this.$message.error('系统内部错误');
+                this.$message.error('提交失败');
               }
-            });
-
-            setTimeout(() => {
-              this.loading = false;
-            }, 400);
-          });
-        }, 2000);
+            })
+          })
+        }, 2000)
       }).catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
+      this.addSonChapterDiag = false
     },
-    getEditSonChapterInfo(son_id) {
+    // 打开编辑子章节的Dialog
+    editSonChapter(son_id) {
       getEditSonChapterInfo(son_id).then(res => {
         if (res.status === '200') {
           let dataObj = res.data
@@ -505,7 +462,42 @@ export default {
           this.edit_lesson_form.ppt = dataObj.ppt
           this.edit_lesson_form.mp4 = dataObj.mp4
           this.edit_lesson_form.son_id = dataObj.son_id
+
+          this.editSonChapterDiag = true
         }
+      })
+
+      this.editSonChapterDiag = true
+    },
+    addEditSonChapterDiagCancel() {
+      this.editSonChapterDiag = false
+    },
+    addEditSonChapter() {
+      this.$confirm('确定要提交表单吗？').then(_ => {
+        this.$refs.submit_son.validate(valid => {
+          editSonChapterInEdit(this.edit_lesson_form).then(res => {
+            if (res.status === '200') {
+              const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+              })
+
+              this.$message.success('修改成功!')
+              this.editSonChapterDiag = false
+              this.chapter = res.data
+              this.form = ''
+              this.lesson_form = {}
+              this.getChapterInfoByLessonId()
+              loading.close()
+            } else {
+              this.$message.error('修改失败!')
+            }
+          })
+        })
+      }).catch(err => {
+        console.log(err);
       });
     },
     delSonChapter(son_id) {

@@ -155,8 +155,8 @@ export default {
       this.lesson_form = {};
     },
     addSonChapterModal(chapter_id) {
-      this.chapter_id = chapter_id;
-      this.addSonChapterDiag = true;
+      this.chapter_id = chapter_id
+      this.addSonChapterDiag = true
     },
     addSonChapter() {
       this.$confirm('确定要提交表单吗？').then(_ => {
