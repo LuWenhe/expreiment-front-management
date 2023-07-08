@@ -95,6 +95,7 @@
 <script>
 import { addTool, deleteTools, findToolByName, getAllTools } from '@/network/api/tool'
 import { uploadFile } from '@/network/api/backLesson'
+import { getFormData } from '@/utils/fileUtils'
 
 export default {
   inject: ['reload'],
@@ -138,9 +139,7 @@ export default {
   },
   methods: {
     uploadTool(params) {
-      let file = params.file
-      let formData = new FormData()
-      formData.append('file', file)
+      let formData = getFormData(params)
 
       uploadFile(formData).then(res => {
         if (res.status === '200') {

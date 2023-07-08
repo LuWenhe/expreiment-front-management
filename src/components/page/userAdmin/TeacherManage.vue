@@ -58,7 +58,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class='block' style='margin:5px 0 0 848px'>
+    <div class='block'>
       <el-row>
         <el-col>
           <div class='block'>

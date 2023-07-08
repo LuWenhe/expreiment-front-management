@@ -16,6 +16,7 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import * as echarts from 'echarts'   //echarts5.0之后引入的方式
 import directives from '@/directives'
+import store from '@/store'
 
 Vue.prototype.$echarts = echarts
 
@@ -46,7 +47,7 @@ Vue.use(Viewer, {
 //使用钩子函数对路由进行权限跳
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title} | 实训平台管理系统`;
-  const token = localStorage.getItem('token')
+  let token= localStorage.getItem('token');
 
   // 如果有token, 直接跳转
   if (token) {
@@ -75,6 +76,7 @@ router.onError((error) => {
 
 new Vue({
   router,
+  store,
   i18n,
   render: h => h(App)
 }).$mount('#app');

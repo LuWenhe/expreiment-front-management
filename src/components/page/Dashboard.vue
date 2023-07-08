@@ -1,31 +1,27 @@
 <template>
-  <el-row>
-    <el-row :gutter='20'>
-      <el-col :span='8'>
-        <div class='div_style'>
-          <div style='width: 20px'></div>
-          <img src='@/assets/icon.png' style='width: 90px;height: 90px;display: inline-block;' />
-          <div style='position: absolute;line-height: 100px;height: 100px;right: 40px;top: 0;'>
-            <router-link :to="{path: '/lessonManage'}"
-                         style='font-size: 20px;color: #000000;text-decoration: none'>
-              课程数量
-            </router-link>
-            <span class='count_style'>{{ lessonNum }}</span>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span='8'>
-        <div class='div_style'>
-          <div style='width: 20px'></div>
-          <img src='@/assets/icon.png' style='width: 90px;height: 90px;display: inline-block;' />
-          <div style='position: absolute;line-height: 100px;height: 100px;right: 40px;top: 0;'>
-            <router-link :to="{path: '/tagManage'}" style='font-size: 20px;color: #000;text-decoration: none'>
-              课程标签
-            </router-link>
-            <span class='count_style'>{{ tagNum }}</span>
-          </div>
-        </div>
-      </el-col>
+  <el-row class='dashboard-container'>
+    <el-row class='lesson-btn'>
+      <el-row class='div_style'>
+        <el-row style='width: 20px'></el-row>
+        <img src='@/assets/icon.png' style='width: 90px;height: 90px;display: inline-block;'  alt=''/>
+        <el-row style='position: absolute;line-height: 100px;height: 100px;right: 40px;top: 0;'>
+          <router-link :to="{path: '/lessonManage'}"
+                       style='font-size: 20px;color: #000000;text-decoration: none'>
+            课程数量
+          </router-link>
+          <span class='count_style'>{{ lessonNum }}</span>
+        </el-row>
+      </el-row>
+      <el-row class='div_style'>
+        <el-row style='width: 20px'></el-row>
+        <img src='@/assets/icon.png' style='width: 90px;height: 90px;display: inline-block;' />
+        <el-row style='position: absolute;line-height: 100px;height: 100px;right: 40px;top: 0;'>
+          <router-link :to="{path: '/tagManage'}" style='font-size: 20px; color: #000;text-decoration: none'>
+            课程标签
+          </router-link>
+          <span class='count_style'>{{ tagNum }}</span>
+        </el-row>
+      </el-row>
     </el-row>
     <el-divider content-position='left'>课程分类图</el-divider>
     <el-row :gutter='20'>
@@ -140,11 +136,13 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  margin: 22px 10px 10px 30px;
-  border: 3px solid #ebeef5;
+  margin: 10px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
   border-radius: 10px;
   overflow: hidden;
+}
 
+.lesson-btn {
+  display: flex;
 }
 </style>

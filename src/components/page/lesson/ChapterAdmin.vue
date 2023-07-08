@@ -213,7 +213,9 @@ import {
   delSonChapterInEdit, editSonChapterInEdit,
   getChapterInfo,
   getEditSonChapterInfo, updateChapter, uploadFile
-} from '@/network/api/backLesson';
+} from '@/network/api/backLesson'
+
+import { getFormData } from '@/utils/fileUtils'
 
 export default {
   name: 'ChapterAdmin',
@@ -314,25 +316,20 @@ export default {
       this.$forceUpdate()
     },
     uploadPPT(params) {
-      let formData = this.getFormData(params)
+      let formData = getFormData(params)
       this.uploadFileByType('PPT', 'add', formData)
     },
     uploadMP4(params) {
-      let formData = this.getFormData(params)
+      let formData = getFormData(params)
       this.uploadFileByType('MP4', 'add', formData)
     },
     editUploadPPT(params) {
-      let formData = this.getFormData(params)
+      let formData = getFormData(params)
       this.uploadFileByType('PPT', 'update', formData)
     },
     editUploadMP4(params) {
-      let formData = this.getFormData(params)
+      let formData = getFormData(params)
       this.uploadFileByType('MP4', 'update', formData)
-    },
-    getFormData(params) {
-      let formData = new FormData()
-      formData.append('file', params.file)
-      return formData
     },
     uploadFileByType(fileType, operatorType, formData) {
       uploadFile(formData).then(res => {
@@ -655,6 +652,7 @@ export default {
       this.editCh_form = {};
     },
     toJupyterPage(son_id) {
+      this.$store.commit('setSonId', son_id)
       this.$router.push({ name: 'ToJupyterPage', query: { son_id: son_id } })
     },
     getChapterInfoByLessonId() {
@@ -678,7 +676,7 @@ export default {
 }
 
 .chapter-add-btn {
-
+  margin: 10px 0 0 5px;
 }
 
 .chapter-index {

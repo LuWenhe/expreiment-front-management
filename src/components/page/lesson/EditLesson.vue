@@ -1,44 +1,51 @@
 <template>
   <el-tabs v-model='activeName' @tab-click='handleClick'>
     <el-tab-pane label='基本信息' name='first'>
-      <div class='firstCard'>
-        <br>
-        <h1>编辑课程</h1>
-        <br>
-        <el-form :model='lesson' :rules='rules' ref='submit'>
-          <el-row :gutter='20' style='margin-left: 5%'>
-            <el-col :span='6'>
-              <el-upload
-                :class='{hide:hideUpload}'
-                list-type='picture-card'
-                action=''
-                :on-preview='handlePictureCardPreview'
-                :on-remove='handleRemove'
-                :before-upload='beforeAvatarUpload'
-                :limit='imgLimit'
-                :on-exceed='handleExceed'
-                :file-list='fileListFront'
-                :headers='uploadHeaders'
-                :http-request='uploadPic'
-              >
-                <i class='el-icon-plus'></i>
-              </el-upload>
-            </el-col>
-            <el-col :span='6'>
-              <span>难易程度</span>
-              <br> <br>
-              <el-form-item prop='difficulty'>
-                <el-radio-group v-model='lesson.difficulty'>
-                  <el-radio :label='1'>简单</el-radio>
-                  <el-radio :label='2'>中等</el-radio>
-                  <el-radio :label='3'>困难</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span='6'>
-              <el-row>
-                <el-col>
-                  <span>教师</span>
+      <el-row class='lesson-edit-container'>
+        <el-row class='lesson-add-title'>
+          <span class='big-title'>编辑课程</span>
+        </el-row>
+        <el-form class='lesson-edit-content' :model='lesson' :rules='rules' ref='submit'>
+          <!-- 第一行 -->
+          <el-row class='content-row'>
+            <!-- 第一列 -->
+            <el-row class='content-row-left'>
+              <el-row class='content-row-left-left'>
+                <span>课程图片：</span>
+                <el-upload
+                  class='content-row-left-left'
+                  :class='{hide: false}'
+                  list-type='picture-card'
+                  action=''
+                  :on-remove='handleRemove'
+                  :before-upload='beforeAvatarUpload'
+                  :limit='imgLimit'
+                  :on-exceed='handleExceed'
+                  :file-list='fileListFront'
+                  :http-request='uploadPic'
+                >
+                  <i class='el-icon-plus'></i>
+                </el-upload>
+              </el-row>
+              <el-row class='content-row-left-right'>
+                <el-row class='difficulty-group'>
+                  <span>难易程度：</span>
+                  <el-form-item prop='difficulty'>
+                    <el-radio-group v-model='lesson.difficulty'>
+                      <el-radio :label='1'>简单</el-radio>
+                      <el-radio :label='2'>中等</el-radio>
+                      <el-radio :label='3'>困难</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                </el-row>
+              </el-row>
+            </el-row>
+            <!-- 第二列 -->
+            <el-row class='content-first-row-right'>
+              <!-- 第二列第一行 -->
+              <el-row class='teacher-and-lesson'>
+                <el-row class='content-row-right-left'>
+                  <span class='title'>教师：</span>
                   <el-form-item prop='teacher_name'>
                     <el-autocomplete
                       popper-class='my-autocomplete'
@@ -46,56 +53,51 @@
                       :fetch-suggestions='querySearch'
                       placeholder='请输入老师姓名'
                       @select='handleSelect'
-                      style='width: 200px'>
+                    >
                       <i class='el-icon-edit el-input__icon' slot='suffix' @click='handleIconClick'></i>
                       <template slot-scope='{ item }'>
                         <div class='name'>{{ item.username }}</div>
                       </template>
                     </el-autocomplete>
                   </el-form-item>
-                </el-col>
-              </el-row>
-              <br>
-              <el-row>
-                <el-col>
-                  <span>学时</span>
-                  <el-form-item prop='learn_time'>
-                    <el-input placeholder='学时' style='width: 200px' v-model='lesson.learn_time'></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-col>
-            <el-col :span='6'>
-              <el-row>
-                <el-col>
-                  <span>课程名称</span>
+                </el-row>
+                <el-row class='content-row-right-right'>
+                  <span class='title'>课程名称：</span>
                   <el-form-item prop='lesson_name'>
-                    <el-input placeholder='课程名称' style='width: 200px' v-model='lesson.lesson_name'></el-input>
+                    <el-input placeholder='课程名称' v-model='lesson.lesson_name'></el-input>
                   </el-form-item>
-                </el-col>
+                </el-row>
               </el-row>
-              <br>
-              <el-row>
-                <el-col>
-                  <span>学分</span>
+              <!-- 第二列第二行 -->
+              <el-row class='hours-and-credits'>
+                <el-row class='content-row-right-left'>
+                  <span class='title'>学时：</span>
+                  <el-form-item prop='learn_time'>
+                    <el-input placeholder='学时' v-model='lesson.learn_time'></el-input>
+                  </el-form-item>
+                </el-row>
+                <el-row class='content-row-right-right'>
+                  <span class='title'>学分：</span>
                   <el-form-item prop='learn_credit'>
-                    <el-input placeholder='学分' style='width: 200px' v-model='lesson.learn_credit'></el-input>
+                    <el-input placeholder='学分' v-model='lesson.learn_credit'></el-input>
                   </el-form-item>
-                </el-col>
+                </el-row>
               </el-row>
-            </el-col>
+            </el-row>
           </el-row>
-          <el-row style='margin-left: 5%'>
-            <el-col :span='12'>
-              <span>tags</span>
+          <!-- 第二行 -->
+          <el-row class='content-row'>
+            <el-row class='content-row-left'>
+              <span class='content-row-left-left2'>tags</span>
               <el-select
-                style='width: 90%'
+                class='content-row-left-right2'
                 v-model='lesson.tags'
                 multiple
                 filterable
                 allow-create
                 default-first-option
-                placeholder='请选择标签'>
+                placeholder='请选择标签'
+              >
                 <el-option
                   v-for='item in options'
                   :key='item.value'
@@ -103,66 +105,56 @@
                   :value='item.value'>
                 </el-option>
               </el-select>
-            </el-col>
-            <el-col :span='12'>
-              <span>适合人群</span>
-              <el-input placeholder='适合人群' style='width: 90%' v-model='lesson.suitablePerson'></el-input>
-            </el-col>
+            </el-row>
+            <el-row class='content-row-right'>
+              <span class='content-row-right-left2'>适合人群</span>
+              <el-input class='content-row-right-right2' placeholder='适合人群'
+                        v-model='lesson.suitablePerson'></el-input>
+            </el-row>
           </el-row>
-          <br>
-          <br>
-          <el-row style='margin-left: 5%'>
-            <el-col :span='12'>
-              <span>大纲</span>
-              <br><br>
-              <el-input style='width: 90%' type='textarea' :rows='3' placeholder='请输入大纲' v-model='lesson.dagang'></el-input>
-            </el-col>
-            <el-col :span='12'>
-              <span>可以学到的知识</span>
-              <br><br>
-              <el-input style='width:90%' type='textarea' :rows='3' placeholder='可以学到的知识' v-model='lesson.canLearn'></el-input>
-            </el-col>
+          <!-- 第三行 -->
+          <el-row class='content-row'>
+            <el-row class='content-row-left'>
+              <span class='content-row-left-left2'>大纲</span>
+              <el-input class='content-row-left-right2' type='textarea' placeholder='请输入大纲'
+                        v-model='lesson.dagang'></el-input>
+            </el-row>
+            <el-row class='content-row-right'>
+              <span class='content-row-right-left2'>可以学到的知识</span>
+              <el-input class='content-row-right-right2' type='textarea' placeholder='可以学到的知识'
+                        v-model='lesson.canLearn'></el-input>
+            </el-row>
           </el-row>
-          <br>
-          <br>
-          <el-row style='margin-left: 5%'>
-            <el-col :span='12'>
-              <span>参考资料</span>
-              <br><br>
-              <el-input
-                style='width: 90%'
-                type='textarea'
-                :rows='3'
-                placeholder='参考资料' v-model='lesson.cankao'>
-              </el-input>
-            </el-col>
-            <el-col :span='12'>
-              <span>目标</span>
-              <br><br>
-              <el-input style='width: 90%' type='textarea' :rows='3' placeholder='目标' v-model='lesson.goal'></el-input>
-            </el-col>
+          <!-- 第四行 -->
+          <el-row class='content-row'>
+            <el-row class='content-row-left'>
+              <span class='content-row-left-left2'>参考资料</span>
+              <el-input class='content-row-left-right2' type='textarea' placeholder='参考资料'
+                        v-model='lesson.cankao'></el-input>
+            </el-row>
+            <el-row class='content-row-right'>
+              <span class='content-row-right-left2'>目标</span>
+              <el-input class='content-row-right-right2' type='textarea' placeholder='目标'
+                        v-model='lesson.goal'></el-input>
+            </el-row>
           </el-row>
-          <br>
-          <br>
-          <el-row style='margin-left: 5%'>
-            <span>简介</span>
-            <br> <br>
-            <el-col :span='24' style='width: 95%'>
-              <el-form-item>
-                <mavon-editor
-                  v-model='lesson.mdDescription'
-                  ref='md'
-                  class='editor'
-                  @imgAdd='handleEditorImgAdd'
-                  @imgDel='handleEditorImgDel'
-                  @change='changeData'>
-                </mavon-editor>
-              </el-form-item>
-            </el-col>
+          <!-- 第五行 -->
+          <el-row class='content-row-introduction'>
+            <span class='title'>简介</span>
+            <mavon-editor
+              ref='md'
+              class='editor'
+              v-model='lesson.description'
+              @imgAdd='handleEditorImgAdd'
+              @imgDel='handleEditorImgDel'>
+            </mavon-editor>
           </el-row>
-          <el-button type='primary' style='margin-left: 5%' @click='submit'>提交</el-button>
+          <el-row class='submit-btn'>
+            <el-button v-if='isAddLesson' type='primary' @click='toAddChapterInfo'>添加章节信息</el-button>
+            <el-button v-else type='primary' @click='submit'>提交</el-button>
+          </el-row>
         </el-form>
-      </div>
+      </el-row>
     </el-tab-pane>
     <el-tab-pane label='章节管理' name='second'>
       <chapter-admin :lessonId='this.lessonId'></chapter-admin>
@@ -171,11 +163,13 @@
 </template>
 
 <script>
-import ChapterAdmin from './ChapterAdmin'
+import ChapterAdmin from '@/components/page/lesson/ChapterAdmin'
+
 import { bNumberCheck } from '@/utils/validator'
 import { loadAllTeachers } from '@/network/api/user'
 import { uploadFile, getLessonDetail, updateLesson } from '@/network/api/backLesson'
 import { getTags } from '@/network/api/tag'
+import { getFormData } from '@/utils/fileUtils'
 
 const validatorLearnTime = (rule, value, callback) => {
   if (!value) {
@@ -187,7 +181,8 @@ const validatorLearnTime = (rule, value, callback) => {
       return callback(new Error('输入不正确'));
     }
   }
-};
+}
+
 const validatorLearnCredit = (rule, value, callback) => {
   if (!value) {
     return callback(new Error('请输入学分'));
@@ -198,22 +193,31 @@ const validatorLearnCredit = (rule, value, callback) => {
       return callback(new Error('输入不正确'));
     }
   }
-};
+}
+
 export default {
-  components: {
-    ChapterAdmin
-  },
+  name: 'EditLesson1',
+  components: { ChapterAdmin },
   data() {
     return {
       dialogImageUrl: '',
       rules: {
-        difficulty: [{ required: true, message: '请选择困难程度', trigger: 'blur' }],
-        teacher_name: [{ required: true, message: '请输入老师姓名', trigger: 'blur' }],
-        learn_time: [{ validator: validatorLearnTime, required: true, trigger: 'blur' }],
-        lesson_name: [{ required: true, message: '请输入课程名', trigger: 'blur' }],
-        learn_credit: [{ validator: validatorLearnCredit, required: true, trigger: 'blur' }]
+        difficulty: [
+          { required: true, message: '请选择困难程度', trigger: 'blur' }
+        ],
+        teacher_name: [
+          { required: true, message: '请输入老师姓名', trigger: 'blur' }
+        ],
+        learn_time: [
+          { validator: validatorLearnTime, required: true, trigger: 'blur' }
+        ],
+        lesson_name: [
+          { required: true, message: '请输入课程名', trigger: 'blur' }
+        ],
+        learn_credit: [
+          { validator: validatorLearnCredit, required: true, trigger: 'blur' }
+        ]
       },
-      uploadHeaders: { 'token': localStorage.getItem('token') },
       activeName: 'first',
       imageUrl: '',
       tempUrl: '',
@@ -242,6 +246,7 @@ export default {
         goal: '',
         teacherId: ''
       },
+      isAddLesson: false,
       teachers: []
     }
   },
@@ -249,14 +254,11 @@ export default {
     this.lessonId = this.$route.query.lessonId
     this.getLessonDetail()
     this.getOptionList()
-  },
-  mounted() {
     this.loadAll()
   },
   methods: {
     uploadPic(params) {
-      let formData = new FormData()
-      formData.append('file', params.file)
+      let formData = getFormData(params)
 
       uploadFile(formData).then(res => {
         if (res.status === '200') {
@@ -332,7 +334,6 @@ export default {
           updateLesson(this.lesson).then(res => {
             if (res.status === '200') {
               this.$message.success('更新课程成功!')
-              this.$router.back()
             } else {
               this.$message.error('更新课程失败')
             }
@@ -395,15 +396,86 @@ export default {
 }
 </script>
 
-<style>
-.hide .el-upload--picture-card {
-  display: none;
+<style scoped>
+.lesson-edit-container {
+  background-color: #FFF;
+  padding: 20px;
+  height: 100%;
 }
 
-.firstCard {
-  background-color: white;
-  height: auto;
-
+.lesson-edit-content {
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
 }
 
+.lesson-add-title {
+  margin-bottom: 20px;
+}
+
+.lesson-add-title .big-title {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.content-row {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.content-row-left, .content-row-right,
+.content-row-left-left, .content-row-left-right,
+.content-row-right-left, .content-row-right-right {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.content-row-left-left2 {
+  display: flex;
+  width: 10%;
+}
+
+.content-row-right-left2 {
+  display: flex;
+  width: 15%;
+}
+
+.content-row-left-right2 {
+  display: flex;
+  width: 85%;
+}
+
+.content-row-right-right2 {
+  display: flex;
+  width: 85%;
+}
+
+.difficulty-group {
+  align-items: center;
+}
+
+.content-first-row-right {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.teacher-and-lesson, .hours-and-credits {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.el-form-item, .el-form-item--small.el-form-item {
+  margin-bottom: 0;
+}
+
+.editor {
+  margin-top: 10px;
+}
+
+.submit-btn {
+  margin-top: 10px;
+}
 </style>

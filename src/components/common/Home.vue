@@ -1,9 +1,9 @@
 <template>
   <div class='wrapper'>
     <v-head></v-head>
-    <vside-bar></vside-bar>
+    <v-side-bar></v-side-bar>
     <div class='content-box' :class="{'content-collapse':collapse}">
-      <!--            <v-tags></v-tags>-->
+      <v-tags></v-tags>
       <div class='content'>
         <transition name='move' mode='out-in'>
           <keep-alive :include='tagsList'>
@@ -19,7 +19,7 @@
 
 <script>
 import vHead from './Header.vue'
-import vsideBar from './sideBar'
+import vSideBar from './sideBar'
 import vTags from './Tags.vue'
 import bus from './bus'
 
@@ -34,7 +34,7 @@ export default {
   components: {
     vHead,
     vTags,
-    vsideBar
+    vSideBar
   },
   created() {
     //this.sideBar_type  = 'sideBarDispatcher';

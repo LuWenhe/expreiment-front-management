@@ -67,12 +67,6 @@ export default new Router({
           meta: {title: "轮播管理"}
         },
         {
-          path: "/userManage",
-          component: () => import("@/components/page/userAdmin/userManage"),
-          name: "/userManage",
-          meta: {title: "用户管理"}
-        },
-        {
           path: "/studentManage",
           component: () => import("@/components/page/userAdmin/StudentManage.vue"),
           name: "/studentManage",
@@ -80,7 +74,7 @@ export default new Router({
         },
         {
           path: "/teacherManage",
-          component: () => import("@/components/page/userAdmin/teacherManage"),
+          component: () => import("@/components/page/userAdmin/TeacherManage.vue"),
           name: "/teacherManage",
           meta: {title: "教师管理"}
         },

@@ -1,75 +1,60 @@
 <template>
-  <div>
-    <el-row>
-      <el-col :span='3'>
-        <ul v-for='(item, index) in tagList' :key='index'>
-          <li class='tagLi' @click='getLessonsByTag(item.tagName)'>
-            <i class='el-icon-price-tag' style='width: 150px;font-size: 20px'>
-              <a href='#' style='width: 150px;height: 50px;font-size: 20px'>{{ item.tagName }}</a>
-            </i>
-          </li>
-        </ul>
-      </el-col>
-      <el-col :span='21'>
-        <el-row type='flex' class='row-bg' justify='start'>
-          <el-col :span='6'>
-            <el-input placeholder='请根据课程名称进行检索' v-model='lesson_name' maxlength='20' show-word-limit clearable>
-            </el-input>
-          </el-col>
-          <el-col :span='4'>
-            <el-button type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
-            <el-button type='danger' @click='addLesson' v-permission="'lesson:add'">添加课程</el-button>
-          </el-col>
-        </el-row>
-        <br>
-        <el-row>
-          <el-col :xs='14' :sm='14' :md='14' :lg='8' :xl='6' :span='6' v-for='(item,index)  in lesson_list'
-                  :key='index'>
-            <el-card style='width: 250px;height: 380px;margin-bottom: 25px; ' shadow='hover'>
-              <div v-if='item.pic_url != null'>
-                <img :src='item.pic_url' class='image' style='width: 100%;height: 250px' @click='stepIntoDetail(item.lessonId)'>
-              </div>
-              <div v-else>
-                <img src='' class='image' style='width: 100%;height: 250px' @click='stepIntoDetail(item.lessonId)'>
-              </div>
-              <div style='padding: 14px;'>
-                <span>{{ item.lesson_name }}</span>
-                <br>
-                <div style='width: 200px;height: 50px'>
-                  <span style='font-size: 15px'>授课老师：{{ item.teacher_name }}</span>
-                  <el-button type='warning' style='float:right;position:relative;margin-right: 6px'
-                             @click='deleteLesson(item.lessonId)' v-permission="'lesson:delete'">
-                    <i class='el-icon-delete'></i>
-                  </el-button>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col>
-            <div class='block'>
-              <el-pagination
-                @size-change='handleSizeChange'
-                @current-change='handleCurrentChange'
-                :current-page='pageInfo.pageNum'
-                :page-sizes='[10, 50, 100, 500]'
-                :page-size='pageInfo.pageSize'
-                layout='total, sizes, prev, pager, next, jumper'
-                :total='pageInfo.total'
-              >
-              </el-pagination>
-            </div>
-          </el-col>
-        </el-row>
-      </el-col>
+  <el-row class='lesson-container'>
+    <el-row class='lesson-container-left'>
+      <ul v-for='(item, index) in tagList' :key='index'>
+        <li class='tagLi' @click='getLessonsByTag(item.tagName)'>
+          <i class='el-icon-price-tag' style='width: 150px;font-size: 20px'>
+            <a href='#' style='width: 150px;height: 50px;font-size: 20px'>{{ item.tagName }}</a>
+          </i>
+        </li>
+      </ul>
     </el-row>
-  </div>
+    <el-row class='lesson-container-right' ref='lessonRight'>
+      <el-row class='search-box'>
+        <el-input class='name-input' placeholder='请根据课程名称进行检索' v-model='lesson_name'
+                  show-word-limit clearable></el-input>
+        <el-button class='search-btn' type='primary' icon='el-icon-search' @click='handleSearch'>搜索</el-button>
+        <el-button type='danger' @click='addLesson' v-permission="'lesson:add'">添加课程</el-button>
+      </el-row>
+      <el-row class='lesson-box'>
+        <!-- 5需要调整 -->
+        <el-row class='lesson-item' v-for='(item,index) in lesson_list' :key='index' style='margin-left: 20px'>
+          <el-row class='lesson-item-card'>
+            <el-row class='image'>
+              <img :src='item.pic_url' @click='stepIntoDetail(item.lessonId)' alt=''>
+            </el-row>
+            <el-row class='info'>
+              <el-row class='info-left'>
+                <span class='lesson-name'>{{ item.lesson_name }}</span>
+                <span>授课老师：{{ item.teacher_name }}</span>
+              </el-row>
+              <el-row class='info-right'>
+                <el-button type='warning'
+                           @click='deleteLesson(item.lessonId)' v-permission="'lesson:delete'">
+                  <i class='el-icon-delete'></i>
+                </el-button>
+              </el-row>
+            </el-row>
+          </el-row>
+        </el-row>
+      </el-row>
+      <el-pagination
+        @size-change='handleSizeChange'
+        @current-change='handleCurrentChange'
+        :current-page='pageInfo.pageNum'
+        :page-sizes='[10, 50, 100, 500]'
+        :page-size='pageInfo.pageSize'
+        layout='total, sizes, prev, pager, next, jumper'
+        :total='pageInfo.total'
+      >
+      </el-pagination>
+    </el-row>
+  </el-row>
 </template>
 
 <script>
 import { deleteLessonById, findLessonsByName, getLessonsByTagName, getLessonsByUserId } from '@/network/api/backLesson';
-import { getTags } from '@/network/api/tag'
+import { getTags } from '@/network/api/tag';
 
 export default {
   inject: ['reload'],
@@ -91,7 +76,9 @@ export default {
       btnShow: false,
       index: '0',
       userId: 0,
-      roleId: 0
+      roleId: 0,
+      numberOfRows: Math.floor(document.documentElement.clientWidth * 0.8 / 250),
+      isShowLesson: false
     }
   },
   created() {
@@ -100,7 +87,15 @@ export default {
     this.userId = userData.userId
     this.roleId = userData.roleId
 
-    this.getLessons()
+    // 获取浏览器宽度
+    // let clientWidth = document.documentElement.clientWidth
+    // this.numberOfRows = Math.floor(clientWidth * 0.8 / 250)
+
+    setTimeout(() => {
+
+    }, 2000)
+
+    this.getLessons();
     this.getOptionList()
   },
   methods: {
@@ -255,5 +250,87 @@ export default {
 <style scoped>
 .tagLi:active, .tagLi:hover {
   background-color: #fdf5e6;
+}
+
+.lesson-container {
+  display: flex;
+}
+
+.lesson-container-left {
+  width: 10%;
+}
+
+.lesson-container-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-box {
+  display: flex;
+  margin-left: 20px;
+}
+
+.search-box .name-input {
+  width: 20%;
+}
+
+.search-box .search-btn {
+  margin-left: 10px;
+}
+
+.lesson-box {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.is-not-left {
+  margin-left: 25px;
+}
+
+.lesson-box .lesson-item {
+  width: 250px;
+  height: 355px;
+  margin-bottom: 25px;
+}
+
+.lesson-box .lesson-item .lesson-item-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  height: 100%;
+  border: 1px solid #EBEEF5;
+  background-color: #FFF;
+  color: #303133;
+  transition: .3s;
+}
+
+.lesson-item-card .info {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+
+.lesson-item-card .info .info-left {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.lesson-item-card .info .info-right {
+  display: flex;
+  height: 60%;
+}
+
+.lesson-box .image img {
+  width: 100%;
+  height: 250px;
+  cursor: pointer;
+}
+
+el-card {
+  display: flex;
 }
 </style>

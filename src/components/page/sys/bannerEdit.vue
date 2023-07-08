@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
+import { getFormData } from '@/utils/fileUtils'
 
 export default {
   props: {
@@ -47,9 +48,8 @@ export default {
     handlePreview(file) {
       console.log(file)
     },
-    uploadFile(file) {
-      this.pic_form = new FormData()
-      this.pic_form.append('file', file.file)
+    uploadFile(params) {
+      this.pic_form = getFormData(params)
     },
     submitUpload() {
       this.$refs.uploadPic.submit()

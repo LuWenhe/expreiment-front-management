@@ -27,6 +27,13 @@ export const uploadFile = (formData) => {
     data: formData
   })
 }
+export const parseJupyter = (formData) => {
+  return request({
+    method: 'POST',
+    url: '/backLesson/parseJupyter',
+    data: formData
+  })
+}
 export const addLesson = (lessonObj) => {
   return request({
     method: 'POST',
@@ -57,13 +64,6 @@ export const getChapterInfo = (lessonId) => {
     params: {
       lessonId: lessonId
     }
-  })
-}
-export const uploadSingleFile = (formData) => {
-  return request({
-    method: 'POST',
-    url: '/backLesson/addChapterJupyterURL',
-    data: formData
   })
 }
 export const findLessonsByName = (pageRequest) => {
