@@ -57,11 +57,7 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog
-      title='添加工具'
-      :visible.sync='addToolsDiag'
-      width='50%'
-      :before-close='handleClose'>
+    <el-dialog title='添加工具' :visible.sync='addToolsDiag' width='50%'>
       <el-form :model='addToolForm' :rules='rules' ref='addToolForm'>
         <el-form-item label='软件名称' :label-width='formLabelWidth' prop='tool_name'>
           <el-input v-model='addToolForm.tool_name' style='width: 90%'></el-input>
@@ -77,7 +73,6 @@
             :limit='1'
             :on-exceed='handleExceed'
             :file-list='fileList'
-            :headers='uploadHeaders'
             :http-request='uploadTool'
           >
             <el-button slot='trigger' size='small' type='primary'>选取文件</el-button>
@@ -109,7 +104,6 @@ export default {
           { required: true, message: '运行环境不能为空', trigger: 'blur' }
         ]
       },
-      uploadHeaders: { 'token': localStorage.getItem('token') },
       fileList: [],
       addToolsDiag: false,
       name: '',
@@ -204,20 +198,6 @@ export default {
       return (item) => {
         return (item.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
-    },
-    handleClose(done) {
-      this.$confirm('确认关闭？').then(_ => {
-        done()
-
-        this.addTeacherInfo = {
-          username: '',
-          realName: '',
-          phone: '',
-          email: ''
-        }
-      }).catch(err => {
-        console.log(err)
-      })
     },
     handleSelectionChange(val) {
       this.multipleSelection = val

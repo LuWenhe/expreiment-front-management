@@ -7,6 +7,7 @@
         action=''
         :on-remove='handleRemove'
         :limit='1'
+        :before-upload='beforeFileUpload'
         :on-exceed='handleExceed'
         :file-list='fileList'
         :http-request='parseJupyter'
@@ -105,6 +106,17 @@ export default {
     },
     handleRemove(file, fileList) {
 
+    },
+    beforeFileUpload(file) {
+      let fileName = file.name
+      let isJupyter = fileName.indexOf('.ipynb') > 0
+
+      if (!isJupyter) {
+        this.$message.error('仅支持上传.ipynb文件')
+        return false
+      }
+
+      return isJupyter
     },
     uploadFile(file) {
       this.file_form = new FormData()

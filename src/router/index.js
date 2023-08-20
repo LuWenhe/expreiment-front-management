@@ -11,11 +11,6 @@ export default new Router({
       meta: {title: '登录'}
     },
     {
-      path: '/404',
-      component: () => import('@/components/page/404.vue'),
-      meta: {title: '错误'}
-    },
-    {
       path: '/',
       component: () => import('@/components/common/Home.vue'),
       redirect: '/dashboard',
@@ -31,6 +26,12 @@ export default new Router({
           name: 'lessonManage',
           component: () => import('@/components/page/lesson/LessonManage.vue'),
           meta: {title: '课程列表'}
+        },
+        {
+          path: '/fileManage',
+          name: 'fileManage',
+          component: () => import('@/components/page/lesson/FileManage.vue'),
+          meta: {title: '文件管理'}
         },
         {
           path: '/tagManage',

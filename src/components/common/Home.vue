@@ -19,7 +19,7 @@
 
 <script>
 import vHead from './Header.vue'
-import vSideBar from './sideBar'
+import vSideBar from './SideBar.vue'
 import vTags from './Tags.vue'
 import bus from './bus'
 

@@ -8,13 +8,13 @@ import VueAxios from 'vue-axios'
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 import { messages } from './components/common/i18n'
-import 'element-ui/lib/theme-chalk/index.css'       // 默认主题
+import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/icon.css'
 import './components/common/directives'
 import 'babel-polyfill'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import * as echarts from 'echarts'   //echarts5.0之后引入的方式
+import * as echarts from 'echarts'
 import directives from '@/directives'
 import store from '@/store'
 
@@ -25,10 +25,11 @@ import SlideVerify from 'vue-monoplasty-slide-verify'
 
 Vue.use(SlideVerify)
 Vue.use(directives)
-Vue.use(mavonEditor);
-Vue.config.productionTip = false;
-Vue.use(VueAxios, axios);
-Vue.use(VueI18n);
+Vue.use(mavonEditor)
+Vue.config.productionTip = false
+Vue.use(VueAxios, axios)
+Vue.use(VueI18n)
+
 Vue.use(ElementUI, {
   size: 'small'
 })

@@ -21,21 +21,15 @@
             <template v-for='menuChild in menu.children'>
               <!-- 如果孩子结点还有子结点 -->
               <template v-if='menuChild.children'>
-                <el-submenu :index='menuChild.id.toString()'>
+                <el-menu-item :index='menuChild.routerUrl'>
                   <template slot='title'>
                     <i :class='menuChild.icon'></i>
                     <span slot='title'>{{menuChild.name}}</span>
                   </template>
-                  <template v-for='menuGrandSon in menuChild.children'>
-                    <el-menu-item :index='menuGrandSon.routerUrl'>
-                      <i :class='menuGrandSon.icon'></i>
-                      <span slot='title'>{{menuGrandSon.name}}</span>
-                    </el-menu-item>
-                  </template>
-                </el-submenu>
+                </el-menu-item>
               </template>
               <template v-else>
-                <el-menu-item :index='menuChild.id.toString()'>
+                <el-menu-item :index='menuChild.routerUrl'>
                   {{menuChild.name}}
                 </el-menu-item>
               </template>
@@ -44,9 +38,9 @@
         </template>
         <!-- 如果当前结点没有子结点 -->
         <template v-else>
-          <el-menu-item :index='menu.id.toString()'>
-            <i :class='menu.routerUrl'></i>
-            <span slot='title'>{{menu.title}}</span>
+          <el-menu-item :index='menu.routerUrl'>
+            <i :class='menu.icon'></i>
+            <span slot='title'>{{menu.name}}</span>
           </el-menu-item>
         </template>
       </template>
@@ -71,7 +65,7 @@ export default {
 
     getMenuTree(userData.userId).then(res => {
       if (res.status === '200') {
-        this.menuList.push(res.data)
+        this.menuList = res.data.children
       } else {
         this.$message.error('导航栏加载失败!')
       }

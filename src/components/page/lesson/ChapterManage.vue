@@ -3,34 +3,34 @@
     <el-row class='chapter-add-btn'>
       <el-button type='primary' @click='addChapterBtn'>添加课程章节</el-button>
     </el-row>
-    <!-- 每个章节 -->
+    <!-- 展示每个章节 -->
     <el-row class='son-chapter-box' v-for='(item, index) in chapter' :key='index'>
       <!-- 章节标题 -->
       <el-row class='chapter-title'>
         <el-row class='left'>
           <span class='chapter-index'>{{ item.chapter_no }}</span>
-          <span><b>{{ item.chapter_name }}</b></span>
+          <span><b>{{ item.name }}</b></span>
         </el-row>
         <el-row class='right'>
-          <el-button @click='delChapter(item.chapter_id)'><i class='el-icon-delete-solid'></i></el-button>
-          <el-button @click='editChapter(item.chapter_id,item.chapter_no,item.chapter_name,item.description)'>
+          <el-button @click='delChapter(item)'><i class='el-icon-delete-solid'></i></el-button>
+          <el-button @click='editChapter(item.id, item.chapter_no, item.name, item.description)'>
             <i class='el-icon-edit'></i>
           </el-button>
-          <el-button type='success' @click='addSonChapterModal(item.chapter_id)'>
+          <el-button type='success' @click='addSonChapterModal(item.id, item.name)'>
             <i class='el-icon-plus'>添加实验章节</i>
           </el-button>
         </el-row>
       </el-row>
       <!-- 子章节 -->
       <el-row v-if='item.sonChapterList.length > 0' class='son-chapter'>
-        <el-row class='son-chapter-item' v-for='(item, index) in item.sonChapterList' :key='index'>
+        <el-row class='son-chapter-item' v-for='(sonItem, index) in item.sonChapterList' :key='index'>
           <el-row class='left'>
-            <span>{{ item.son_no }} {{ item.son_name }}</span>
+            <span>{{ sonItem.son_no }} {{ sonItem.name }}</span>
           </el-row>
           <el-row class='right'>
-            <el-button @click='delSonChapter(item.son_id)'><i class='el-icon-delete-solid'></i></el-button>
-            <el-button @click='editSonChapter(item.son_id)'><i class='el-icon-edit'></i></el-button>
-            <el-button @click='toJupyterPage(item.son_id)'><i class='el-icon-edit'>实验指导书</i></el-button>
+            <el-button @click='delSonChapter(item, sonItem)'><i class='el-icon-delete-solid'></i></el-button>
+            <el-button @click='editSonChapter(sonItem.id, item.name)'><i class='el-icon-edit'></i></el-button>
+            <el-button @click='toJupyterPage(sonItem.id)'><i class='el-icon-edit'>实验指导书</i></el-button>
           </el-row>
         </el-row>
       </el-row>
@@ -38,7 +38,7 @@
         <span>无数据</span>
       </el-row>
     </el-row>
-    <!-- 添加章节信息 -->
+    <!-- 添加章节信息弹出框 -->
     <el-drawer
       title='添加章节信息'
       :visible.sync='dialog'
@@ -51,15 +51,17 @@
           <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
             <el-input v-model.number='form.chapter_no' style='width: 90%'></el-input>
           </el-form-item>
-          <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
-            <el-input v-model='form.chapter_name' style='width: 90%'></el-input>
+          <el-form-item label='章节名称' :label-width='formLabelWidth' prop='name'>
+            <el-input v-model='form.name' style='width: 90%'></el-input>
           </el-form-item>
           <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
             <el-input
               style='width: 90%'
               type='textarea'
               :rows='3'
-              placeholder='请输入大纲' v-model='form.description'>
+              placeholder='请输入大纲'
+              v-model='form.description'
+            >
             </el-input>
           </el-form-item>
         </el-form>
@@ -69,7 +71,7 @@
         </div>
       </div>
     </el-drawer>
-    <!-- 编辑课程章节 -->
+    <!-- 编辑课程章节弹出框 -->
     <el-drawer
       title='编辑课程章节'
       :visible.sync='editChDiag'
@@ -82,8 +84,8 @@
           <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
             <el-input v-model='editCh_form.chapter_no' style='width: 90%' @input='changeValue'></el-input>
           </el-form-item>
-          <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
-            <el-input v-model='editCh_form.chapter_name' style='width: 90%' @input='changeValue'></el-input>
+          <el-form-item label='章节名称' :label-width='formLabelWidth' prop='name'>
+            <el-input v-model='editCh_form.name' style='width: 90%' @input='changeValue'></el-input>
           </el-form-item>
           <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
             <el-input
@@ -101,14 +103,14 @@
         </div>
       </el-row>
     </el-drawer>
-    <!-- 添加课程章节 -->
+    <!-- 添加课程章节弹出框 -->
     <el-dialog title='子章节' :visible.sync='addSonChapterDiag' width='30%'>
       <el-form :model='lesson_form' :rules='son_rules' ref='submit_son'>
         <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
           <el-input v-model='lesson_form.son_no' style='width: 90%'></el-input>
         </el-form-item>
-        <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
-          <el-input v-model='lesson_form.son_name' style='width: 90%'></el-input>
+        <el-form-item label='名称' :label-width='formLabelWidth' prop='name'>
+          <el-input v-model='lesson_form.name' style='width: 90%'></el-input>
         </el-form-item>
         <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
           <el-input
@@ -136,7 +138,6 @@
           <el-upload
             action=''
             :before-upload='beforeMP4Upload'
-            :on-preview='handlePreviewMp4'
             :on-remove='handleRemoveMp4'
             :limit='1'
             :on-exceed='handleExceedMp4'
@@ -152,7 +153,7 @@
           <el-button type='primary' @click='addSonChapter'>确 定</el-button>
         </span>
     </el-dialog>
-    <!-- 编辑子章节 -->
+    <!-- 编辑子章节弹出框 -->
     <el-dialog
       title='编辑子章节'
       :visible.sync='editSonChapterDiag'
@@ -162,8 +163,8 @@
         <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
           <el-input v-model='edit_lesson_form.son_no' @input='changeValue' style='width: 90%'></el-input>
         </el-form-item>
-        <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
-          <el-input v-model='edit_lesson_form.son_name' @input='changeValue' style='width: 90%'></el-input>
+        <el-form-item label='名称' :label-width='formLabelWidth' prop='name'>
+          <el-input v-model='edit_lesson_form.name' @input='changeValue' style='width: 90%'></el-input>
         </el-form-item>
         <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
           <el-input style='width: 90%' type='textarea' :rows='3' placeholder='请输入大纲'
@@ -199,27 +200,32 @@
         </el-form-item>
       </el-form>
       <span slot='footer' class='dialog-footer'>
-          <el-button @click='addEditSonChapterDiagCancel'>取 消</el-button>
-          <el-button type='primary' @click='addEditSonChapter'>确 定</el-button>
-        </span>
+        <el-button @click='addEditSonChapterDiagCancel'>取 消</el-button>
+        <el-button type='primary' @click='addEditSonChapter'>确 定</el-button>
+      </span>
     </el-dialog>
   </el-row>
 </template>
 
 <script>
 import {
-  addChapterInEdit, addSonChapterInEdit,
-  delChapterInEdit,
-  delSonChapterInEdit, editSonChapterInEdit,
-  getChapterInfo,
+  addChapter, addSonChapter, delChapter,
+  delSonChapter, editSonChapter, getChapterInfo,
   getEditSonChapterInfo, updateChapter, uploadFile
 } from '@/network/api/backLesson'
 
 import { getFormData } from '@/utils/fileUtils'
 
 export default {
-  name: 'ChapterAdmin',
-  props: ['lessonId'],
+  name: 'ChapterManage',
+  props: {
+    lessonObj: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
   data() {
     return {
       options: [
@@ -237,7 +243,7 @@ export default {
       addSonChapterDiag: false,
       editSonChapterDiag: false,
       rules: {
-        chapter_name: [{ required: true, message: '请输入章节名称', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入章节名称', trigger: 'blur' }],
         description: [{ required: true, message: '请输入章节描述', trigger: 'blur' }],
         chapter_no: [
           { required: true, message: '请输入章节编号', trigger: 'blur' },
@@ -245,7 +251,7 @@ export default {
         ]
       },
       son_rules: {
-        son_name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
         description: [{ required: true, message: '请输入描述', trigger: 'blur' }],
         son_no: [
           { required: true, message: '请输入编号', trigger: 'blur' }
@@ -253,18 +259,18 @@ export default {
       },
       table: false,
       loading: false,
-      lesson_id: this.lessonId,    // 把传过来的值赋值给新的变量
+      lesson_id: this.lessonObj.lessonId,    // 把传过来的值赋值给新的变量
       chapter: [],
       dialog: false,
       editChDiag: false,
       editCh_form: {
-        chapter_id: '',
+        id: '',
         chapter_no: '',
-        chapter_name: '',
+        name: '',
         description: ''
       },
       form: {
-        chapter_name: '',
+        name: '',
         description: '',
         mp4: '',
         ppt: '',
@@ -274,7 +280,7 @@ export default {
       exp_type: '',
       lesson_form: {
         son_no: '',
-        son_name: '',
+        name: '',
         description: '',
         exp_type: '',
         chapter_id: '',
@@ -283,20 +289,20 @@ export default {
         mp4: ''
       },
       edit_lesson_form: {
-        son_id: '',
+        id: '',
         son_no: '',
-        son_name: '',
+        name: '',
         description: '',
-        chapter_id: '',
         lessonId: '',
         ppt: '',
         mp4: ''
       },
       formLabelWidth: '80px',
       timer: null,
-      chapter_id: '',
+      chapterId: '',
+      chapterName: '',
       isShow: false
-    };
+    }
   },
   created() {
     this.getChapterInfoByLessonId()
@@ -390,6 +396,7 @@ export default {
 
       return isMP4 && isLt50
     },
+    // Todo
     handleRemovePPT(file, fileList) {
       console.log(file, fileList);
     },
@@ -401,9 +408,6 @@ export default {
     },
     handleRemoveMp4(file, fileList) {
       console.log(file, fileList);
-    },
-    handlePreviewMp4(file) {
-      console.log(file);
     },
     handleExceedMp4() {
       this.$message.warning('只能上传一个文件！');
@@ -417,18 +421,21 @@ export default {
     addSonChapterDiagCancel() {
       this.addSonChapterDiag = false
     },
-    addSonChapterModal(chapter_id) {
+    addSonChapterModal(id, name) {
       this.addSonChapterDiag = true
-      this.chapter_id = chapter_id
+      this.chapterId = id
+      this.chapterName = name
     },
     addSonChapter() {
       this.$confirm('确定要提交表单吗？').then(_ => {
         this.timer = setTimeout(() => {
           this.lesson_form.lessonId = this.lesson_id
-          this.lesson_form.chapter_id = this.chapter_id
+          this.lesson_form.chapter_id = this.chapterId
+          this.lesson_form.chapterName = this.chapterName
+          this.lesson_form.lessonName = this.lessonObj.lesson_name
 
           this.$refs.submit_son.validate(valid => {
-            addSonChapterInEdit(this.lesson_form).then(res => {
+            addSonChapter(this.lesson_form).then(res => {
               if (res.status === '200') {
                 this.$message.success('提交成功');
                 this.chapter = res.data
@@ -445,20 +452,23 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+
       this.addSonChapterDiag = false
     },
     // 打开编辑子章节的Dialog
-    editSonChapter(son_id) {
-      getEditSonChapterInfo(son_id).then(res => {
+    editSonChapter(id, chapterName) {
+      getEditSonChapterInfo(id).then(res => {
         if (res.status === '200') {
           let dataObj = res.data
 
           this.edit_lesson_form.son_no = dataObj.son_no
-          this.edit_lesson_form.son_name = dataObj.son_name
+          this.edit_lesson_form.name = dataObj.name
           this.edit_lesson_form.description = dataObj.description
           this.edit_lesson_form.ppt = dataObj.ppt
           this.edit_lesson_form.mp4 = dataObj.mp4
-          this.edit_lesson_form.son_id = dataObj.son_id
+          this.edit_lesson_form.id = dataObj.id
+          this.edit_lesson_form.lessonName = this.lessonObj.lesson_name
+          this.edit_lesson_form.chapterName = chapterName
 
           this.editSonChapterDiag = true
         }
@@ -472,45 +482,52 @@ export default {
     addEditSonChapter() {
       this.$confirm('确定要提交表单吗？').then(_ => {
         this.$refs.submit_son.validate(valid => {
-          editSonChapterInEdit(this.edit_lesson_form).then(res => {
-            if (res.status === '200') {
-              const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-              })
 
-              this.$message.success('修改成功!')
+          editSonChapter(this.edit_lesson_form).then(res => {
+            const loading = this.$loading({
+              lock: true,
+              text: 'Loading',
+              spinner: 'el-icon-loading',
+              background: 'rgba(0, 0, 0, 0.7)'
+            })
+
+            if (res.status === '200') {
+              this.$message.success('修改小节成功!')
               this.editSonChapterDiag = false
               this.chapter = res.data
               this.form = ''
               this.lesson_form = {}
               this.getChapterInfoByLessonId()
-              loading.close()
             } else {
-              this.$message.error('修改失败!')
+              this.$message.error('修改小节失败!')
             }
+
+            loading.close()
           })
         })
       }).catch(err => {
-        console.log(err);
+        console.log(err)
       });
     },
-    delSonChapter(son_id) {
+    delSonChapter(chapterObj, sonObj) {
+      let lessonName = this.lessonObj.lesson_name
+      let chapterName = chapterObj.name
+      let sonId = sonObj.id
+      let sonName = sonObj.name
+
       this.$confirm('此操作将永久删除该子章节, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
-        delSonChapterInEdit(son_id).then(res => {
+      }).then(() => {
+        delSonChapter(lessonName, chapterName, sonId, sonName).then(res => {
           if (res.status === '200') {
-            this.$message.success('删除子章节成功!');
-            this.getChapterInfoByLessonId();
+            this.$message.success('删除子章节成功!')
+            this.getChapterInfoByLessonId()
           } else {
-            this.$message.error('删除子章节失败!');
+            this.$message.error('删除子章节失败!')
           }
-        });
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -518,63 +535,63 @@ export default {
         })
       })
     },
-    delChapter(chapter_id) {
+    delChapter(chapterObj) {
+      let lessonName = this.lessonObj.lesson_name
+      let chapterId = chapterObj.id
+      let chapterName = chapterObj.name
+
       this.$confirm('此操作将永久删除该章节, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
-        delChapterInEdit(chapter_id).then(res => {
+      }).then(() => {
+        delChapter(lessonName, chapterId, chapterName).then(res => {
           if (res.status === '200') {
             this.$message.success('删除章节成功!');
             this.getChapterInfoByLessonId();
           } else {
             this.$message.error('删除章节失败!');
           }
-        })
+        });
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
-        })
-      })
+        });
+      });
     },
     //编辑章节信息
-    editChapter(chapter_id, chapter_no, chapter_name, description) {
-      this.editCh_form.chapter_id = chapter_id
+    editChapter(id, chapter_no, name, description) {
+      this.editCh_form.id = id
       this.editCh_form.chapter_no = chapter_no
-      this.editCh_form.chapter_name = chapter_name
+      this.editCh_form.name = name
       this.editCh_form.description = description
       this.editChDiag = true
+      this.editCh_form.lessonName = this.lessonObj.lesson_name
     },
     addChapter() {
       this.$confirm('确定要提交表单吗？').then(_ => {
         this.timer = setTimeout(() => {
-          this.form.lessonId = this.lesson_id;
+          this.form.lessonId = this.lessonObj.lessonId
+          this.form.lessonName = this.lessonObj.lesson_name
+          this.form.lessonPath = this.lessonObj.lessonPath
 
           this.$refs.submit.validate(valid => {
             if (valid) {
-              addChapterInEdit(this.form).then(res => {
+              addChapter(this.form).then(res => {
                 if (res.status === '200') {
-                  this.$message.success('提交成功');
-                  this.chapter = res.data;
-                  this.dialog = false;
-                  this.form = {
-                    chapter_name: '',
-                    description: '',
-                    mp4: '',
-                    ppt: '',
-                    lesson_id: '',
-                    chapter_no: ''
-                  };
+                  this.$message.success('提交成功')
+                  this.chapter = res.data
+                  this.dialog = false
+
                 } else {
-                  this.$message.error('系统内部错误');
+                  this.$message.error('添加章节失败!')
                 }
               });
 
               setTimeout(() => {
-                this.loading = false;
-              }, 400);
+                this.loading = false
+              }, 400)
             } else {
               this.$message.error('输入有误');
             }
@@ -598,45 +615,18 @@ export default {
             if (res.status === '200') {
               this.$message.success('修改章节信息成功!')
               this.editChDiag = false
-              // this.editCh_form = {}
               this.getChapterInfoByLessonId()
-              loading.close()
             } else {
-              this.$message.error('服务器发生错误')
+              this.$message.error('修改章节错误!')
             }
           })
+
+          loading.close()
 
           setTimeout(() => {
             this.loading = false
           }, 400)
         })
-      }).catch(err => {
-        console.log(err)
-      });
-    },
-    handleClose(done) {
-      this.$confirm('确认关闭？').then(_ => {
-        done()
-
-        this.form = {
-          chapter_name: '',
-          description: '',
-          mp4: '',
-          ppt: '',
-          lesson_id: '',
-          chapter_no: ''
-        };
-
-        this.lesson_form = {
-          son_no: '',
-          son_name: '',
-          description: '',
-          exp_type: '',
-          chapter_id: '',
-          lesson_id: '',
-          ppt: '',
-          mp4: ''
-        }
       }).catch(err => {
         console.log(err)
       })
@@ -651,9 +641,9 @@ export default {
       this.editChDiag = false;
       this.editCh_form = {};
     },
-    toJupyterPage(son_id) {
-      this.$store.commit('setSonId', son_id)
-      this.$router.push({ name: 'ToJupyterPage', query: { son_id: son_id } })
+    toJupyterPage(id) {
+      this.$store.commit('setSonId', id)
+      this.$router.push({ name: 'ToJupyterPage', query: { id: id } })
     },
     getChapterInfoByLessonId() {
       getChapterInfo(this.lesson_id).then(res => {
@@ -662,7 +652,7 @@ export default {
         } else {
           this.$message.error('加载失败')
         }
-      });
+      })
     }
   }
 };

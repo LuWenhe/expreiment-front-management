@@ -20,10 +20,33 @@ export const getLessonsByTagName = (pageRequest) => {
     data: pageRequest
   })
 }
+export const getJupyterFiles = (sonId) => {
+  return request({
+    method: 'GET',
+    url: '/backLesson/getJupyterFiles',
+    params: {
+      sonId: sonId
+    }
+  })
+}
+export const deleteJupyterFiles = (jupyterFileDto) => {
+  return request({
+    method: 'POST',
+    url: '/backLesson/deleteJupyterFiles',
+    data: jupyterFileDto
+  })
+}
 export const uploadFile = (formData) => {
   return request({
     method: 'POST',
     url: '/backLesson/uploadFile',
+    data: formData
+  })
+}
+export const uploadLessonFile = (formData) => {
+  return request({
+    method: 'POST',
+    url: '/backLesson/uploadLessonFile',
     data: formData
   })
 }
@@ -44,7 +67,7 @@ export const addLesson = (lessonObj) => {
 export const updateLesson = (lessonObj) => {
   return request({
     method: 'POST',
-    url: '/backLesson/updateLessonInfo',
+    url: '/backLesson/updateLesson',
     data: lessonObj
   })
 }
@@ -73,10 +96,10 @@ export const findLessonsByName = (pageRequest) => {
     data: pageRequest
   })
 }
-export const addChapterInEdit = (chapterObj) => {
+export const addChapter = (chapterObj) => {
   return request({
     method: 'POST',
-    url: '/backLesson/addChapterInEdit',
+    url: '/backLesson/addChapter',
     data: chapterObj
   })
 }
@@ -87,64 +110,41 @@ export const updateChapter = (chapterObj) => {
     data: chapterObj
   })
 }
-export const delChapterInEdit = (chapterId) => {
+export const delChapter = (lessonName, chapterId, chapterName) => {
   return request({
     method: 'GET',
-    url: '/backLesson/delChapterInEdit',
+    url: '/backLesson/deleteChapter',
     params: {
-      chapterId: chapterId
+      lessonName: lessonName,
+      chapterId: chapterId,
+      chapterName: chapterName
     }
   })
 }
-export const delSonChapterInEdit = (sonId) => {
+export const delSonChapter = (lessonName, chapterName, sonId, sonName) => {
   return request({
     method: 'GET',
-    url: '/backLesson/delSonChapterInEdit',
+    url: '/backLesson/delSonChapter',
     params: {
-      sonId: sonId
+      lessonName: lessonName,
+      chapterName: chapterName,
+      sonId: sonId,
+      sonName: sonName
     }
   })
 }
-export const addSonChapterInEdit = (chapterObj) => {
+export const addSonChapter = (chapterObj) => {
   return request({
     method: 'POST',
-    url: '/backLesson/addSonChapterInEdit',
+    url: '/backLesson/addSonChapter',
     data: chapterObj
   })
 }
-export const editSonChapterInEdit = (chapterObj) => {
+export const editSonChapter = (chapterObj) => {
   return request({
     method: 'POST',
-    url: '/backLesson/editSonChapterInEdit',
+    url: '/backLesson/updateSonChapter',
     data: chapterObj
-  })
-}
-export const uploadAttachmentMp4 = (formData) => {
-  return request({
-    method: 'POST',
-    url: '/backLesson/uploadAttachmentMp4',
-    data: formData
-  })
-}
-export const uploadAttachmentPPT = (formData) => {
-  return request({
-    method: 'POST',
-    url: '/backLesson/uploadAttachmentPPT',
-    data: formData
-  })
-}
-export const uploadExcelImport = (formData) => {
-  return request({
-    method: 'POST',
-    url: '/backLesson/uploadExcelImport',
-    data: formData
-  })
-}
-export const uploadExcelImportStu = (formData) => {
-  return request({
-    method: 'POST',
-    url: '/backLesson/uploadExcelImportStu',
-    data: formData
   })
 }
 export const addSonChapterBook = (sonChapterObj) => {
@@ -154,12 +154,13 @@ export const addSonChapterBook = (sonChapterObj) => {
     data: sonChapterObj
   })
 }
-export const deleteLessonById = (lessonId) => {
+export const deleteLessonById = (lessonId, lessonName) => {
   return request({
     method: 'GET',
-    url: '/backLesson/deleteLessonById',
+    url: '/backLesson/deleteLesson',
     params: {
-      lessonId: lessonId
+      lessonId: lessonId,
+      lessonName: lessonName
     }
   })
 }

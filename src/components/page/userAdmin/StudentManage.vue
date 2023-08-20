@@ -14,7 +14,7 @@
         </el-select>
       </el-row>
       <el-row class='button-group'>
-        <el-button type="danger" @click="delStudents">删除多个</el-button>
+        <el-button type="danger" @click="deleteStudents">删除多个</el-button>
         <el-button type="primary" @click="addStudentBtn">添加学生</el-button>
         <el-button type="success" @click="uploadBtn">上传文件</el-button>
       </el-row>
@@ -27,7 +27,8 @@
         class="student-table"
         ref="multipleTable"
         stripe
-        @selection-change="handleSelectionChange">
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type='index' label="序号" width="100px"></el-table-column>
         <el-table-column prop="username" label="用户名" width="130px"></el-table-column>
@@ -443,7 +444,7 @@ export default {
         }
       })
     },
-    delStudents() {
+    deleteStudents() {
       let studentObjs = this.multipleSelection
       let studentIds = []
 

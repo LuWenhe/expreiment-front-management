@@ -1,7 +1,7 @@
 <template>
   <el-tabs v-model='activeName' @tab-click='handleClick'>
-    <el-tab-pane label='基本信息' name='first'>
-      <el-row class='lesson-edit-container'>
+    <el-tab-pane label='基本信息' name='info'>
+      <el-row v-if='firstTab' class='lesson-edit-container'>
         <el-row class='lesson-add-title'>
           <span class='big-title'>编辑课程</span>
         </el-row>
@@ -150,20 +150,24 @@
             </mavon-editor>
           </el-row>
           <el-row class='submit-btn'>
-            <el-button v-if='isAddLesson' type='primary' @click='toAddChapterInfo'>添加章节信息</el-button>
+            <el-button v-if='isAddLesson' type='primary'>添加章节信息</el-button>
             <el-button v-else type='primary' @click='submit'>提交</el-button>
           </el-row>
         </el-form>
       </el-row>
     </el-tab-pane>
-    <el-tab-pane label='章节管理' name='second'>
-      <chapter-admin :lessonId='this.lessonId'></chapter-admin>
+    <el-tab-pane label='章节管理' name='chapter-manage'>
+      <chapter-manage v-if='secondTab' :lessonObj='lesson'></chapter-manage>
+    </el-tab-pane>
+    <el-tab-pane label='文件管理' name='file-manage'>
+      <file-manage v-if='thirdTab' :lessonObj='lesson'></file-manage>
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
-import ChapterAdmin from '@/components/page/lesson/ChapterAdmin'
+import ChapterManage from '@/components/page/lesson/ChapterManage.vue'
+import FileManage from '@/components/page/lesson/FileManage.vue'
 
 import { bNumberCheck } from '@/utils/validator'
 import { loadAllTeachers } from '@/network/api/user'
@@ -196,8 +200,8 @@ const validatorLearnCredit = (rule, value, callback) => {
 }
 
 export default {
-  name: 'EditLesson1',
-  components: { ChapterAdmin },
+  name: 'EditLesson',
+  components: { FileManage, ChapterManage },
   data() {
     return {
       dialogImageUrl: '',
@@ -218,7 +222,7 @@ export default {
           { validator: validatorLearnCredit, required: true, trigger: 'blur' }
         ]
       },
-      activeName: 'first',
+      activeName: 'info',
       imageUrl: '',
       tempUrl: '',
       imgLimit: 1, // 上传照片数
@@ -244,10 +248,15 @@ export default {
         dagang: '',
         cankao: '',
         goal: '',
-        teacherId: ''
+        teacherId: '',
+        lessonPath: '',
       },
       isAddLesson: false,
-      teachers: []
+      teachers: [],
+      fileMenuTree: [],
+      firstTab: true,
+      secondTab: false,
+      thirdTab: false
     }
   },
   created() {
@@ -344,7 +353,21 @@ export default {
       })
     },
     handleClick(tab, event) {
+      let label = tab.label
 
+      if (label === '基本信息') {
+        this.firstTab = true
+        this.secondTab = false
+        this.thirdTab = false
+      } else if (label === '章节管理') {
+        this.firstTab = false
+        this.secondTab = true
+        this.thirdTab = false
+      } else {
+        this.firstTab = false
+        this.secondTab = false
+        this.thirdTab = true
+      }
     },
     handleRemove(file, fileList) {
       this.fileListFront.some((item, i) => {

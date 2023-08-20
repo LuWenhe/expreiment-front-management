@@ -6,10 +6,10 @@
         <br>
         <div>
           <div style='float: left;margin-left: 20px'><span class='chapter-index'>{{ item.chapter_no }}</span>
-            &nbsp;<span><b>{{ item.chapter_name }}</b></span></div>
+            &nbsp;<span><b>{{ item.name }}</b></span></div>
           <div style='float: right;margin-right: 20px'>
-            <el-button @click='delChapter(item.chapter_id)'><i class='el-icon-delete-solid'></i></el-button>
-            <el-button @click='editChapter(item.chapter_id)'><i class='el-icon-edit'></i></el-button>
+            <el-button @click='delChapter(item.id)'><i class='el-icon-delete-solid'></i></el-button>
+            <el-button @click='editChapter(item.id)'><i class='el-icon-edit'></i></el-button>
           </div>
           <br>
         </div>
@@ -20,19 +20,19 @@
           <span>{{ item.description }}</span>
           <br>
           <br>
-          <div v-for='(item1,index)  in item.sonChapterList' :key='index'>
+          <div v-for='(sonItem,index) in item.sonChapterList' :key='index'>
             <div style='float: left;'>
-              <span> {{ item1.son_no }} &nbsp;{{ item1.son_name }}</span>
+              <span> {{ sonItem.son_no }} &nbsp;{{ sonItem.name }}</span>
             </div>
             <div style='float: right;margin-right: 20px'>
               <el-button><i class='el-icon-edit'></i></el-button>
-              <el-button @click='toJupyterPage(item1.exp_url,item1.son_id)'><i class='el-icon-edit'>jupyter实验</i>
+              <el-button @click='toJupyterPage(sonItem.exp_url,sonItem.id)'><i class='el-icon-edit'>jupyter实验</i>
               </el-button>
             </div>
             <br>
             <br>
           </div>
-          <el-button><i class='el-icon-plus' @click='addSonChapterModal(item.chapter_id)'>添加实验章节</i></el-button>
+          <el-button><i class='el-icon-plus' @click='addSonChapterModal(item.id)'>添加实验章节</i></el-button>
           <br>
           <br>
         </div>
@@ -53,8 +53,8 @@
             <el-form-item label='章节序号' :label-width='formLabelWidth' prop='chapter_no'>
               <el-input v-model='form.chapter_no' style='width: 90%'></el-input>
             </el-form-item>
-            <el-form-item label='章节名称' :label-width='formLabelWidth' prop='chapter_name'>
-              <el-input v-model='form.chapter_name' style='width: 90%'></el-input>
+            <el-form-item label='章节名称' :label-width='formLabelWidth' prop='name'>
+              <el-input v-model='form.name' style='width: 90%'></el-input>
             </el-form-item>
             <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
               <el-input
@@ -80,7 +80,7 @@
           <el-form-item label='序号' :label-width='formLabelWidth' prop='son_no'>
             <el-input v-model='lesson_form.son_no' style='width: 90%'></el-input>
           </el-form-item>
-          <el-form-item label='名称' :label-width='formLabelWidth' prop='son_name'>
+          <el-form-item label='名称' :label-width='formLabelWidth' prop='name'>
             <el-input v-model='lesson_form.son_name' style='width: 90%'></el-input>
           </el-form-item>
           <el-form-item label='简介' :label-width='formLabelWidth' prop='description'>
@@ -102,10 +102,16 @@
 </template>
 
 <script>
-import { addSonChapterInEdit, delChapterInEdit } from '@/network/api/backLesson'
+import { addSonChapter, delChapter } from '@/network/api/backLesson'
+import toJupyterPage from '@/components/page/lesson/ToJupyterPage.vue';
 
 export default {
   name: 'ChapterAdd',
+  computed: {
+    toJupyterPage() {
+      return toJupyterPage
+    }
+  },
   props: ['isAddLesson', 'lesson_id', 'tabIndex'],
   data() {
     return {
@@ -114,7 +120,7 @@ export default {
       tab_index: this.tabIndex,
       addSonChapterDiag: false,
       rules: {
-        chapter_name: [{ required: true, message: '请输入章节名称', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入章节名称', trigger: 'blur' }],
         description: [{ required: true, message: '请输入章节描述', trigger: 'blur' }],
         chapter_no: [{ required: true, message: '请输入章节编号', trigger: 'blur' }]
       },
@@ -129,7 +135,7 @@ export default {
       chapterList: [],
       dialog: false,
       form: {
-        chapter_name: '',
+        name: '',
         description: '',
         mp4: '',
         ppt: '',
@@ -141,31 +147,32 @@ export default {
         son_name: '',
         description: '',
         exp_type: '',
-        chapter_id: '',
+        id: '',
         lesson_id: ''
       },
       formLabelWidth: '80px',
       timer: null,
-      chapter_id: ''
+      id: ''
     };
   },
   methods: {
     addSonChapterDiagCancel() {
-      this.addSonChapterDiag = false;
-      this.lesson_form = {};
+      this.addSonChapterDiag = false
+      this.lesson_form = {}
     },
-    addSonChapterModal(chapter_id) {
-      this.chapter_id = chapter_id
+    addSonChapterModal(id) {
+      this.id = id
       this.addSonChapterDiag = true
     },
     addSonChapter() {
       this.$confirm('确定要提交表单吗？').then(_ => {
         this.timer = setTimeout(() => {
           this.lesson_form.lesson_id = this.lesson_id
-          this.lesson_form.chapter_id = this.chapter_id
+          this.lesson_form.id = this.id
+          // this.lesson_form.lessonName =
 
           this.$refs.submit_son.validate(valid => {
-            addSonChapterInEdit(this.lesson_form).then(res => {
+            addSonChapter(this.lesson_form).then(res => {
               if (res.status === '200') {
                 this.$message.success('提交子章节成功')
                 this.chapter = res.data
@@ -187,13 +194,13 @@ export default {
 
       this.addSonChapterDiag = false
     },
-    delChapter(chapter_id) {
+    delChapter(id) {
       this.$confirm('此操作将永久删除该章节, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        delChapterInEdit(chapter_id).then(res => {
+        delChapter(id).then(res => {
           if (res.status === '200') {
             this.$message.success('删除章节成功!')
             this.getChapterInfoByLessonId()
@@ -216,7 +223,7 @@ export default {
         this.form.lesson_id = this.lesson_id
 
         this.chapterList.push({
-          chapter_name: this.form.chapter_name,
+          name: this.form.name,
           chapter_no: this.form.chapter_no,
           description: this.form.description,
           sonChapterList: []

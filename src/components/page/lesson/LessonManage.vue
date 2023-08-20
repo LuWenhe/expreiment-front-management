@@ -29,8 +29,7 @@
                 <span>授课老师：{{ item.teacher_name }}</span>
               </el-row>
               <el-row class='info-right'>
-                <el-button type='warning'
-                           @click='deleteLesson(item.lessonId)' v-permission="'lesson:delete'">
+                <el-button type='warning' @click='deleteLesson(item.lessonId, item.lesson_name)' v-permission="'lesson:delete'">
                   <i class='el-icon-delete'></i>
                 </el-button>
               </el-row>
@@ -119,13 +118,13 @@ export default {
     addLesson() {
       this.$router.push('/addLesson')
     },
-    deleteLesson(lesson_id) {
+    deleteLesson(lessonId, lessonName) {
       this.$confirm('此操作将永久删除该课程, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
-        deleteLessonById(lesson_id).then(res => {
+      }).then(() => {
+        deleteLessonById(lessonId, lessonName).then(res => {
           if (res.status === '200') {
             this.$message({
               type: 'success',

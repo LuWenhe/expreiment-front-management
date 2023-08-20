@@ -307,6 +307,8 @@ export default {
                 this.isAddLesson = true
                 this.$message.success('添加课程成功!')
                 this.$router.push('/lessonManage')
+              } else {
+                this.$message.error('添加课程失败!')
               }
             })
           } else {
